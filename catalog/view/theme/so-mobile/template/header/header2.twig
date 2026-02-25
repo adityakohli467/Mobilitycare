@@ -401,121 +401,76 @@ function displayDealers(dealers) {
                     <p><i class="fa fa-phone"></i> ${dealer.phone || ''}</p>
                     <p><i class="fa fa-map-marker"></i> ${dealer.business_address || ''} ${dealer.suburb || ''} ${dealer.state || ''} ${dealer.postcode || ''}</p>
                     ${dealer.distance ? `<div class="distance"><i class="fa fa-road"></i>  ${parseFloat(dealer.distance).toFixed(2)} Km away</div>` : ''}
-                    <button class="btn-map" data-address="${dealer.business_address || ''} ${dealer.suburb || ''} ${dealer.state || ''} ${dealer.postcode || ''}">
+                    <button class="btn-map" data-lat="${dealer.latitude || ''}" data-lng="${dealer.longitude || ''}" data-address="${dealer.business_address || ''} ${dealer.suburb || ''} ${dealer.state || ''} ${dealer.postcode || ''}">
                         <i class="fa fa-location-arrow"></i>
                     </button>
                 </div>
             </div>
         `;
-        if (dealer.business_address && dealer.postcode && window.map && typeof google !== 'undefined') {
-            let fullAddress = dealer.business_address + ', ' + dealer.suburb + ' ' + dealer.state + ' ' + dealer.postcode + ', Australia';
-            geocodeAndAddMarker(fullAddress, dealer.full_name, dealer.phone);
+        // ✅ FIX: Use stored lat/lng from database instead of making API calls
+        if (dealer.latitude && dealer.longitude && window.map && typeof google !== 'undefined') {
+            addMarkerFromCoords(parseFloat(dealer.latitude), parseFloat(dealer.longitude), dealer.full_name, dealer.phone, dealer.business_address);
             markerCount++;
         }
     });
     output += '</div>';
     $('#dealer-results').html(output);
 
-    $(document).on('click', '.btn-map', function() {
-        let fullAddress = $(this).data('address');
-        let decodedAddress = decodeURIComponent(fullAddress);
-        geocodeAddress(decodedAddress, function (lat, lng) {
-            if (lat && lng) {
-                window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
-            } else {
-                window.open(
-                    'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(decodedAddress),
-                    '_blank'
-                );
+    // Unbind previous handlers to prevent duplicates
+    $(document).off('click', '.btn-map').on('click', '.btn-map', function() {
+        var lat = $(this).data('lat');
+        var lng = $(this).data('lng');
+        
+        // ✅ FIX: Use stored coordinates directly - no API call needed
+        if (lat && lng) {
+            window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+        } else {
+            // Fallback: use address search (no geocode API call)
+            let fullAddress = $(this).data('address');
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(fullAddress), '_blank');
+        }
+    });
+
+    // Fit map bounds after all markers are added
+    if (markerCount > 0 && window.bounds && !window.bounds.isEmpty()) {
+        window.map.fitBounds(window.bounds);
+        google.maps.event.addListenerOnce(window.map, 'bounds_changed', function () {
+            if (window.map.getZoom() > 12) {
+                window.map.setZoom(12);
             }
         });
-    });
-
-    // setTimeout(function () {
-    //     resetButton();
-    //     if (window.bounds && window.map && !window.bounds.isEmpty()) {
-    //         window.map.fitBounds(window.bounds);
-    //         console.log('Map bounds updated with', window.markers.length, 'markers');
-    //     } else {
-    //         console.warn('Cannot fit bounds, map or bounds invalid, markers:', window.markers.length);
-    //     }
-    // }, 1000 * markerCount || 1000);
-}
-
-let pendingGeocodes = 0;
-
-function geocodeAndAddMarker(address, name, phone) {
-    pendingGeocodes++;
-
-    $.ajax({
-        url: 'index.php?route=dealer/googleproxy/geocode',
-        type: 'POST',
-        data: { address: address },
-        dataType: 'json',
-        success: function (data) {
-            if (data.status === 'OK' && data.results[0]) {
-                const position = data.results[0].geometry.location;
-
-                const marker = new google.maps.Marker({
-                    map: window.map,
-                    position: position,
-                    title: name
-                });
-
-                window.markers.push(marker);
-                window.bounds.extend(position);
-
-                google.maps.event.addListener(marker, 'click', function () {
-                    window.infoWindow.setContent(`
-                        <strong>${name}</strong><br>
-                        ${address}<br>
-                        <i class="fa fa-phone"></i> ${phone || ''}
-                    `);
-                    window.infoWindow.open(window.map, marker);
-                });
-            }
-        },
-        complete: function () {
-            pendingGeocodes--;
-
-            // ✅ FIT MAP ONLY ONCE (when all markers are done)
-            if (pendingGeocodes === 0 && !window.bounds.isEmpty()) {
-                window.map.fitBounds(window.bounds);
-
-                // Optional zoom cap
-                google.maps.event.addListenerOnce(window.map, 'bounds_changed', function () {
-                    if (window.map.getZoom() > 12) {
-                        window.map.setZoom(12);
-                    }
-                });
-
-                resetButton();
-            }
-        }
-    });
-}
-
-
-function geocodeAddress(address, callback) {
-    if (!google.maps) {
-        callback(null, null);
-        return;
     }
-    $.ajax({
-        url: 'index.php?route=dealer/googleproxy/geocode',
-        type: 'POST',
-        data: { address: address },
-        dataType: 'json',
-        success: function (data) {
-            if (data.status === 'OK' && data.results[0]) {
-                var loc = data.results[0].geometry.location;
-                callback(loc.lat, loc.lng);
-            } else {
-                callback(null, null);
-            }
-        }
+    resetButton();
+}
+
+// ✅ NEW: Add marker using stored coordinates - NO API CALL
+function addMarkerFromCoords(lat, lng, name, phone, address) {
+    if (!window.map || typeof google === 'undefined') return;
+    
+    var position = { lat: lat, lng: lng };
+    
+    var marker = new google.maps.Marker({
+        map: window.map,
+        position: position,
+        title: name
+    });
+    
+    window.markers.push(marker);
+    window.bounds.extend(position);
+    
+    google.maps.event.addListener(marker, 'click', function () {
+        window.infoWindow.setContent(`
+            <strong>${name}</strong><br>
+            ${address}<br>
+            <i class="fa fa-phone"></i> ${phone || ''}
+        `);
+        window.infoWindow.open(window.map, marker);
     });
 }
+
+// REMOVED: geocodeAndAddMarker and geocodeAddress functions
+// These were making expensive Google Geocoding API calls for every dealer
+// Now using stored lat/lng from database via addMarkerFromCoords()
 
 function clearMarkers() {
     console.log('Clearing markers, window.markers:', window.markers);
