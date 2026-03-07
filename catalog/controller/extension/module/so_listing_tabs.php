@@ -221,10 +221,10 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
 				$_data = $this->load->view('extension/module/so_listing_tabs/'.$setting['store_layout'], $data);
 			}
 			
-			// Only generate captcha for module 1239 (the one with the quote form modal).
-			// Other so_listing_tabs modules on the same page must NOT overwrite
-			// the session value, otherwise the displayed captcha won't match.
-			if ($module_id == 1239) {
+			// Only generate captcha if this module's rendered HTML contains the
+			// placeholder (i.e. it has the quote form modal). This works for any
+			// module ID (1239 on desktop, 1284 on mobile, etc.) without hardcoding.
+			if (strpos($_data, '%%CAPTCHA_PLACEHOLDER%%') !== false) {
 			    // Generate fresh captcha AFTER cache logic so it is never stale
                 $captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
                 // Use a unique session key so other captcha widgets on the same page

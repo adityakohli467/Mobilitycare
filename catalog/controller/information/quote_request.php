@@ -13,7 +13,15 @@ class ControllerInformationQuoteRequest extends Controller {
 
         // Handle form submission
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if ($this->validate()) {
+            // If AJAX validateAjax already passed, skip re-validation (captcha
+            // session keys get consumed/overwritten between the two calls)
+            $skip_validation = false;
+            if (isset($this->session->data['quote_ajax_validated']) && $this->session->data['quote_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['quote_ajax_validated']);
+            }
+            
+            if ($skip_validation || $this->validate()) {
 
                 // Default empty for missing fields
                 $fields = ['vehicle_make', 'vehicle_model', 'vehicle_year', 'body_type', 'lifting_item', 'item_weight', 'item_height'];
@@ -119,6 +127,9 @@ class ControllerInformationQuoteRequest extends Controller {
             $json['error'] = $this->error;
         } else {
             $json['success'] = true;
+            // Set flag so the normal POST submit skips re-validation.
+            // This prevents captcha from failing on the second validate() call.
+            $this->session->data['quote_ajax_validated'] = true;
         }
     } else {
         $json['error'] = 'Invalid request';
