@@ -222,10 +222,10 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
 			}
 			
 			// Generate fresh captcha AFTER cache logic so it is never stale
-            $captcha_key = 'captcha_listing_tabs_' . $module_id;
             $captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-            $this->session->data[$captcha_key] = $captcha_value;
-            $this->session->data['captcha'] = $captcha_value;
+            // Use a unique session key so other captcha widgets on the same page
+            // (product.php, marketing_popup.php, etc.) don't overwrite this value
+            $this->session->data['listing_captcha'] = $captcha_value;
             
             $image = imagecreatetruecolor(150, 35);
             $white = imagecolorallocate($image, 255, 255, 255);
