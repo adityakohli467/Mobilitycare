@@ -97,8 +97,7 @@ class ControllerInformationLightDriveEnquiry extends Controller {
 	    	} else {
 			$data['captcha'] = '';
 		    }
-		    
-        $data['originalCaptcha'] = isset($this->session->data['captcha']) ? $this->session->data['captcha'] : '';
+
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -193,7 +192,7 @@ $html .= '</body></html>';
         // Captcha validation
         if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') 
             && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validateCustom');
+            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
             if ($captcha) {
                 $this->error['captcha'] = $captcha;
             }

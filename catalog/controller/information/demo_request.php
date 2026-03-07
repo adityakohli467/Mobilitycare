@@ -130,9 +130,7 @@ class ControllerInformationDemoRequest extends Controller {
 		} else {
 			$data['captcha'] = '';
 		}
-        
-         $data['originalCaptcha'] = isset($this->session->data['captcha']) ? $this->session->data['captcha'] : '';
-         
+
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
@@ -243,7 +241,7 @@ class ControllerInformationDemoRequest extends Controller {
         // Captcha validation
         if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') 
             && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validateCustom');
+            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
             if ($captcha) {
                 $this->error['captcha'] = $captcha;
             }

@@ -4,12 +4,12 @@
     {% if route|slice(0, 9) == 'checkout/' %}
    
     <input type="text" name="captcha" id="input-payment-captcha" class="form-control" autocomplete="off" />
-    <img src="index.php?route=extension/captcha/basic/captcha" alt="" />
+    <img src="index.php?route=extension/captcha/basic/captcha&t={{ "now"|date("U") }}" alt="" />
     {% else %}
    
     <div class="col-sm-10">
       <input type="text" name="captcha" id="input-captcha" class="form-control" placeholder="Please enter the captcha code" />
-      <img src="index.php?route=extension/captcha/basic/captcha" alt="" />
+      <img src="index.php?route=extension/captcha/basic/captcha&t={{ "now"|date("U") }}" alt="" />
       {% if error_captcha %}
       <div class="text-danger">{{ error_captcha }}</div>
       {% endif %}

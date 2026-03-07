@@ -198,10 +198,11 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
             $quoteProducts = $this->model_catalog_demo_request->getProductsByCategory(101);
             $data = $this->readData($setting);
             
-            // Generate unique captcha for this module instance (avoids session conflicts with other forms)
+            // Generate captcha and store in standard session key for validation
             $captcha_key = 'captcha_listing_tabs_' . $module_id;
             $captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $this->session->data[$captcha_key] = $captcha_value;
+            $this->session->data['captcha'] = $captcha_value;
             
             // Create captcha image as data URL to avoid separate HTTP request
             $image = imagecreatetruecolor(150, 35);
@@ -224,7 +225,6 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
             $image_data = ob_get_clean();
             imagedestroy($image);
             $data['captcha_image_data'] = 'data:image/jpeg;base64,' . base64_encode($image_data);
-            $data['originalCaptcha'] = $captcha_value;
             $data['captcha_key'] = $captcha_key;
             
             $data['products']  = $quoteProducts;
