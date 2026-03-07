@@ -161,7 +161,7 @@ $html .= '</body></html>';
         }
 
         // Phone - accept 10 digits (national) or 11-12 digits (international with/without +)
-        if (empty($this->request->post['phone']) || !preg_match('/^\+?[0-9]{10,12}$/', $this->request->post['phone'])) {
+        if (empty($this->request->post['phone']) || !preg_match('/^\+?[0-9]{9,12}$/', $this->request->post['phone'])) {
             $this->error['phone'] = 'Please enter a valid phone number.';
         }
         

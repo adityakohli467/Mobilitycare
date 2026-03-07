@@ -20,6 +20,11 @@ function is_valid_au_phone($phone) {
         $phone = '0' . $matches[1];
     }
     
+    // Handle 9-digit numbers without leading 0 (e.g., 411114916 -> 0411114916)
+    if (strlen($phone) === 9 && preg_match('/^[2-9]/', $phone)) {
+        $phone = '0' . $phone;
+    }
+    
     // Now validate as 10-digit Australian number starting with 0
     // Australian mobile: 04XX XXX XXX
     // Australian landline: 02/03/07/08 XXXX XXXX
