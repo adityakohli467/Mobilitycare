@@ -78,6 +78,9 @@ class ControllerInformationQuoteRequest extends Controller {
                 // Save in database
                 $this->model_catalog_demo_request->addQuoteRequest($this->request->post);
 
+                // Clear the listing captcha after successful processing (one-time use)
+                unset($this->session->data['listing_captcha']);
+                
                 // redirect
                  $this->session->data['success'] = 'Your enquiry has been successfully submitted.';
                  $this->response->redirect($this->url->link('information/form_success/quote'));
@@ -239,7 +242,8 @@ if ((isset($this->request->post['item_height'])) && ($item_height === '' || !pre
             if (isset($this->request->post['captcha']) && isset($this->session->data['listing_captcha'])) {
                 if ($this->request->post['captcha'] == $this->session->data['listing_captcha']) {
                     $listing_captcha_valid = true;
-                    unset($this->session->data['listing_captcha']); // one-time use
+                    // Don't unset here — validate() is called twice (AJAX then POST).
+                    // listing_captcha is cleared in index() after successful processing.
                 }
             }
             
