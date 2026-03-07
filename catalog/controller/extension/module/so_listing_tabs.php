@@ -198,13 +198,35 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
             $quoteProducts = $this->model_catalog_demo_request->getProductsByCategory(101);
             $data = $this->readData($setting);
             
-            // Generate captcha and store in standard session key for validation
+            // Use placeholder for captcha in template - will be replaced after cache
+            $data['captcha_image_data'] = '%%CAPTCHA_PLACEHOLDER%%';
+            $data['captcha_key'] = '';
+            
+            $data['products']  = $quoteProducts;
+            $data['action'] = $this->url->link('information/quote_request', '', true);
+			// Check cache lite - get HTML first (may come from cache)
+			if ($use_cache){
+			
+				$cacheid = md5(serialize(array($module_id, $this->config->get('config_language_id'), $this->session->data['currency'], $setting)));
+				$_data = $Cache_Lite->get($cacheid);
+				if (!$_data) {
+					$_data = $this->load->view('extension/module/so_listing_tabs/'.$setting['store_layout'], $data);
+					$Cache_Lite->save($_data);
+				}
+			}else{
+			    
+				if(file_exists($folder_cache))
+				$Cache_Lite->_cleanDir($folder_cache);
+		       
+				$_data = $this->load->view('extension/module/so_listing_tabs/'.$setting['store_layout'], $data);
+			}
+			
+			// Generate fresh captcha AFTER cache logic so it is never stale
             $captcha_key = 'captcha_listing_tabs_' . $module_id;
             $captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $this->session->data[$captcha_key] = $captcha_value;
             $this->session->data['captcha'] = $captcha_value;
             
-            // Create captcha image as data URL to avoid separate HTTP request
             $image = imagecreatetruecolor(150, 35);
             $white = imagecolorallocate($image, 255, 255, 255);
             $black = imagecolorallocate($image, 0, 0, 0);
@@ -224,30 +246,12 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
             imagejpeg($image);
             $image_data = ob_get_clean();
             imagedestroy($image);
-            $data['captcha_image_data'] = 'data:image/jpeg;base64,' . base64_encode($image_data);
-            $data['captcha_key'] = $captcha_key;
+            $fresh_captcha_src = 'data:image/jpeg;base64,' . base64_encode($image_data);
             
-            $data['products']  = $quoteProducts;
-            $data['action'] = $this->url->link('information/quote_request', '', true);
-			// Check cache lite
-			if ($use_cache){
-			
-				$cacheid = md5(serialize(array($module_id, $this->config->get('config_language_id'), $this->session->data['currency'], $setting)));
-				$_data = $Cache_Lite->get($cacheid);
-				if (!$_data) {
-					$_data = $this->load->view('extension/module/so_listing_tabs/'.$setting['store_layout'], $data);
-					$Cache_Lite->save($_data);
-					return  $_data;
-				} else {
-					return  $_data;
-				}
-			}else{
-			    
-				if(file_exists($folder_cache))
-				$Cache_Lite->_cleanDir($folder_cache);
-		       
-				return $this->load->view('extension/module/so_listing_tabs/'.$setting['store_layout'], $data);
-			}
+            // Replace placeholder with fresh captcha in the rendered/cached HTML
+            $_data = str_replace('%%CAPTCHA_PLACEHOLDER%%', $fresh_captcha_src, $_data);
+            
+            return $_data;
 		}
 	}
 	
