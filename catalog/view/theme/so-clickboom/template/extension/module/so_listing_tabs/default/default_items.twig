@@ -224,6 +224,8 @@
                 </div>
                 <div class="modal-body">
                     <form action="{{ action }}" method="post" class="form-horizontal quoteForm">
+                        <input type="hidden" name="is_manufacturer_or_product" value="1" />
+                        <input type="hidden" name="manufacturer_id" class="selected_manufacturer_id" />
                         <div class="form-group">
                             <label for="fullname" class="col-sm-3 control-label">Full Name *</label>
                             <div class="col-sm-9">
@@ -486,7 +488,8 @@ function openModal(productId, productNameOverride) {
         targetSelect = targetModal.find('.quote_product_id');
         targetModal.modal('show');
     }
-
+    // Set the hidden manufacturer_id field
+    targetModal.find('.selected_manufacturer_id').val(productId);
     if (targetSelect && targetSelect.length) {
         var selectedOption = targetSelect.find('option[value="' + productId + '"]');
         if (selectedOption.length) {
