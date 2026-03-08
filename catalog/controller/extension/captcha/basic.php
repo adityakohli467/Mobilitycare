@@ -1,5 +1,12 @@
 <?php
 class ControllerExtensionCaptchaBasic extends Controller {
+	/**
+	 * Generates a captcha widget. Supports named instances so multiple
+	 * captcha widgets on the same page don't overwrite each other.
+	 * 
+	 * The captcha name is derived from the current route (e.g. 'information/contact'
+	 * becomes session key 'captcha_information_contact'). Each form gets its own key.
+	 */
 	public function index($error = array()) {
 		$this->load->language('extension/captcha/basic');
 
@@ -9,24 +16,57 @@ class ControllerExtensionCaptchaBasic extends Controller {
 			$data['error_captcha'] = '';
 		}
 
-		$data['route'] = $this->request->get['route'];
+		$data['route'] = isset($this->request->get['route']) ? $this->request->get['route'] : '';
+		
+		// Derive a unique captcha name from the page route
+		$captcha_name = $this->getCaptchaName();
+		$data['captcha_name'] = $captcha_name;
 
-// 		$this->session->data['captcha'] = substr(sha1(mt_rand()), 17, 6); 
-    $this->session->data['captcha'] = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-
+		$captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+		$this->session->data['captcha_' . $captcha_name] = $captcha_value;
+		
+		// Also keep backward-compatible session key (used by forms that
+		// are the only captcha on their page)
+		$this->session->data['captcha'] = $captcha_value;
 
 		return $this->load->view('extension/captcha/basic', $data);
 	}
 
+	/**
+	 * Validates captcha. Checks the named session key first, falls back to
+	 * the generic 'captcha' key for backward compatibility.
+	 */
 	public function validate() {
 		$this->load->language('extension/captcha/basic');
-
-		if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
+		
+		$posted = isset($this->request->post['captcha']) ? $this->request->post['captcha'] : '';
+		
+		if (empty($posted)) {
 			return $this->language->get('error_captcha');
 		}
+		
+		// Check named captcha key first (from the page that loaded the captcha)
+		$captcha_name = $this->getCaptchaName();
+		$named_key = 'captcha_' . $captcha_name;
+		
+		if (!empty($this->session->data[$named_key]) && $this->session->data[$named_key] == $posted) {
+			return ''; // valid
+		}
+		
+		// Check the listing_captcha key (from so_listing_tabs module)
+		if (!empty($this->session->data['listing_captcha']) && $this->session->data['listing_captcha'] == $posted) {
+			return ''; // valid
+		}
+		
+		// Fallback: check generic session key
+		if (!empty($this->session->data['captcha']) && $this->session->data['captcha'] == $posted) {
+			return ''; // valid
+		}
+		
+		return $this->language->get('error_captcha');
 	}
 	
-		public function validateCustom() {
+	public function validateCustom() {
 		$this->load->language('extension/captcha/basic');
 
 		if (empty($this->request->post['originalCaptcha']) || ($this->request->post['originalCaptcha'] != $this->request->post['captcha'])) {
@@ -35,6 +75,19 @@ class ControllerExtensionCaptchaBasic extends Controller {
 	}
 
 	public function captcha() {
+		// Support named captcha: check if a specific name was requested
+		$captcha_name = isset($this->request->get['captcha_name']) ? $this->request->get['captcha_name'] : '';
+		$named_key = $captcha_name ? 'captcha_' . $captcha_name : '';
+		
+		// Try named key first, fall back to generic
+		if ($named_key && !empty($this->session->data[$named_key])) {
+			$captcha_text = $this->session->data[$named_key];
+		} elseif (!empty($this->session->data['captcha'])) {
+			$captcha_text = $this->session->data['captcha'];
+		} else {
+			$captcha_text = '????';
+		}
+		
 		$image = imagecreatetruecolor(150, 35);
 
 		$width = imagesx($image);
@@ -55,7 +108,7 @@ class ControllerExtensionCaptchaBasic extends Controller {
 		imagefilledrectangle($image, 0, 0, 0, $height - 1, $black);
 		imagefilledrectangle($image, 0, $height - 1, $width, $height - 1, $black);
 
-		imagestring($image, 10, intval(($width - (strlen($this->session->data['captcha']) * 9)) / 2), intval(($height - 15) / 2), $this->session->data['captcha'], $black);
+		imagestring($image, 10, intval(($width - (strlen($captcha_text) * 9)) / 2), intval(($height - 15) / 2), $captcha_text, $black);
 
 		header('Content-type: image/jpeg');
 		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
@@ -67,5 +120,30 @@ class ControllerExtensionCaptchaBasic extends Controller {
 
 		imagedestroy($image);
 		exit();
+	}
+	
+	/**
+	 * Derives a safe captcha name from the current page route.
+	 * e.g. 'information/contact' → 'information_contact'
+	 *      'information/quote_request/validateAjax' → 'information_quote_request'
+	 *      'product/product' → 'product_product'
+	 */
+	private function getCaptchaName() {
+		$route = isset($this->request->get['route']) ? $this->request->get['route'] : 'default';
+		
+		// Strip method suffixes like /validateAjax, /validate, /submit
+		// so AJAX validation and normal POST use the same key
+		$route = preg_replace('#/(validateAjax|validate|submit|write)$#', '', $route);
+		
+		// Convert slashes to underscores for a clean session key
+		$name = str_replace('/', '_', $route);
+		
+		// Remove the captcha's own route prefix if called as sub-controller
+		// In that case, use the parent page route from the referrer or fallback
+		if (strpos($name, 'extension_captcha') === 0) {
+			$name = 'default';
+		}
+		
+		return preg_replace('/[^a-zA-Z0-9_]/', '', $name);
 	}
 }

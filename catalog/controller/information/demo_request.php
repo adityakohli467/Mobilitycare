@@ -11,7 +11,14 @@ class ControllerInformationDemoRequest extends Controller {
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
         
         $data['marketing_popup'] = $this->load->controller('common/marketing_popup');
-	  if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
+	  // If AJAX validateAjax already passed, skip re-validation
+	  $skip_validation = false;
+	  if (isset($this->session->data['demo_ajax_validated']) && $this->session->data['demo_ajax_validated'] === true) {
+	      $skip_validation = true;
+	      unset($this->session->data['demo_ajax_validated']);
+	  }
+	  
+	  if ($this->request->server['REQUEST_METHOD'] == 'POST' && ($skip_validation || $this->validate())) {
            
                 // Save to DB
                 $this->model_catalog_demo_request->addDemoRequest($this->request->post);
@@ -150,6 +157,8 @@ class ControllerInformationDemoRequest extends Controller {
             $json['error'] = $this->error;
         } else {
             $json['success'] = true;
+            // Set flag so the normal POST submit skips re-validation
+            $this->session->data['demo_ajax_validated'] = true;
         }
     } else {
         $json['error'] = 'Invalid request';

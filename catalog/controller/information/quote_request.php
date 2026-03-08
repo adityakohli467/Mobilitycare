@@ -246,23 +246,9 @@ if ((isset($this->request->post['item_height'])) && ($item_height === '' || !pre
         // Captcha validation
         if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') 
             && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            
-            // Check if submission came from so_listing_tabs module (uses separate session key
-            // because other captcha widgets on the same page overwrite session['captcha'])
-            $listing_captcha_valid = false;
-            if (isset($this->request->post['captcha']) && isset($this->session->data['listing_captcha'])) {
-                if ($this->request->post['captcha'] == $this->session->data['listing_captcha']) {
-                    $listing_captcha_valid = true;
-                    // Don't unset here — validate() is called twice (AJAX then POST).
-                    // listing_captcha is cleared in index() after successful processing.
-                }
-            }
-            
-            if (!$listing_captcha_valid) {
-                $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-                if ($captcha) {
-                    $this->error['captcha'] = $captcha;
-                }
+            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
+            if ($captcha) {
+                $this->error['captcha'] = $captcha;
             }
         }
 

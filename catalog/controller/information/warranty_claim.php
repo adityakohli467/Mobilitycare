@@ -56,7 +56,8 @@ class ControllerInformationWarrantyClaim extends Controller {
                 $mail->send();
                 
  
-         $this->response->redirect($this->url->link('information/contact/success'));
+         $this->session->data['success'] = 'Your warranty claim has been successfully submitted.';
+         $this->response->redirect($this->url->link('information/form_success/warranty_claim'));
 		}
 
 		$data['breadcrumbs'] = array();

@@ -352,6 +352,14 @@ RewriteRule ^thank-you-trial_request/?$ index.php?route=information/form_success
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/form_success/trial_request[\s&] [NC]
 RewriteRule ^index\.php$ /thank-you-trial_request [R=301,L,QSD]
 
+# warranty claim form success
+
+RewriteRule ^thank-you-warranty-claim/?$ index.php?route=information/form_success/warranty_claim [L,QSA]
+
+# Canonical redirect
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/form_success/warranty_claim[\s&] [NC]
+RewriteRule ^index\.php$ /thank-you-warranty-claim [R=301,L,QSD]
+
 # become a dealer form success
 
 RewriteRule ^thank-you-becomedealer/?$ index.php?route=information/form_success/becomedealer [L,QSA]
