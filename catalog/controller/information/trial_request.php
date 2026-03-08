@@ -13,8 +13,14 @@ class ControllerInformationTrialRequest extends Controller {
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
 
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+
+            $skip_validation = false;
+            if (isset($this->session->data['trial_ajax_validated']) && $this->session->data['trial_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['trial_ajax_validated']);
+            }
             
-            if ($this->validate()) {
+            if ($skip_validation || $this->validate()) {
                 // Save to DB
                 $this->model_catalog_demo_request->addProductTrialRequest($this->request->post);
 
@@ -212,6 +218,22 @@ class ControllerInformationTrialRequest extends Controller {
         }
 
         return !$this->error;
+    }
+
+    public function validateAjax() {
+        $json = [];
+        if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+            if (!$this->validate()) {
+                $json['error'] = $this->error;
+            } else {
+                $json['success'] = true;
+                $this->session->data['trial_ajax_validated'] = true;
+            }
+        } else {
+            $json['error'] = 'Invalid request';
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 }
 ?>

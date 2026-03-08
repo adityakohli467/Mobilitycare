@@ -175,7 +175,7 @@ iframe, #map-canvas {
             </div>
             <div class="info-contact row">
                 <div class="col-sm-6 col-xs-12 contact-form">
-                    <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal quoteForm">
+                    <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal quoteForm ajax-validate-form" data-validate-url="index.php?route=information/contact/validateAjax">
                         <fieldset>
                             <p>{{ comment }}</p>
                             <div class="form-group required">
@@ -524,3 +524,4 @@ $(document).on('submit', '.quoteForm', function () {
 });
 
 </script>
+<script src="catalog/view/javascript/form-ajax-validate.js"></script>

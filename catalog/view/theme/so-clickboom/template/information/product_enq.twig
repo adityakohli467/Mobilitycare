@@ -27,7 +27,7 @@
 
     
     <div class="demo-request-right col-md-5 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm">
+        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/product_enq/validateAjax">
             
             <div class="">
                <input type="text" name="fullname"  placeholder="Full Name *" required>
@@ -193,3 +193,4 @@ document.getElementById("contact_type").addEventListener("change", function() {
     //             });
     //         });
      </script>
+<script src="catalog/view/javascript/form-ajax-validate.js"></script>

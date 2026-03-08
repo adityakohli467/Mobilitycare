@@ -14,7 +14,14 @@ class ControllerInformationFundingSupport extends Controller {
       
         
 	  if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if ($this->validate()) {
+
+            $skip_validation = false;
+            if (isset($this->session->data['funding_ajax_validated']) && $this->session->data['funding_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['funding_ajax_validated']);
+            }
+
+            if ($skip_validation || $this->validate()) {
 
                 // Save to DB
                 $this->model_catalog_demo_request->addFundingSupport($this->request->post);
@@ -231,5 +238,21 @@ class ControllerInformationFundingSupport extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		$this->response->setOutput($this->load->view('common/success', $data));
+	}
+
+	public function validateAjax() {
+		$json = [];
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->validate()) {
+				$json['error'] = $this->error;
+			} else {
+				$json['success'] = true;
+				$this->session->data['funding_ajax_validated'] = true;
+			}
+		} else {
+			$json['error'] = 'Invalid request';
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 }

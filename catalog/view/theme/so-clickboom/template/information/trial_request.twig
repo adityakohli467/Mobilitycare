@@ -28,7 +28,7 @@ ensure the process is smooth, supported and clinically appropriate.</p>
                             
                         </div>
                         <div class="demo-request-right col-md-7 col-sm-12">
-                            <form action="{{ action }}" method="post" id="demoRequestForm">
+                            <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/trial_request/validateAjax">
                                 <!-- Therapist Details -->
                                 <div>
                                     <input type="text" name="fullname" id="fullname" value="{{ fullname }}" placeholder="Full Name *" required>
@@ -191,3 +191,4 @@ ensure the process is smooth, supported and clinically appropriate.</p>
 //             });
         });
     </script>
+<script src="catalog/view/javascript/form-ajax-validate.js"></script>

@@ -8,7 +8,15 @@ class ControllerInformationWarrantyClaim extends Controller {
 		$this->document->setTitle('Warranty claim');
         $this->load->model('catalog/warranty_claim');
         
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+
+		    $skip_validation = false;
+		    if (isset($this->session->data['warranty_ajax_validated']) && $this->session->data['warranty_ajax_validated'] === true) {
+		        $skip_validation = true;
+		        unset($this->session->data['warranty_ajax_validated']);
+		    }
+
+		    if ($skip_validation || $this->validate()) {
 		    
 		    if (!empty($this->request->files['upload_files']['name'][0])) {
             $uploaded_files = [];
@@ -58,6 +66,7 @@ class ControllerInformationWarrantyClaim extends Controller {
  
          $this->session->data['success'] = 'Your warranty claim has been successfully submitted.';
          $this->response->redirect($this->url->link('information/form_success/warranty_claim'));
+		}
 		}
 
 		$data['breadcrumbs'] = array();
@@ -196,5 +205,21 @@ class ControllerInformationWarrantyClaim extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		$this->response->setOutput($this->load->view('common/success', $data));
+	}
+
+	public function validateAjax() {
+		$json = [];
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->validate()) {
+				$json['error'] = $this->error;
+			} else {
+				$json['success'] = true;
+				$this->session->data['warranty_ajax_validated'] = true;
+			}
+		} else {
+			$json['error'] = 'Invalid request';
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 }

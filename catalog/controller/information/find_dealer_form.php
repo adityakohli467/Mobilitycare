@@ -11,7 +11,15 @@ class ControllerInformationFindDealerForm extends Controller {
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
         
         
-	  if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
+	  if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+
+            $skip_validation = false;
+            if (isset($this->session->data['finddealer_ajax_validated']) && $this->session->data['finddealer_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['finddealer_ajax_validated']);
+            }
+
+            if ($skip_validation || $this->validate()) {
            
 
                 // Save to DB
@@ -68,6 +76,7 @@ class ControllerInformationFindDealerForm extends Controller {
                  $this->response->redirect($this->url->link('information/form_success/find_dealer'));
 
              
+        }
         }
 
 		$data['breadcrumbs'] = array();
@@ -258,5 +267,21 @@ class ControllerInformationFindDealerForm extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		$this->response->setOutput($this->load->view('common/success', $data));
+	}
+
+	public function validateAjax() {
+		$json = [];
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->validate()) {
+				$json['error'] = $this->error;
+			} else {
+				$json['success'] = true;
+				$this->session->data['finddealer_ajax_validated'] = true;
+			}
+		} else {
+			$json['error'] = 'Invalid request';
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 }

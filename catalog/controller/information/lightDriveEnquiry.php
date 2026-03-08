@@ -11,7 +11,14 @@ class ControllerInformationLightDriveEnquiry extends Controller {
 
         // Handle form submission
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if ($this->validate()) {
+
+            $skip_validation = false;
+            if (isset($this->session->data['lightdrive_ajax_validated']) && $this->session->data['lightdrive_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['lightdrive_ajax_validated']);
+            }
+
+            if ($skip_validation || $this->validate()) {
 
                 // Default empty for missing fields
                 $fields = ['contact_type', 'healthcare_profession', 'quote_type', 'additional_info'];
@@ -199,6 +206,22 @@ $html .= '</body></html>';
         }
 
         return !$this->error;
+    }
+
+    public function validateAjax() {
+        $json = [];
+        if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+            if (!$this->validate()) {
+                $json['error'] = $this->error;
+            } else {
+                $json['success'] = true;
+                $this->session->data['lightdrive_ajax_validated'] = true;
+            }
+        } else {
+            $json['error'] = 'Invalid request';
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
    

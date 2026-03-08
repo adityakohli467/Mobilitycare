@@ -15,9 +15,14 @@ class ControllerInformationContact extends Controller {
 // 	    ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
-             
+
+            $skip_validation = false;
+            if (isset($this->session->data['contact_ajax_validated']) && $this->session->data['contact_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['contact_ajax_validated']);
+            }
                 
-               if($this->validate()){
+               if($skip_validation || $this->validate()){
                      $mailMessageHtml = $this->mailHtml($this->request->post);
                 //   echo "<pre>"; print_r($this->request->post); exit;
                  $this->model_catalog_demo_request->addContactFormInfo($this->request->post);
@@ -311,5 +316,21 @@ class ControllerInformationContact extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		$this->response->setOutput($this->load->view('common/success', $data));
+	}
+
+	public function validateAjax() {
+		$json = [];
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->validate()) {
+				$json['error'] = $this->error;
+			} else {
+				$json['success'] = true;
+				$this->session->data['contact_ajax_validated'] = true;
+			}
+		} else {
+			$json['error'] = 'Invalid request';
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 }

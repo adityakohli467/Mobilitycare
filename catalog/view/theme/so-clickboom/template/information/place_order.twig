@@ -30,7 +30,7 @@ Complete the form below and our team will contact you to confirm details, pricin
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm">
+        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/place_order/validateAjax">
             
             <div class="">
                <input type="text" name="fullname"  placeholder="Full Name *" required>
@@ -178,6 +178,7 @@ Complete the form below and our team will contact you to confirm details, pricin
     //             });
     //         });
      </script>
+<script src="catalog/view/javascript/form-ajax-validate.js"></script>
         <script>
 document.getElementById("contact_type").addEventListener("change", function() {
     var healthcareField = document.getElementById("healthcare_profession");

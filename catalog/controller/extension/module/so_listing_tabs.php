@@ -203,7 +203,7 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
             $data['captcha_key'] = '';
             
             $data['products']  = $quoteProducts;
-            $data['action'] = $this->url->link('information/quote_request', '', true);
+            $data['action'] = '/request-quote/';
 			// Check cache lite - get HTML first (may come from cache)
 			if ($use_cache){
 			

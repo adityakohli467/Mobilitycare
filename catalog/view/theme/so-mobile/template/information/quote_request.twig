@@ -26,7 +26,7 @@
               
                 
                 <div class="demo-request-right  col-sm-12 col-xs-12">
-                  <form action="{{ action }}" method="post" class="quoteForm">
+                  <form action="{{ action }}" method="post" class="quoteForm ajax-validate-form" data-validate-url="index.php?route=information/quote_request/validateAjax">
                         <div class="form-group required">
                             <label for="fullname" class="control-label">Full Name *</label>
                             <input type="text" name="fullname" id="fullname" placeholder="Full Name *" class="form-control" required>
@@ -215,3 +215,4 @@ document.getElementById("contact_type").addEventListener("change", function() {
 
 //             });
 </script>
+<script src="catalog/view/javascript/form-ajax-validate.js"></script>

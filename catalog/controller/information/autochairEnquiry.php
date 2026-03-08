@@ -11,7 +11,14 @@ class ControllerInformationAutochairEnquiry extends Controller {
 
         // Handle form submission
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if ($this->validate()) {
+
+            $skip_validation = false;
+            if (isset($this->session->data['autochair_ajax_validated']) && $this->session->data['autochair_ajax_validated'] === true) {
+                $skip_validation = true;
+                unset($this->session->data['autochair_ajax_validated']);
+            }
+
+            if ($skip_validation || $this->validate()) {
 
                 // Default empty for missing fields
                 $fields = ['vehicle_make', 'vehicle_model', 'vehicle_year', 'body_type', 'lifting_item', 'item_weight', 'item_height'];
@@ -217,6 +224,22 @@ if ((isset($this->request->post['item_height'])) && ($item_height === '' || !pre
         }
 
         return !$this->error;
+    }
+
+    public function validateAjax() {
+        $json = [];
+        if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+            if (!$this->validate()) {
+                $json['error'] = $this->error;
+            } else {
+                $json['success'] = true;
+                $this->session->data['autochair_ajax_validated'] = true;
+            }
+        } else {
+            $json['error'] = 'Invalid request';
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
    
