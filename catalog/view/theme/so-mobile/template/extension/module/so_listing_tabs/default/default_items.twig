@@ -445,22 +445,51 @@
         }
 </style>
 <script>
-function openModal(productId) {
-    $('#customQuoteModal').modal('show');
-    
-    // Set the hidden manufacturer_id field
-    $('.selected_manufacturer_id').each(function () {
-        $(this).val(productId);
+function openModal(productId, productNameOverride) {
+    // Find the modal whose dropdown contains this product ID
+    var targetModal = null;
+    var targetSelect = null;
+
+    $('.quote_product_id').each(function() {
+        var opt = $(this).find('option[value="' + productId + '"]');
+        if (opt.length) {
+            targetSelect = $(this);
+            targetModal = $(this).closest('.modal');
+            return false; // break
+        }
     });
-    
-    // Set the product dropdown value and display product name
-    var productSelect = $('.quote_product_id');
-    productSelect.val(productId);
-    
-    // Get the product name from the selected option and display it
-    var selectedOption = productSelect.find('option[value="' + productId + '"]');
-    var productName = selectedOption.data('name') || selectedOption.text();
-    $('#product_of_interest').val(productName);
+
+    if (targetModal && targetModal.length) {
+        targetModal.modal('show');
+    } else {
+        // Fallback: open first available modal
+        targetModal = $('.modal:has(.quote_product_id)').first();
+        targetSelect = targetModal.find('.quote_product_id');
+        targetModal.modal('show');
+    }
+
+    // Set the hidden manufacturer_id field
+    targetModal.find('.selected_manufacturer_id').val(productId);
+
+    if (targetSelect && targetSelect.length) {
+        var selectedOption = targetSelect.find('option[value="' + productId + '"]');
+        if (selectedOption.length) {
+            // Product found in dropdown
+            targetSelect.val(productId);
+            var productName = selectedOption.data('name') || selectedOption.text();
+            targetModal.find('#product_of_interest').val(productName);
+        } else if (productNameOverride) {
+            // Product not in dropdown - add it dynamically with provided name
+            targetSelect.append('<option value="' + productId + '" data-name="' + productNameOverride + '">' + productNameOverride + '</option>');
+            targetSelect.val(productId);
+            targetModal.find('#product_of_interest').val(productNameOverride);
+        } else {
+            // No name provided - set product ID as fallback
+            targetSelect.append('<option value="' + productId + '">Product #' + productId + '</option>');
+            targetSelect.val(productId);
+            targetModal.find('#product_of_interest').val('Product #' + productId);
+        }
+    }
 }
 
  $('#loaderOverlay').hide();

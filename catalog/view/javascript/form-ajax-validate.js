@@ -30,6 +30,11 @@
 
         e.preventDefault();
 
+        // Disable submit button and show saving state
+        var $btn = form.find('[type="submit"]');
+        var originalBtnText = $btn.html();
+        $btn.prop('disabled', true).text('Saving...');
+
         // Show loader overlay
         var loader = $('#loaderOverlay');
         if (loader.length) {
@@ -57,6 +62,9 @@
                     loader.hide();
                 }
 
+                // Re-enable submit button so user can retry
+                $btn.prop('disabled', false).html(originalBtnText);
+
                 if (res.error) {
                     var lastError = '';
 
@@ -81,6 +89,8 @@
                 if (loader.length) {
                     loader.hide();
                 }
+                // Re-enable submit button on network error
+                $btn.prop('disabled', false).html(originalBtnText);
                 alert('A network error occurred. Please try again.');
             }
         });
