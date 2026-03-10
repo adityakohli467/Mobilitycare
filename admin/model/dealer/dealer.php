@@ -146,6 +146,10 @@ public function editDealer($dealer_id, $data) {
         }
 }
 
+public function toggleDealerStatus($dealer_id, $status) {
+    $this->db->query("UPDATE " . DB_PREFIX . "dealers SET status = '" . (int)$status . "' WHERE dealer_id = '" . (int)$dealer_id . "'");
+}
+
 public function getDealerBrandsWithProducts($dealer_id) {
         $query = $this->db->query("SELECT brand_id, product_id, show_demo 
                                    FROM `" . DB_PREFIX . "dealer_to_brand`

@@ -69,6 +69,7 @@ class ControllerDealerDealer extends Controller {
                 'dealer_id' => $result['dealer_id'],
                 'is_new' => $result['is_new'],
                 'is_approved' => $result['is_approved'],
+                'status' => $result['status'],
                 'postcode' => $result['postcode'],
                 'state' => $result['state'],
                 'name'      => $result['full_name'],
@@ -208,6 +209,26 @@ if (isset($this->request->get['dealer_id'])) {
     $this->response->setOutput($this->load->view('dealer/add_dealer', $data));
 }
     
+  public function toggleStatus() {
+        $this->load->model('dealer/dealer');
+        $json = [];
+
+        if (isset($this->request->post['dealer_id']) && isset($this->request->post['status'])) {
+            $dealer_id = (int)$this->request->post['dealer_id'];
+            $status = (int)$this->request->post['status'] ? 1 : 0;
+
+            $this->model_dealer_dealer->toggleDealerStatus($dealer_id, $status);
+            $json['success'] = true;
+            $json['message'] = 'Dealer status updated successfully!';
+        } else {
+            $json['success'] = false;
+            $json['message'] = 'Missing dealer_id or status';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
   public function fetchProducts() {
     $this->load->model('catalog/manufacturer');
 
