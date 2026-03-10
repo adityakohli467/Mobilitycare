@@ -8,7 +8,7 @@ public function sendData($data) {
     
     $product_info = $this->model_catalog_product->getProduct($data['product_id']);
     
-    $mail = new Mail();
+    $mail = new Mail($this->config->get('config_mail_engine'));
     $mail->parameter = $this->config->get('config_mail_parameter');
     $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
     $mail->smtp_username = $this->config->get('config_mail_smtp_username');

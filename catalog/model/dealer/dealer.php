@@ -73,7 +73,10 @@ class ModelDealerDealer extends Model {
                 SELECT DISTINCT d.dealer_id, d.full_name, d.phone, d.email, d.business_address, d.suburb, d.state, d.postcode
                 FROM " . DB_PREFIX . "dealers d
                 INNER JOIN " . DB_PREFIX . "dealer_to_brand dtb ON d.dealer_id = dtb.dealer_id
-                WHERE dtb.brand_id = '" . (int)$manufacturer_id . "'";
+                WHERE dtb.brand_id = '" . (int)$manufacturer_id . "'
+                AND d.is_deleted = 0
+                AND d.status = 1
+                AND d.is_approved = 1";
 
             // Add state condition if not 'all'
             if (strtolower($selectedState) !== 'all') {
@@ -125,9 +128,9 @@ class ModelDealerDealer extends Model {
     $sql = "SELECT DISTINCT full_name, email, phone, business_address,state,suburb, postcode FROM " . DB_PREFIX . "dealers d ";
             
     if (!empty($manufacturer_id)) {
-        $sql .= " left join " . DB_PREFIX . "dealer_to_brand db on d.dealer_id = db.dealer_id where d.postcode IN ('" . $postcodeList . "') and db.brand_id = ".$manufacturer_id;   
+        $sql .= " left join " . DB_PREFIX . "dealer_to_brand db on d.dealer_id = db.dealer_id where d.postcode IN ('" . $postcodeList . "') and db.brand_id = ".$manufacturer_id . " AND d.is_deleted = 0 AND d.status = 1 AND d.is_approved = 1";   
     }else{
-        $sql .= " WHERE d.postcode IN ('" . $postcodeList . "')";
+        $sql .= " WHERE d.postcode IN ('" . $postcodeList . "') AND d.is_deleted = 0 AND d.status = 1 AND d.is_approved = 1";
     }
 //   echo $sql; exit;
     $query = $this->db->query($sql);
@@ -178,6 +181,7 @@ public function getDealersWithinRadius($lat, $lng, $radius = 200, $manufacturerI
         
         $conditions[] = "d.is_approved = '1'";
         $conditions[] = "d.status = '1'";
+        $conditions[] = "d.is_deleted = 0";
 
         if (!empty($joins)) {
             $sql .= " " . implode(" ", array_unique($joins));
@@ -205,7 +209,7 @@ public function getDealersWithinRadius($lat, $lng, $radius = 200, $manufacturerI
                     + SIN(RADIANS(" . $lat . ")) * SIN(RADIANS(d.latitude))
                 )) AS distance
             FROM " . DB_PREFIX . "dealers d
-            WHERE d.dealer_id = 567 AND d.status = 1
+            WHERE d.dealer_id = 567 AND d.status = 1 AND d.is_deleted = 0
         ";
 
         $query567 = $this->db->query($sql567);
