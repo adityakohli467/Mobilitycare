@@ -8,14 +8,6 @@ public function sendData($data) {
     
     $product_info = $this->model_catalog_product->getProduct($data['product_id']);
     
-    $mail = new Mail($this->config->get('config_mail_engine'));
-    $mail->parameter = $this->config->get('config_mail_parameter');
-    $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-    $mail->smtp_username = $this->config->get('config_mail_smtp_username');
-    $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-    $mail->smtp_port = $this->config->get('config_mail_smtp_port');
-    $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-
     $subject = 'Find a dealer enquiry - ' . html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
     /* ---------------------------
@@ -57,24 +49,43 @@ public function sendData($data) {
     /* ---------------------------
      *  SEND EMAIL TO CUSTOMER
      * --------------------------- */
-    $mail->setFrom($this->config->get('config_email'));
-    $mail->setSender($this->config->get('config_name'));
-    $mail->setSubject($subject);
-
     if ($data['email']) {
-        $mail->setTo($data['email']);
-        $mail->setText($message);
-        $mail->send();
+        $customerMail = new Mail($this->config->get('config_mail_engine'));
+        $customerMail->parameter = $this->config->get('config_mail_parameter');
+        $customerMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+        $customerMail->smtp_username = $this->config->get('config_mail_smtp_username');
+        $customerMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+        $customerMail->smtp_port = $this->config->get('config_mail_smtp_port');
+        $customerMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+        $customerMail->setTo($data['email']);
+        $customerMail->setFrom('enquiries@mobilitycare.net.au');
+        $customerMail->setReplyTo('enquiries@mobilitycare.net.au');
+        $customerMail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+        $customerMail->setSubject($subject);
+        $customerMail->setText($message);
+        $customerMail->send();
     }
 
     /* ---------------------------
      *  SEND EMAIL TO ADMIN
      * --------------------------- */
-    $mail->setText($messageAdmin);
+    $adminMail = new Mail($this->config->get('config_mail_engine'));
+    $adminMail->parameter = $this->config->get('config_mail_parameter');
+    $adminMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+    $adminMail->smtp_username = $this->config->get('config_mail_smtp_username');
+    $adminMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+    $adminMail->smtp_port = $this->config->get('config_mail_smtp_port');
+    $adminMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+    $adminMail->setFrom('enquiries@mobilitycare.net.au');
+    $replyTo = !empty($data['email']) ? $data['email'] : 'enquiries@mobilitycare.net.au';
+    $adminMail->setReplyTo($replyTo);
+    $adminMail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+    $adminMail->setSubject($subject);
+    $adminMail->setText($messageAdmin);
 
     // Main store email
-    $mail->setTo($this->config->get('config_email'));
-    $mail->send();
+    $adminMail->setTo($this->config->get('config_email'));
+    $adminMail->send();
 
     // Additional admin emails
     if ($this->config->get('module_so_askquestion_add_email')) {
@@ -82,8 +93,20 @@ public function sendData($data) {
         foreach ($emails as $email) {
             $email = trim($email);
             if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $mail->setTo($email);
-                $mail->send();
+                $extraMail = new Mail($this->config->get('config_mail_engine'));
+                $extraMail->parameter = $this->config->get('config_mail_parameter');
+                $extraMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+                $extraMail->smtp_username = $this->config->get('config_mail_smtp_username');
+                $extraMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+                $extraMail->smtp_port = $this->config->get('config_mail_smtp_port');
+                $extraMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+                $extraMail->setFrom('enquiries@mobilitycare.net.au');
+                $extraMail->setReplyTo($replyTo);
+                $extraMail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+                $extraMail->setSubject($subject);
+                $extraMail->setText($messageAdmin);
+                $extraMail->setTo($email);
+                $extraMail->send();
             }
         }
     }
