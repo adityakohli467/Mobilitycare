@@ -32,9 +32,11 @@ $data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquest
     public function sendData() {
     $this->load->language('extension/module/so_askquestion');
 
+    $isAjax = !empty($this->request->post['isAjax']) || (!empty($this->request->server['HTTP_X_REQUESTED_WITH']) && strtolower($this->request->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+
     $errors = [];
 
-    // Validation (same as before, but collect errors in array)
+    // Validation
     if ($this->config->get('module_so_askquestion_require_name') && $this->config->get('module_so_askquestion_show_name')) {
         if (empty(trim($this->request->post['name'] ?? ''))) {
             $errors[] = $this->language->get('error_name');
@@ -54,11 +56,11 @@ $data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquest
     if (empty(trim($this->request->post['postcode'] ?? ''))) {
         $errors[] = 'Please enter postcode';
     }
-    
-      $this->load->helper('phone');	
-     if (!is_valid_au_phone($this->request->post['phone'])) {
-      $errors[] = 'Please enter a valid Australian phone number';
-     }
+
+    $this->load->helper('phone');
+    if (!is_valid_au_phone($this->request->post['phone'] ?? '')) {
+        $errors[] = 'Please enter a valid Australian phone number';
+    }
 
     if ($this->config->get('module_so_askquestion_require_question') && $this->config->get('module_so_askquestion_show_question')) {
         if (empty(trim($this->request->post['message'] ?? ''))) {
@@ -67,11 +69,18 @@ $data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquest
     }
 
     if (!empty($errors)) {
-        // If errors → redirect back with errors in session (or show on current page)
-        $this->session->data['askquestion_errors'] = $errors;
-        $this->session->data['askquestion_post']   = $this->request->post; // repopulate form
+        if ($isAjax) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode([
+                'status' => 0,
+                'errors' => array_map(function($e) { return ['error' => $e]; }, $errors)
+            ]));
+            return;
+        }
 
-        // Redirect back to product page or wherever modal was opened
+        $this->session->data['askquestion_errors'] = $errors;
+        $this->session->data['askquestion_post']   = $this->request->post;
+
         $redirect = $this->url->link('product/product', 'product_id=' . (int)($this->request->post['product_id'] ?? 0), true);
         $this->response->redirect($redirect);
         return;
@@ -80,7 +89,7 @@ $data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquest
     // No errors → process
     $this->load->model('extension/module/so_askquestion');
 
-    $base = ($this->request->server['HTTPS'] && ($this->request->server['HTTPS'] !== 'off' || $this->request->server['HTTPS'] == '1'))
+    $base = (isset($this->request->server['HTTPS']) && ($this->request->server['HTTPS'] !== 'off' || $this->request->server['HTTPS'] == '1'))
         ? $this->config->get('config_ssl')
         : $this->config->get('config_url');
 
@@ -98,7 +107,15 @@ $data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquest
 
     $this->model_extension_module_so_askquestion->sendData($data);
 
-    // SUCCESS → redirect to your custom success page
+    if ($isAjax) {
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode([
+            'status'  => 1,
+            'success' => 'Your enquiry has been sent successfully!'
+        ]));
+        return;
+    }
+
     $this->response->redirect($this->url->link('information/form_success/find_dealer', '', true));
 }
 }
