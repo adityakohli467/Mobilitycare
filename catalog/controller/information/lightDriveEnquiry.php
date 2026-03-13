@@ -7,7 +7,8 @@ class ControllerInformationLightDriveEnquiry extends Controller {
         $this->load->model('catalog/demo_request');
 
 
-        $this->document->setTitle('Light Drive Enquiry');
+        $this->document->setTitle('Light Drive 2 Enquiry | MobilityCare Australia');
+        $this->document->setDescription('Enquire about the Benoit Systemes Light Drive 2 wheelchair power assist. Get pricing, availability and book a demo with MobilityCare Australia.');
 
         // Handle form submission
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {

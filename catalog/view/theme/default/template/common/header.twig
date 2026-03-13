@@ -33,6 +33,11 @@
 {% for link in links %}
 <link href="{{ link.href }}" rel="{{ link.rel }}" />
 {% endfor %}
+{% set has_canonical = false %}
+{% for link in links %}{% if link.rel == 'canonical' %}{% set has_canonical = true %}{% endif %}{% endfor %}
+{% if not has_canonical %}
+<link href="{{ canonical }}" rel="canonical" />
+{% endif %}
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}

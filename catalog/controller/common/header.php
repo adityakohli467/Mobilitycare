@@ -30,6 +30,7 @@ class ControllerCommonHeader extends Controller {
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
 		$data['links'] = $this->document->getLinks();
+		$data['canonical'] = $server . ltrim($this->request->server['REQUEST_URI'], '/');
 		$data['styles'] = $this->document->getStyles();
 		$data['scripts'] = $this->document->getScripts('header');
 		$data['lang'] = $this->language->get('code');

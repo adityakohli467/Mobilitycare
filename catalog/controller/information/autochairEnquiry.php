@@ -7,7 +7,8 @@ class ControllerInformationAutochairEnquiry extends Controller {
         $this->load->model('catalog/demo_request');
 
 
-        $this->document->setTitle('Quote Request');
+        $this->document->setTitle('Autochair Smart Lifter Enquiry | MobilityCare Australia');
+        $this->document->setDescription('Enquire about Autochair Smart Lifter scooter and wheelchair hoists. Get a quote for vehicle-mounted lifting solutions from MobilityCare Australia.');
 
         // Handle form submission
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {

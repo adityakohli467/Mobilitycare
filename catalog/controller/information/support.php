@@ -4,6 +4,10 @@ class ControllerInformationSupport extends Controller {
 
 	public function index() {
 		$this->load->language('information/contact');
+
+		$this->document->setTitle('Customer Support & Service | MobilityCare Australia');
+		$this->document->setDescription('Get help with your mobility equipment. Contact MobilityCare customer support for product enquiries, warranty claims, demonstrations, repairs and after-sales service.');
+
 		if (isset($this->request->get['route'])) {
 			$this->document->addLink($this->config->get('config_url'), 'canonical');
 		}

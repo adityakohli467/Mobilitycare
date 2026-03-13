@@ -5,7 +5,8 @@ class ControllerInformationFundingSupport extends Controller {
 	public function index() {
 		$this->load->language('information/contact');
 
-		$this->document->setTitle('Funding Support Eligibility Check');
+		$this->document->setTitle('Funding Support Eligibility Check | MobilityCare Australia');
+		$this->document->setDescription('Check your eligibility for NDIS, DVA, My Aged Care and other funding support for mobility aids and assistive equipment from MobilityCare.');
         $this->load->model('catalog/demo_request');
         // all Manufacturers list
         $this->load->model('catalog/manufacturer');

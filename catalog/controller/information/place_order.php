@@ -5,7 +5,8 @@ class ControllerInformationPlaceOrder extends Controller {
 	public function index() {
 		$this->load->language('information/contact');
 
-		$this->document->setTitle('Place Order ');
+		$this->document->setTitle('Place an Order | MobilityCare Australia');
+		$this->document->setDescription('Place an order for mobility aids, wheelchairs, rollators and assistive equipment. Fast delivery across Australia from MobilityCare.');
         $this->load->model('catalog/demo_request');
         // all Manufacturers list
         $this->load->model('catalog/manufacturer');

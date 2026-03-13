@@ -4,7 +4,10 @@ class ControllerInformationNdis extends Controller {
 
 	public function index() {
 		$this->load->language('information/contact');
-        
+
+		$this->document->setTitle('NDIS Funding for Mobility Equipment | MobilityCare Australia');
+		$this->document->setDescription('Learn how NDIS funding can help you access mobility aids, wheelchairs, rollators and assistive technology. MobilityCare is a registered NDIS provider across Australia.');
+
         $data['title'] = 'National Disability Insurance Scheme';
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

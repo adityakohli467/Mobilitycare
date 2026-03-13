@@ -8,7 +8,8 @@ class ControllerInformationProductEnq extends Controller {
 		 $this->load->model('catalog/manufacturer');
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
 
-		$this->document->setTitle('Product Enquiry Form');
+		$this->document->setTitle('Product Enquiry | MobilityCare Australia');
+		$this->document->setDescription('Have a question about our mobility equipment? Submit a product enquiry and our specialist team at MobilityCare will get back to you promptly.');
 		if (isset($this->request->get['route'])) {
 			$this->document->addLink($this->config->get('config_url'), 'canonical');
 		}

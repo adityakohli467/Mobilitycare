@@ -9,7 +9,8 @@ class ControllerInformationQuoteRequest extends Controller {
 
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
 
-        $this->document->setTitle('Quote Request');
+        $this->document->setTitle('Request a Quote | MobilityCare Australia');
+        $this->document->setDescription('Request a free, no-obligation quote for mobility aids, wheelchairs, rollators, scooter hoists and assistive equipment from MobilityCare Australia.');
 
         // Handle form submission
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {

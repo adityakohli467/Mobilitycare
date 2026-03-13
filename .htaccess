@@ -7,6 +7,14 @@ RewriteEngine On
 RewriteBase /
 
 ############################################################
+# Force www + HTTPS (canonical domain)
+# Redirect non-www → www and HTTP → HTTPS in one hop
+############################################################
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ https://www.mobilitycare.net.au/$1 [R=301,L]
+
+############################################################
 # Custom SEO Routes
 ############################################################
 # Product Trial
@@ -96,7 +104,7 @@ RewriteRule ^index\.php$ /ndis/? [R=301,L,QSD]
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/support[\s&] [NC]
 RewriteRule ^index\.php$ /customer-service/? [R=301,L,QSD]
 
-RewriteRule ^sitemap.xml$ index.php?route=extension/feed/google_sitemap [L,QSA]
+RewriteRule ^sitemap\.xml$ index.php?route=extension/feed/google_sitemap [L,QSA]
 
 
 

@@ -111,6 +111,11 @@ fbq('track', 'PageView');
 {% if soconfig.get_settings('cssinput_status') and (soconfig.get_settings('cssinput_content')) is not empty %}{{ soconfig.get_settings('cssinput_content')  }} {% endif %} 
 {# =========== Begin Google Analytics ==============#}
 {% for link in links %}<link href="{{ link.href }}" rel="{{ link.rel }}" />{% endfor %}
+{% set has_canonical = false %}
+{% for link in links %}{% if link.rel == 'canonical' %}{% set has_canonical = true %}{% endif %}{% endfor %}
+{% if not has_canonical %}
+<link href="{{ canonical }}" rel="canonical" />
+{% endif %}
 {% for analytic in analytics %}{{ analytic }}{% endfor %}
 
 {% if soconfig.get_settings('layoutstyle') == 'boxed'  %} 

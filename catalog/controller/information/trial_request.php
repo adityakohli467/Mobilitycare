@@ -5,7 +5,8 @@ class ControllerInformationTrialRequest extends Controller {
     public function index() {
         $this->load->language('information/contact');
 
-        $this->document->setTitle('Product Trial ');
+        $this->document->setTitle('Organise a Product Trial | MobilityCare Australia');
+        $this->document->setDescription('Request a free product trial for mobility aids, wheelchairs, rollators and assistive equipment. Try before you buy with MobilityCare Australia.');
         $this->load->model('catalog/demo_request');
         $this->load->model('catalog/manufacturer');
 

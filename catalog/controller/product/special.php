@@ -31,7 +31,8 @@ class ControllerProductSpecial extends Controller {
 			$limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
 		}
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle('Special Offers on Mobility Equipment | MobilityCare Australia');
+		$this->document->setDescription('Shop special offers and discounted mobility aids, wheelchairs, rollators and assistive equipment at MobilityCare. Limited-time deals across Australia.');
 
 		$data['breadcrumbs'] = array();
 

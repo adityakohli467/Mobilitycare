@@ -5,7 +5,8 @@ class ControllerInformationWarrantyClaim extends Controller {
 	public function index() {
 		$this->load->language('information/contact');
       
-		$this->document->setTitle('Warranty claim');
+		$this->document->setTitle('Warranty Claim | MobilityCare Australia');
+		$this->document->setDescription('Submit a warranty claim for your MobilityCare mobility equipment. We stand behind all our products with comprehensive warranty support.');
         $this->load->model('catalog/warranty_claim');
         
 		if ($this->request->server['REQUEST_METHOD'] == 'POST') {

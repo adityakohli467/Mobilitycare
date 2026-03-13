@@ -3,7 +3,8 @@ class ControllerInformationAboutUs extends Controller {
     public function index() {
         $this->load->language('information/aboutUs');
 
-        $this->document->setTitle('About Us');
+        $this->document->setTitle('About Us | MobilityCare Australia');
+        $this->document->setDescription('Learn about MobilityCare, Australia\'s trusted supplier of mobility aids, wheelchairs, rollators, lifting equipment and assistive technology solutions.');
 
         // Load Breadcrumbs
         $data['breadcrumbs'] = array();

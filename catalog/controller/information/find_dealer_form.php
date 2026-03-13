@@ -5,7 +5,8 @@ class ControllerInformationFindDealerForm extends Controller {
 	public function index() {
 		$this->load->language('information/contact');
 
-		$this->document->setTitle('Request local dealer');
+		$this->document->setTitle('Find a Local Dealer | MobilityCare Australia');
+		$this->document->setDescription('Request a local MobilityCare dealer near you for mobility aids, wheelchairs and assistive equipment. We have dealers across Australia ready to help.');
         $this->load->model('catalog/demo_request');
         $this->load->model('catalog/manufacturer');
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();

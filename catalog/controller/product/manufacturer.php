@@ -5,7 +5,8 @@ class ControllerProductManufacturer extends Controller {
 
 		$this->load->model('catalog/manufacturer');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle('Our Brands | MobilityCare Australia');
+		$this->document->setDescription('Browse trusted mobility equipment brands at MobilityCare including Topro, Autochair, Mangar, Benoit Systemes, Trekinetic and more. Quality products across Australia.');
 
 		$data['breadcrumbs'] = array();
 

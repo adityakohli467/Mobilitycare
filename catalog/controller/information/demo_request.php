@@ -5,7 +5,8 @@ class ControllerInformationDemoRequest extends Controller {
 	public function index() {
 		$this->load->language('information/contact');
 
-		$this->document->setTitle('Demo');
+		$this->document->setTitle('Organise a Product Demonstration | MobilityCare Australia');
+		$this->document->setDescription('Book a free product demonstration for mobility aids, wheelchairs, rollators and assistive equipment with MobilityCare. Available Australia-wide.');
         $this->load->model('catalog/demo_request');
         $this->load->model('catalog/manufacturer');
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
