@@ -80,17 +80,14 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				'find-a-dealer',
 				'become-a-dealer',
 				'customer-service',
-				'returns-warranty-policy',
 				'light-drive-2-enquiry',
 				'autochair-smart-lifter-enquiry',
 				'about-us',
 				'blog',
-				'terms-conditions',
-				'privacy-policy',
 				'faq',
-				'delivery-information',
-				'demo-videos',
-				'brands'
+				'brands',
+				'register',
+				'request-local-dealer'
 			);
 
 			foreach ($customUrls as $url) {
@@ -115,7 +112,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 		foreach ($results as $result) {
 			$output .= '<url>' . "\n";
-			$output .= '  <loc>' . $this->escapeUrl($this->url->link('product/category', 'path=' . $result['category_id'])) . '</loc>' . "\n";
+			$output .= '  <loc>' . trim($this->escapeUrl($this->url->link('product/category', 'path=' . $result['category_id']))) . '</loc>' . "\n";
 			$output .= '  <changefreq>weekly</changefreq>' . "\n";
 			$output .= '  <priority>0.7</priority>' . "\n";
 			$output .= '</url>' . "\n";
@@ -131,7 +128,8 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 	}
 
 	private function escapeUrl($url) {
-		// Ensure ampersands in URLs are XML-safe
+		// Trim whitespace and ensure ampersands in URLs are XML-safe
+		$url = trim($url);
 		return str_replace('&', '&amp;', str_replace('&amp;', '&', $url));
 	}
 }
