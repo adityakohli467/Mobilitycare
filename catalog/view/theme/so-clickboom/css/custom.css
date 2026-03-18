@@ -16,6 +16,11 @@
    iPAD / TABLET RESPONSIVE FIXES — Header & Navigation Menu
    ============================================================ */
 
+/* Tablet-only compact contact bar — hidden by default */
+.tablet-only-header {
+  display: none !important;
+}
+
 /* --- iPad portrait & small tablets (768px – 991px) --- */
 @media (min-width: 768px) and (max-width: 991px) {
 
@@ -55,12 +60,29 @@
   }
 }
 
-/* --- iPad landscape & mid-tablets (992px – 1024px) --- */
+/* --- iPad portrait & mid-tablets (992px – 1024px) --- */
 @media (min-width: 992px) and (max-width: 1024px) {
+
+  /* Hide the crowded upper header nav (NDIS, Dealers, Talk, etc.) */
+  .middle-right.hidden-sm {
+    display: none !important;
+  }
+
+  /* Show compact tablet contact bar instead */
+  .tablet-only-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .tablet-only-header .btn {
+    font-size: 12px;
+    padding: 7px 12px;
+  }
 
   /* Megamenu: reduce padding & font to prevent overlap */
   .horizontal ul.megamenu > li > a {
-    padding: 10px 7px;
+    padding: 10px 8px;
     font-size: 12px;
   }
   .horizontal ul.megamenu > li > a strong {
@@ -71,22 +93,6 @@
   .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  /* Middle-right header nav: reduce gap & font sizes to stop overflow */
-  .middle-right {
-    gap: 10px !important;
-  }
-  .middle-right .headerRightItem a,
-  .middle-right .headerRightItem strong a,
-  .middle-right .headerRightItem .dropdown-btn strong span,
-  .middle-right .headerRightItem .dropdown-btn strong a {
-    font-size: 11px;
-  }
-  .middle-right .headerRightItem .btn.btn-danger,
-  .middle-right .headerRightItem .btn.btn-custom-blue-red {
-    padding: 6px 8px;
-    font-size: 11px;
   }
 
   /* Feature box top bar */
