@@ -57,15 +57,22 @@
             visibility: hidden !important;
             opacity: 0 !important;
         }
-        /* Hide marketing popup on tablets */
+        /* Hide marketing popup (healthProModal) on tablets */
         @media (min-width: 768px) and (max-width: 1024px) {
-            .marketing-popup,
-            #marketing-popup,
-            [class*="marketing-popup"],
-            .popup-marketing,
-            .so-custom-popup {
+            #marketing-popup-wrapper,
+            #healthProModal,
+            #healthProModal.modal.fade,
+            #healthProModal.modal.fade.in {
                 display: none !important;
                 visibility: hidden !important;
+                opacity: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
+                pointer-events: none !important;
+            }
+            /* Also prevent backdrop from showing */
+            body.modal-open #healthProModal + .modal-backdrop {
+                display: none !important;
             }
         }
     </style>
@@ -1030,7 +1037,24 @@
 
 </div>
 {# review modal #}
+<div id="marketing-popup-wrapper">
 {{ marketing_popup }}
+</div>
+<script>
+(function(){
+  /* Only suppress marketing popup on tablet viewports (768-1024px).
+     On desktop/laptop the popup + localStorage logic remains untouched. */
+  var w = window.innerWidth || document.documentElement.clientWidth;
+  if(w >= 768 && w <= 1024){
+    /* Remove the wrapper content so the popup JS never initialises */
+    var wrapper = document.getElementById('marketing-popup-wrapper');
+    if(wrapper){ wrapper.innerHTML = ''; wrapper.style.display = 'none'; }
+    /* Safety: also remove the modal if it was somehow appended to body */
+    var modal = document.getElementById('healthProModal');
+    if(modal){ modal.parentNode.removeChild(modal); }
+  }
+})();
+</script>
  <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
