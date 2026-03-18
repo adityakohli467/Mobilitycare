@@ -53,27 +53,33 @@
         /* iPad / tablet feature bar */
 @media (min-width: 768px) and (max-width: 1024px) {
 
-  .container-fluid > .row > .feature-box {
-    display: inline-block;
-    width: 32%;              /* percentage instead of fixed px */
-    padding: 0 5px;
+  .container-fluid > .row {
+    display: flex !important;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    font-size: 12px;
+  }
+
+  .container-fluid > .row > .feature-box {
+    flex: 1 1 0;
+    padding: 0 4px;
+    text-align: center;
+    font-size: 11px;
+    white-space: nowrap;
+    float: none;
+    width: auto;
   }
 
   .container-fluid > .row > .feature-box span {
     display: inline;
-    font-size: 12px;
-  }
-
-  .container-fluid > .row {
-    text-align: center;
+    font-size: 11px;
   }
 
   /* Add separator | except last */
   .container-fluid > .row > .feature-box:not(:last-child)::after {
     content: " |";
-    margin-left: 5px;
+    margin-left: 4px;
     color: #fff;
   }
 }
@@ -151,8 +157,27 @@
 
   /* Logo row: constrain logo size */
   #header .col-left-top .logo img {
-    max-height: 45px;
+    max-height: 40px;
     width: auto;
+  }
+  #header .col-left-top .logo {
+    justify-content: center;
+  }
+
+  /* Megamenu items: shrink to fit */
+  #header .horizontal ul.megamenu > li > a {
+    padding: 8px 5px;
+    font-size: 11px;
+  }
+  #header .horizontal ul.megamenu > li > a strong {
+    font-size: 11px;
+  }
+  #header .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #header .main-menu-w {
+    overflow: visible;
   }
 
   /* Feature top bar: smaller text */

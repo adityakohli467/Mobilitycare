@@ -57,6 +57,17 @@
             visibility: hidden !important;
             opacity: 0 !important;
         }
+        /* Hide marketing popup on tablets */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .marketing-popup,
+            #marketing-popup,
+            [class*="marketing-popup"],
+            .popup-marketing,
+            .so-custom-popup {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
     </style>
 
    <link href="catalog/view/theme/so-clickboom/css/product.css" rel="stylesheet">
