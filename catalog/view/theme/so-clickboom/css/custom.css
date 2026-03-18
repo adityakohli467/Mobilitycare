@@ -45,51 +45,6 @@
   }
 }
 
-/* --- iPad portrait & mid-tablets (992px – 1024px) --- */
-@media (min-width: 992px) and (max-width: 1024px) {
-
-  /*
-   * In the FIRST middle-right (logo row, has .hidden-sm class),
-   * hide all items EXCEPT the last 2 (Contact Now + Phone).
-   * This does NOT affect the second middle-right (cart row)
-   * because it doesn't have .hidden-sm.
-   */
-  .middle-right.hidden-sm {
-    gap: 10px !important;
-  }
-  .middle-right.hidden-sm > .headerRightItem {
-    display: none !important;
-  }
-  .middle-right.hidden-sm > .headerRightItem:nth-last-child(1),
-  .middle-right.hidden-sm > .headerRightItem:nth-last-child(2) {
-    display: block !important;
-  }
-  .middle-right.hidden-sm .btn {
-    font-size: 12px;
-    padding: 7px 12px;
-  }
-
-  /* Megamenu: reduce padding & font */
-  .horizontal ul.megamenu > li > a {
-    padding: 10px 8px;
-    font-size: 12px;
-  }
-  .horizontal ul.megamenu > li > a strong {
-    font-size: 12px;
-  }
-
-  /* Allow megamenu items to wrap */
-  .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  /* Feature box top bar */
-  .feature-box span {
-    font-size: 12px;
-  }
-}
-
 /* --- iPad Pro portrait & larger tablets (1025px – 1199px) --- */
 @media (min-width: 1025px) and (max-width: 1199px) {
 

@@ -76,6 +76,56 @@
   }
 }
 
+/* ============================================================
+   TABLET HEADER — 992px to 1024px (iPad portrait)
+   Uses #header ID for maximum specificity to override inline styles.
+   Placed here (in template) to avoid CSS file caching issues.
+   ============================================================ */
+@media (min-width: 992px) and (max-width: 1024px) {
+
+  /* 1) HIDE the crowded upper nav row entirely.
+   *    This overrides the inline style="display: flex" because !important wins. */
+  #header .middle-right.hidden-sm.hidden-xs {
+    display: none !important;
+  }
+
+  /* 2) Logo row: make logo area full width & centered */
+  #header .col-left-top.col-md-3 {
+    width: 100%;
+    float: none;
+  }
+  #header .col-left-top .logo {
+    justify-content: center;
+  }
+  /* Hide the right column that held the middle-right */
+  #header .header-center.col-md-9.pull-right {
+    width: 100%;
+    float: none;
+  }
+
+  /* 3) Megamenu row: give menu more room, shrink items */
+  #header .main-menu-w {
+    overflow: visible;
+  }
+  #header .horizontal ul.megamenu > li > a {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  #header .horizontal ul.megamenu > li > a strong {
+    font-size: 12px;
+  }
+  #header .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* 4) Cart row: tighter gap */
+  #header .header-center .middle-right:not(.hidden-sm) {
+    gap: 10px !important;
+  }
+}
+
 </style>
 {#=====Get variable : Config Select Block on header=====#}
 {% set hidden_headercenter = soconfig.get_settings('toppanel_type') =='2'? 'hidden-compact' : '' %}
