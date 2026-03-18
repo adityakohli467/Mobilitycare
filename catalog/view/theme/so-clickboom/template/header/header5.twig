@@ -53,17 +53,24 @@
         /* iPad / tablet feature bar */
 @media (min-width: 768px) and (max-width: 1024px) {
 
-  .container-fluid > .row {
+  #header .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #header .container-fluid > .row {
     display: flex !important;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     text-align: center;
+    margin-left: 0;
+    margin-right: 0;
   }
 
-  .container-fluid > .row > .feature-box {
+  #header .container-fluid > .row > .feature-box {
     flex: 1 1 0;
-    padding: 0 4px;
+    padding: 6px 4px;
     text-align: center;
     font-size: 11px;
     white-space: nowrap;
@@ -71,13 +78,13 @@
     width: auto;
   }
 
-  .container-fluid > .row > .feature-box span {
+  #header .container-fluid > .row > .feature-box span {
     display: inline;
     font-size: 11px;
   }
 
   /* Add separator | except last */
-  .container-fluid > .row > .feature-box:not(:last-child)::after {
+  #header .container-fluid > .row > .feature-box:not(:last-child)::after {
     content: " |";
     margin-left: 4px;
     color: #fff;
