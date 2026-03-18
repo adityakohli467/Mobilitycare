@@ -50,29 +50,31 @@
         
         
         
-        /* iPad only */
+        /* iPad / tablet feature bar */
 @media (min-width: 768px) and (max-width: 1024px) {
 
   .container-fluid > .row > .feature-box {
     display: inline-block;
-    width: 256px;            /* shrink to content */
-    padding: 0 10px;
+    width: 32%;              /* percentage instead of fixed px */
+    padding: 0 5px;
     text-align: center;
+    font-size: 12px;
   }
 
   .container-fluid > .row > .feature-box span {
-    display: inline;          /* keep text inline */
+    display: inline;
+    font-size: 12px;
   }
 
   .container-fluid > .row {
-    text-align: center;       /* center align feature boxes only */
+    text-align: center;
   }
 
   /* Add separator | except last */
   .container-fluid > .row > .feature-box:not(:last-child)::after {
     content: " |";
-    margin-left: 10px;
-    color: #fff; /* or adjust to match background */
+    margin-left: 5px;
+    color: #fff;
   }
 }
 
@@ -89,7 +91,7 @@
     display: none !important;
   }
 
-  /* 2) Logo row: make logo area full width & centered */
+  /* 2) Logo row: make logo area full width & centered, constrain size */
   #header .col-left-top.col-md-3 {
     width: 100%;
     float: none;
@@ -97,10 +99,26 @@
   #header .col-left-top .logo {
     justify-content: center;
   }
+  #header .col-left-top .logo img {
+    max-height: 55px;
+    width: auto;
+  }
   /* Hide the right column that held the middle-right */
   #header .header-center.col-md-9.pull-right {
     width: 100%;
     float: none;
+  }
+
+  /* Feature top bar: smaller text & tighter padding */
+  #header .container-fluid .feature-box {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  #header .container-fluid .feature-box span {
+    font-size: 12px;
+  }
+  #header .container-fluid .feature-box .glyphicon {
+    font-size: 11px;
   }
 
   /* 3) Megamenu row: give menu more room, shrink items */
@@ -123,6 +141,30 @@
   /* 4) Cart row: tighter gap */
   #header .header-center .middle-right:not(.hidden-sm) {
     gap: 10px !important;
+  }
+}
+
+/* ============================================================
+   TABLET HEADER — 768px to 991px (iPad Mini / small tablets)
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 991px) {
+
+  /* Logo row: constrain logo size */
+  #header .col-left-top .logo img {
+    max-height: 45px;
+    width: auto;
+  }
+
+  /* Feature top bar: smaller text */
+  #header .container-fluid .feature-box {
+    font-size: 11px;
+    padding: 6px 4px;
+  }
+  #header .container-fluid .feature-box span {
+    font-size: 11px;
+  }
+  #header .container-fluid .feature-box .glyphicon {
+    font-size: 10px;
   }
 }
 
