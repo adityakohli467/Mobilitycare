@@ -1,19 +1,86 @@
 {% set count_item = list|length %}
 <style>
 
-/* Target iPads / tablets (portrait + landscape between 768px and 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* ============================================
+   TABLET / iPAD RESPONSIVE FIXES
+   ============================================ */
+
+/* iPad landscape & tablets (992px – 1024px) */
+@media (min-width: 992px) and (max-width: 1024px) {
+  .sohomepage-slider .item.banner > a {
+    height: auto !important;
+  }
+  .sohomepage-slider .item.banner > a img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    min-height: 450px;
+  }
+  .banner-content {
+    top: 45% !important;
+    width: 85%;
+  }
+  .banner-content h2 {
+    font-size: 2.2rem;
+    line-height: 38px;
+    margin-bottom: 14px;
+  }
+  .see-more-container {
+    gap: 15px !important;
+  }
+  .see-more-container .see-more-button {
+    padding: 10px 25px !important;
+    font-size: 14px;
+  }
+}
+
+/* iPad portrait & small tablets (768px – 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .sohomepage-slider .item.banner > a {
+    height: auto !important;
+  }
+  .sohomepage-slider .item.banner > a img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    min-height: 380px;
+  }
+  .banner-content {
+    top: 45% !important;
+    width: 90%;
+  }
+  .banner-content h2 {
+    font-size: 1.7rem;
+    line-height: 32px;
+    margin-bottom: 10px;
+  }
   .see-more-container {
     flex-direction: column !important;
     align-items: center;
+    gap: 10px !important;
   }
-
   .see-more-container .see-more-button {
-    width: 80%; /* or 100% if you want full width */
-    margin-bottom: 15px;
+    width: 70%;
+    margin-bottom: 8px;
+    font-size: 14px;
   }
-  
-  
+}
+
+/* iPad Pro portrait & larger tablets (1025px – 1199px) */
+@media (min-width: 1025px) and (max-width: 1199px) {
+  .sohomepage-slider .item.banner > a {
+    height: auto !important;
+  }
+  .sohomepage-slider .item.banner > a img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    min-height: 480px;
+  }
+  .banner-content h2 {
+    font-size: 2.5rem;
+    line-height: 42px;
+  }
 }
 
 </style>

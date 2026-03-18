@@ -12,3 +12,110 @@
 
 }
 
+/* ============================================================
+   iPAD / TABLET RESPONSIVE FIXES — Header & Navigation Menu
+   ============================================================ */
+
+/* --- iPad portrait & small tablets (768px – 991px) --- */
+@media (min-width: 768px) and (max-width: 991px) {
+
+  /* Megamenu: shrink items so they fit in the available width */
+  .horizontal ul.megamenu > li > a {
+    padding: 10px 6px;
+    font-size: 11px;
+    letter-spacing: -0.3px;
+  }
+  .horizontal ul.megamenu > li > a strong {
+    font-size: 11px;
+  }
+
+  /* Allow megamenu items to wrap instead of overflow */
+  .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  /* Make menu row columns full width so menu has more room */
+  header .header-center .main-menu-w {
+    overflow: visible;
+  }
+
+  /* Header logo row: tighter spacing */
+  header .col-left-top .logo {
+    justify-content: center;
+  }
+  header .col-left-top .logo img {
+    max-height: 50px;
+    width: auto;
+  }
+
+  /* Feature box top bar: smaller text */
+  .feature-box span {
+    font-size: 11px;
+  }
+}
+
+/* --- iPad landscape & mid-tablets (992px – 1024px) --- */
+@media (min-width: 992px) and (max-width: 1024px) {
+
+  /* Megamenu: reduce padding & font to prevent overlap */
+  .horizontal ul.megamenu > li > a {
+    padding: 10px 7px;
+    font-size: 12px;
+  }
+  .horizontal ul.megamenu > li > a strong {
+    font-size: 12px;
+  }
+
+  /* Allow megamenu items to wrap */
+  .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  /* Middle-right header nav: reduce gap & font sizes to stop overflow */
+  .middle-right {
+    gap: 10px !important;
+  }
+  .middle-right .headerRightItem a,
+  .middle-right .headerRightItem strong a,
+  .middle-right .headerRightItem .dropdown-btn strong span,
+  .middle-right .headerRightItem .dropdown-btn strong a {
+    font-size: 11px;
+  }
+  .middle-right .headerRightItem .btn.btn-danger,
+  .middle-right .headerRightItem .btn.btn-custom-blue-red {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  /* Feature box top bar */
+  .feature-box span {
+    font-size: 12px;
+  }
+}
+
+/* --- iPad Pro portrait & larger tablets (1025px – 1199px) --- */
+@media (min-width: 1025px) and (max-width: 1199px) {
+
+  /* Megamenu: slightly tighter padding */
+  .horizontal ul.megamenu > li > a {
+    padding: 10px 10px;
+    font-size: 13px;
+  }
+
+  /* Middle-right header nav: reduce gap */
+  .middle-right {
+    gap: 15px !important;
+  }
+  .middle-right .headerRightItem a,
+  .middle-right .headerRightItem strong a {
+    font-size: 12px;
+  }
+  .middle-right .headerRightItem .btn.btn-danger,
+  .middle-right .headerRightItem .btn.btn-custom-blue-red {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
+
