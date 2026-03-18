@@ -16,15 +16,10 @@
    iPAD / TABLET RESPONSIVE FIXES — Header & Navigation Menu
    ============================================================ */
 
-/* Tablet-only compact contact bar — hidden by default */
-.tablet-only-header {
-  display: none !important;
-}
-
 /* --- iPad portrait & small tablets (768px – 991px) --- */
 @media (min-width: 768px) and (max-width: 991px) {
 
-  /* Megamenu: shrink items so they fit in the available width */
+  /* Megamenu: shrink items so they fit */
   .horizontal ul.megamenu > li > a {
     padding: 10px 6px;
     font-size: 11px;
@@ -34,24 +29,14 @@
     font-size: 11px;
   }
 
-  /* Allow megamenu items to wrap instead of overflow */
+  /* Allow megamenu items to wrap */
   .container-megamenu.horizontal .megamenu-pattern ul.megamenu {
     display: flex;
     flex-wrap: wrap;
   }
 
-  /* Make menu row columns full width so menu has more room */
   header .header-center .main-menu-w {
     overflow: visible;
-  }
-
-  /* Header logo row: tighter spacing */
-  header .col-left-top .logo {
-    justify-content: center;
-  }
-  header .col-left-top .logo img {
-    max-height: 50px;
-    width: auto;
   }
 
   /* Feature box top bar: smaller text */
@@ -63,24 +48,28 @@
 /* --- iPad portrait & mid-tablets (992px – 1024px) --- */
 @media (min-width: 992px) and (max-width: 1024px) {
 
-  /* Hide the crowded upper header nav (NDIS, Dealers, Talk, etc.) */
+  /*
+   * In the FIRST middle-right (logo row, has .hidden-sm class),
+   * hide all items EXCEPT the last 2 (Contact Now + Phone).
+   * This does NOT affect the second middle-right (cart row)
+   * because it doesn't have .hidden-sm.
+   */
   .middle-right.hidden-sm {
+    gap: 10px !important;
+  }
+  .middle-right.hidden-sm > .headerRightItem {
     display: none !important;
   }
-
-  /* Show compact tablet contact bar instead */
-  .tablet-only-header {
-    display: flex !important;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
+  .middle-right.hidden-sm > .headerRightItem:nth-last-child(1),
+  .middle-right.hidden-sm > .headerRightItem:nth-last-child(2) {
+    display: block !important;
   }
-  .tablet-only-header .btn {
+  .middle-right.hidden-sm .btn {
     font-size: 12px;
     padding: 7px 12px;
   }
 
-  /* Megamenu: reduce padding & font to prevent overlap */
+  /* Megamenu: reduce padding & font */
   .horizontal ul.megamenu > li > a {
     padding: 10px 8px;
     font-size: 12px;
