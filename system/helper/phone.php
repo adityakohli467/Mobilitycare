@@ -20,14 +20,13 @@ function is_valid_au_phone($phone) {
         $phone = '0' . $matches[1];
     }
     
-    // Handle 9-digit numbers without leading 0 (e.g., 411114916 -> 0411114916)
-    if (strlen($phone) === 9 && preg_match('/^[2-9]/', $phone)) {
+    // Handle 9-digit mobile numbers without leading 0 (e.g., 412345678 -> 0412345678)
+    // Only auto-prefix for mobile numbers starting with 4
+    if (strlen($phone) === 9 && $phone[0] === '4') {
         $phone = '0' . $phone;
     }
     
     // Now validate as 10-digit Australian number starting with 0
-    // Australian mobile: 04XX XXX XXX
-    // Australian landline: 02/03/07/08 XXXX XXXX
     if (strlen($phone) !== 10) {
         return false;
     }
@@ -37,16 +36,21 @@ function is_valid_au_phone($phone) {
         return false;
     }
     
-    // Valid Australian prefixes:
-    // 04 - Mobile
-    // 02 - NSW/ACT
-    // 03 - VIC/TAS  
-    // 07 - QLD
-    // 08 - SA/WA/NT
-    $validPrefixes = ['02', '03', '04', '07', '08'];
-    $prefix = substr($phone, 0, 2);
+    // Validate against known Australian number patterns:
+    // Mobile:   04XX XXX XXX
+    // NSW/ACT:  02 [4569] then 7 digits  (024x,025x,026x,029x — Sydney 028x,029x)
+    // VIC/TAS:  03 [5-9] then 7 digits
+    // QLD:      07 [2-57] then 7 digits
+    // SA/WA/NT: 08 [1-9] then 7 digits
+    $validPatterns = '/^('
+        . '04[0-9]{8}'          // Mobile
+        . '|02[45689][0-9]{7}'  // NSW/ACT landline
+        . '|03[5-9][0-9]{7}'   // VIC/TAS landline
+        . '|07[2-57][0-9]{7}'  // QLD landline
+        . '|08[1-9][0-9]{7}'   // SA/WA/NT landline
+        . ')$/';
     
-    if (!in_array($prefix, $validPrefixes)) {
+    if (!preg_match($validPatterns, $phone)) {
         return false;
     }
     
