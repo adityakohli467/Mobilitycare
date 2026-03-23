@@ -2380,14 +2380,18 @@ $(document).on('submit', '.quoteForm', function (e) {
 // Hide marketing popup when quote or demo modals are open
 $(document).ready(function() {
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('show.bs.modal', function() {
-        $('.marketing-popup, #marketing-popup, [id*="marketing"], .popup-marketing').hide();
+        $('#healthProModal').modal('hide');
+        $('#marketing-popup-wrapper').hide();
         $('body').addClass('quote-modal-open');
     });
     
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('hidden.bs.modal', function() {
-        // Only show marketing popup if no other quote/demo modals are open
         if (!$('#bookaDemoModal').hasClass('in') && !$('#customQuoteModal').hasClass('in') && !$('#customQuoteModalForVM').hasClass('in')) {
             $('body').removeClass('quote-modal-open');
+            // Restore wrapper visibility so the popup can still trigger if it hasn't been shown yet
+            if (!localStorage.getItem('healthProModalShown')) {
+                $('#marketing-popup-wrapper').show();
+            }
         }
     });
 });
