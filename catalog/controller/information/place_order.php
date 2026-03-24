@@ -69,7 +69,7 @@ class ControllerInformationPlaceOrder extends Controller {
         $customerMessageHtml = $this->load->view('mail/enquiry_confirmation', $data);
         
         $customerMail->setHtml($customerMessageHtml);
-        $customerMail->addAttachment(DIR_IMAGE . 'mobilitycare-brochure-assistive-technology-web.pdf');
+        // PDF brochure removed — 16 MB file causes memory exhaustion on 64 MB hosts
         $customerMail->send();
         
         

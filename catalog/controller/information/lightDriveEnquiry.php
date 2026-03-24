@@ -32,6 +32,9 @@ class ControllerInformationLightDriveEnquiry extends Controller {
                 // Send mail
                 $mailMessageHtml = $this->mailHtml($this->request->post);
 
+                // Save in database FIRST so data is never lost even if mail fails
+                $this->model_catalog_demo_request->addLightDriveEnquiry($this->request->post);
+
                 try {
     $mail = new Mail($this->config->get('config_mail_engine'));
     $mail->parameter = $this->config->get('config_mail_parameter');
@@ -48,45 +51,37 @@ class ControllerInformationLightDriveEnquiry extends Controller {
     $mail->setSubject('New Light Drive Enquiry Received');
     $mail->setHtml($mailMessageHtml);
     $mail->send();
-    
-    
-     // auto reply to customer
-                
-                  if (isset($this->request->post['email'])) {
-        $customerMail = new Mail($this->config->get('config_mail_engine'));
-        $customerMail->parameter = $this->config->get('config_mail_parameter');
-        $customerMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-        $customerMail->smtp_username = $this->config->get('config_mail_smtp_username');
-        $customerMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-        $customerMail->smtp_port = $this->config->get('config_mail_smtp_port');
-        $customerMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-        $customerMail->setTo($this->request->post['email']);
-        $customerMail->setFrom('enquiries@mobilitycare.net.au');
-        $customerMail->setReplyTo('enquiries@mobilitycare.net.au');
-        $customerMail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
-        $customerMail->setSubject('Thank You for Your Enquiry - MobilityCare');
-        
-        // Load the email template
-        $data['customer_name'] = isset($this->request->post['fullname']) ? htmlspecialchars($this->request->post['fullname']) : 'Valued Customer';
-        
-        $customerMessageHtml = $this->load->view('mail/enquiry_confirmation', $data);
-        
-        $customerMail->setHtml($customerMessageHtml);
-        $customerMail->addAttachment(DIR_IMAGE . 'mobilitycare-brochure-assistive-technology-web.pdf');
-        $customerMail->send();
-    }
-    
-} catch (Exception $e) {
-    // Log or show the error
-    $this->log->write('MAIL ERROR: ' . $e->getMessage());
-    echo '<pre>Mail Error: ' . $e->getMessage() . '</pre>';
+} catch (\Throwable $e) {
+    $this->log->write('LIGHTDRIVE ADMIN MAIL ERROR: ' . $e->getMessage());
 }
 
+    // Auto-reply to customer
+    try {
+        if (isset($this->request->post['email'])) {
+            $customerMail = new Mail($this->config->get('config_mail_engine'));
+            $customerMail->parameter = $this->config->get('config_mail_parameter');
+            $customerMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+            $customerMail->smtp_username = $this->config->get('config_mail_smtp_username');
+            $customerMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+            $customerMail->smtp_port = $this->config->get('config_mail_smtp_port');
+            $customerMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+            $customerMail->setTo($this->request->post['email']);
+            $customerMail->setFrom('enquiries@mobilitycare.net.au');
+            $customerMail->setReplyTo('enquiries@mobilitycare.net.au');
+            $customerMail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
+            $customerMail->setSubject('Thank You for Your Enquiry - MobilityCare');
+            
+            $data['customer_name'] = isset($this->request->post['fullname']) ? htmlspecialchars($this->request->post['fullname']) : 'Valued Customer';
+            $customerMessageHtml = $this->load->view('mail/enquiry_confirmation', $data);
+            
+            $customerMail->setHtml($customerMessageHtml);
+            // PDF brochure removed — 16 MB file causes memory exhaustion on 64 MB hosts
+            $customerMail->send();
+        }
+    } catch (\Throwable $e) {
+        $this->log->write('LIGHTDRIVE CUSTOMER MAIL ERROR: ' . $e->getMessage());
+    }
 
-                // Save in database
-                $this->model_catalog_demo_request->addLightDriveEnquiry($this->request->post);
-
-                // JSON response for AJAX
                 // redirect
                  $this->session->data['success'] = 'Your enquiry has been successfully submitted.';
                  $this->response->redirect($this->url->link('information/form_success/lightdrive'));

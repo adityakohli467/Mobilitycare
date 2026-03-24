@@ -28,7 +28,8 @@ class ControllerInformationContact extends Controller {
                 //   echo "<pre>"; print_r($this->request->post); exit;
                  $this->model_catalog_demo_request->addContactFormInfo($this->request->post);
 
-                // Mail config
+                // Admin notification email
+                try {
                 $mail = new Mail($this->config->get('config_mail_engine'));
                 $mail->parameter = $this->config->get('config_mail_parameter');
                 $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
@@ -46,8 +47,29 @@ class ControllerInformationContact extends Controller {
                 $mail->setSubject('Enquiry from website');
                 $mail->setHtml($mailMessageHtml);
                 $mail->send();
+                } catch (\Throwable $e) {
+                    $this->log->write('CONTACT ADMIN MAIL ERROR: ' . $e->getMessage());
+                    try {
+                        $fallback = new Mail($this->config->get('config_mail_engine'));
+                        $fallback->parameter = $this->config->get('config_mail_parameter');
+                        $fallback->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+                        $fallback->smtp_username = $this->config->get('config_mail_smtp_username');
+                        $fallback->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+                        $fallback->smtp_port = $this->config->get('config_mail_smtp_port');
+                        $fallback->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+                        $fallback->setTo($this->config->get('config_email'));
+                        $fallback->setFrom('enquiries@mobilitycare.net.au');
+                        $fallback->setSender('MobilityCare');
+                        $fallback->setSubject('[ALERT] Contact Enquiry Received - Email Delivery Issue');
+                        $fallback->setHtml('<p>A contact enquiry was saved to the database but the full notification email failed.</p><p><b>Error:</b> ' . htmlspecialchars($e->getMessage()) . '</p><p>Please check admin panel.</p>' . $mailMessageHtml);
+                        $fallback->send();
+                    } catch (\Throwable $e2) {
+                        $this->log->write('CONTACT FALLBACK MAIL ERROR: ' . $e2->getMessage());
+                    }
+                }
                 
-                 //  Send automatic confirmation email to customer
+                // Auto-reply to customer (without heavy attachment to avoid memory issues)
+                try {
                 if (isset($this->request->post['email'])) {
         $customerMail = new Mail($this->config->get('config_mail_engine'));
         $customerMail->parameter = $this->config->get('config_mail_parameter');
@@ -68,9 +90,12 @@ class ControllerInformationContact extends Controller {
         $customerMessageHtml = $this->load->view('mail/enquiry_confirmation', $data);
         
         $customerMail->setHtml($customerMessageHtml);
-        $customerMail->addAttachment(DIR_IMAGE . 'mobilitycare-brochure-assistive-technology-web.pdf');
+        // PDF brochure removed — 16 MB file causes memory exhaustion on 64 MB hosts
         $customerMail->send();
     }
+                } catch (\Throwable $e) {
+                    $this->log->write('CONTACT CUSTOMER MAIL ERROR: ' . $e->getMessage());
+                }
                 
         $this->session->data['success'] = 'Your enquiry has been successfully submitted.';
         $this->response->redirect($this->url->link('information/contact_success'));
