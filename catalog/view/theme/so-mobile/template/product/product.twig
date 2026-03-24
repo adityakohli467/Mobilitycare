@@ -2085,10 +2085,20 @@ $(document).ready(function() {
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('show.bs.modal', function() {
         $('.marketing-popup, #marketing-popup, [id*="marketing"], .popup-marketing').hide();
         $('body').addClass('quote-modal-open');
+
+        // Refresh captcha so it matches current session
+        var modal = $(this);
+        $.getJSON('index.php?route=extension/captcha/basic/refresh&captcha_name=product_product', function(data) {
+            if (data && data.image_url) {
+                modal.find('.captcha-image').attr('src', data.image_url);
+                modal.find('input[name="captcha"]').val('');
+            }
+        });
     });
     
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('hidden.bs.modal', function() {
-        // Only show marketing popup if no other quote/demo modals are open
+        $(this).find('form').data('validated', false);
+
         if (!$('#bookaDemoModal').hasClass('in') && !$('#customQuoteModal').hasClass('in') && !$('#customQuoteModalForVM').hasClass('in')) {
             $('body').removeClass('quote-modal-open');
         }

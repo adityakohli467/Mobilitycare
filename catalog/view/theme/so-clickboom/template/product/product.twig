@@ -2383,9 +2383,21 @@ $(document).ready(function() {
         $('#healthProModal').modal('hide');
         $('#marketing-popup-wrapper').hide();
         $('body').addClass('quote-modal-open');
+
+        // Refresh captcha so it matches current session (prevents stale captcha from multi-tab or long page idle)
+        var modal = $(this);
+        $.getJSON('index.php?route=extension/captcha/basic/refresh&captcha_name=product_product', function(data) {
+            if (data && data.image_url) {
+                modal.find('.captcha-image').attr('src', data.image_url);
+                modal.find('input[name="captcha"]').val('');
+            }
+        });
     });
     
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('hidden.bs.modal', function() {
+        // Reset the ajax-validated flag so captcha is re-checked on next submit
+        $(this).find('form').data('validated', false);
+
         if (!$('#bookaDemoModal').hasClass('in') && !$('#customQuoteModal').hasClass('in') && !$('#customQuoteModalForVM').hasClass('in')) {
             $('body').removeClass('quote-modal-open');
             // Restore wrapper visibility so the popup can still trigger if it hasn't been shown yet

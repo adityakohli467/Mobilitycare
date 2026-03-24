@@ -63,6 +63,12 @@ class ControllerExtensionCaptchaBasic extends Controller {
 			return ''; // valid
 		}
 		
+		// Last resort: check the product_product key (forms rendered on product pages
+		// validate via information/quote_request route, so the named key differs)
+		if (!empty($this->session->data['captcha_product_product']) && $this->session->data['captcha_product_product'] == $posted) {
+			return ''; // valid
+		}
+		
 		return $this->language->get('error_captcha');
 	}
 	
@@ -72,6 +78,24 @@ class ControllerExtensionCaptchaBasic extends Controller {
 		if (empty($this->request->post['originalCaptcha']) || ($this->request->post['originalCaptcha'] != $this->request->post['captcha'])) {
 			return $this->language->get('error_captcha');
 		}
+	}
+
+	/**
+	 * AJAX endpoint to regenerate captcha value + image URL.
+	 * Call: index.php?route=extension/captcha/basic/refresh&captcha_name=product_product
+	 * Returns JSON: { "image_url": "index.php?route=extension/captcha/basic/captcha&captcha_name=...&t=..." }
+	 */
+	public function refresh() {
+		$captcha_name = isset($this->request->get['captcha_name']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $this->request->get['captcha_name']) : 'default';
+		
+		$captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+		$this->session->data['captcha_' . $captcha_name] = $captcha_value;
+		$this->session->data['captcha'] = $captcha_value;
+		
+		$image_url = 'index.php?route=extension/captcha/basic/captcha&captcha_name=' . $captcha_name . '&t=' . time();
+		
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode(['image_url' => $image_url]));
 	}
 
 	public function captcha() {
