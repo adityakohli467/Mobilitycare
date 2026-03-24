@@ -2,16 +2,16 @@
   <div class="form-group required">
     {% if route|slice(0, 9) == 'checkout/' %}
       <div class="captcha-container">
-           <img src="index.php?route=extension/captcha/basic/captcha&captcha_name={{ captcha_name }}&t={{ "now"|date("U") }}" alt="Captcha" class="captcha-image" />
+           <img src="index.php?route=extension/captcha/basic/captcha&captcha_token={{ captcha_token }}&t={{ "now"|date("U") }}" alt="Captcha" class="captcha-image" />
         <input type="text" name="captcha" id="input-payment-captcha" class="form-control" autocomplete="off" />
-       
+        <input type="hidden" name="captcha_token" value="{{ captcha_token }}" />
       </div>
     {% else %}
       <div class="col-sm-12">
         <div class="captcha-container">
-            <img src="index.php?route=extension/captcha/basic/captcha&captcha_name={{ captcha_name }}&t={{ "now"|date("U") }}" alt="Captcha" class="captcha-image" />
+            <img src="index.php?route=extension/captcha/basic/captcha&captcha_token={{ captcha_token }}&t={{ "now"|date("U") }}" alt="Captcha" class="captcha-image" />
           <input type="text" name="captcha" id="input-captcha" required class="form-control" placeholder="Enter Captcha code" />
-          
+          <input type="hidden" name="captcha_token" value="{{ captcha_token }}" />
         </div>
         {% if error_captcha %}
           <div class="text-red">{{ error_captcha }}</div>

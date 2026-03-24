@@ -1,11 +1,8 @@
 <?php
 class ControllerExtensionCaptchaBasic extends Controller {
 	/**
-	 * Generates a captcha widget. Supports named instances so multiple
-	 * captcha widgets on the same page don't overwrite each other.
-	 * 
-	 * The captcha name is derived from the current route (e.g. 'information/contact'
-	 * becomes session key 'captcha_information_contact'). Each form gets its own key.
+	 * Generates a captcha widget with a unique token so that multiple
+	 * browser tabs / forms don't overwrite each other's captcha values.
 	 */
 	public function index($error = array()) {
 		$this->load->language('extension/captcha/basic');
@@ -18,23 +15,30 @@ class ControllerExtensionCaptchaBasic extends Controller {
 
 		$data['route'] = isset($this->request->get['route']) ? $this->request->get['route'] : '';
 		
-		// Derive a unique captcha name from the page route
 		$captcha_name = $this->getCaptchaName();
 		$data['captcha_name'] = $captcha_name;
 
 		$captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+		// Token-based storage: each form instance gets a unique token
+		$token = bin2hex(random_bytes(16));
+		$this->pruneTokens();
+		if (!isset($this->session->data['captcha_tokens'])) {
+			$this->session->data['captcha_tokens'] = [];
+		}
+		$this->session->data['captcha_tokens'][$token] = $captcha_value;
+		$data['captcha_token'] = $token;
+
+		// Backward-compatible keys (still used by single-form pages)
 		$this->session->data['captcha_' . $captcha_name] = $captcha_value;
-		
-		// Also keep backward-compatible session key (used by forms that
-		// are the only captcha on their page)
 		$this->session->data['captcha'] = $captcha_value;
 
 		return $this->load->view('extension/captcha/basic', $data);
 	}
 
 	/**
-	 * Validates captcha. Checks the named session key first, falls back to
-	 * the generic 'captcha' key for backward compatibility.
+	 * Validates captcha. Checks token-based lookup first, then falls back
+	 * to named/generic session keys for backward compatibility.
 	 */
 	public function validate() {
 		$this->load->language('extension/captcha/basic');
@@ -44,8 +48,19 @@ class ControllerExtensionCaptchaBasic extends Controller {
 		if (empty($posted)) {
 			return $this->language->get('error_captcha');
 		}
+
+		// 1. Token-based check (multi-tab safe)
+		$token = isset($this->request->post['captcha_token']) ? $this->request->post['captcha_token'] : '';
+		if ($token && !empty($this->session->data['captcha_tokens'][$token])) {
+			if ($this->session->data['captcha_tokens'][$token] == $posted) {
+				unset($this->session->data['captcha_tokens'][$token]);
+				return ''; // valid
+			}
+			// Token exists but value wrong — don't fall through to legacy keys
+			return $this->language->get('error_captcha');
+		}
 		
-		// Check named captcha key first (from the page that loaded the captcha)
+		// 2. Legacy: check named captcha key
 		$captcha_name = $this->getCaptchaName();
 		$named_key = 'captcha_' . $captcha_name;
 		
@@ -53,18 +68,17 @@ class ControllerExtensionCaptchaBasic extends Controller {
 			return ''; // valid
 		}
 		
-		// Check the listing_captcha key (from so_listing_tabs module)
+		// 3. Check the listing_captcha key (from so_listing_tabs module)
 		if (!empty($this->session->data['listing_captcha']) && $this->session->data['listing_captcha'] == $posted) {
 			return ''; // valid
 		}
 		
-		// Fallback: check generic session key
+		// 4. Fallback: check generic session key
 		if (!empty($this->session->data['captcha']) && $this->session->data['captcha'] == $posted) {
 			return ''; // valid
 		}
 		
-		// Last resort: check the product_product key (forms rendered on product pages
-		// validate via information/quote_request route, so the named key differs)
+		// 5. Last resort: check the product_product key
 		if (!empty($this->session->data['captcha_product_product']) && $this->session->data['captcha_product_product'] == $posted) {
 			return ''; // valid
 		}
@@ -82,34 +96,48 @@ class ControllerExtensionCaptchaBasic extends Controller {
 
 	/**
 	 * AJAX endpoint to regenerate captcha value + image URL.
-	 * Call: index.php?route=extension/captcha/basic/refresh&captcha_name=product_product
-	 * Returns JSON: { "image_url": "index.php?route=extension/captcha/basic/captcha&captcha_name=...&t=..." }
+	 * Returns JSON with image_url and captcha_token for multi-tab safety.
 	 */
 	public function refresh() {
 		$captcha_name = isset($this->request->get['captcha_name']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $this->request->get['captcha_name']) : 'default';
 		
 		$captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+		// Token-based storage
+		$token = bin2hex(random_bytes(16));
+		$this->pruneTokens();
+		if (!isset($this->session->data['captcha_tokens'])) {
+			$this->session->data['captcha_tokens'] = [];
+		}
+		$this->session->data['captcha_tokens'][$token] = $captcha_value;
+
+		// Backward-compatible keys
 		$this->session->data['captcha_' . $captcha_name] = $captcha_value;
 		$this->session->data['captcha'] = $captcha_value;
 		
-		$image_url = 'index.php?route=extension/captcha/basic/captcha&captcha_name=' . $captcha_name . '&t=' . time();
+		$image_url = 'index.php?route=extension/captcha/basic/captcha&captcha_token=' . $token . '&t=' . time();
 		
 		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode(['image_url' => $image_url]));
+		$this->response->setOutput(json_encode(['image_url' => $image_url, 'captcha_token' => $token]));
 	}
 
 	public function captcha() {
-		// Support named captcha: check if a specific name was requested
-		$captcha_name = isset($this->request->get['captcha_name']) ? $this->request->get['captcha_name'] : '';
-		$named_key = $captcha_name ? 'captcha_' . $captcha_name : '';
-		
-		// Try named key first, fall back to generic
-		if ($named_key && !empty($this->session->data[$named_key])) {
-			$captcha_text = $this->session->data[$named_key];
-		} elseif (!empty($this->session->data['captcha'])) {
-			$captcha_text = $this->session->data['captcha'];
+		// Token-based lookup first (multi-tab safe)
+		$token = isset($this->request->get['captcha_token']) ? $this->request->get['captcha_token'] : '';
+		if ($token && !empty($this->session->data['captcha_tokens'][$token])) {
+			$captcha_text = $this->session->data['captcha_tokens'][$token];
 		} else {
-			$captcha_text = '????';
+			// Legacy: named captcha or generic fallback
+			$captcha_name = isset($this->request->get['captcha_name']) ? $this->request->get['captcha_name'] : '';
+			$named_key = $captcha_name ? 'captcha_' . $captcha_name : '';
+			
+			if ($named_key && !empty($this->session->data[$named_key])) {
+				$captcha_text = $this->session->data[$named_key];
+			} elseif (!empty($this->session->data['captcha'])) {
+				$captcha_text = $this->session->data['captcha'];
+			} else {
+				$captcha_text = '????';
+			}
 		}
 		
 		$image = imagecreatetruecolor(150, 35);
@@ -146,6 +174,15 @@ class ControllerExtensionCaptchaBasic extends Controller {
 		exit();
 	}
 	
+	/**
+	 * Prevents session bloat by limiting stored captcha tokens.
+	 */
+	private function pruneTokens() {
+		if (isset($this->session->data['captcha_tokens']) && count($this->session->data['captcha_tokens']) > 20) {
+			$this->session->data['captcha_tokens'] = array_slice($this->session->data['captcha_tokens'], -10, null, true);
+		}
+	}
+
 	/**
 	 * Derives a safe captcha name from the current page route.
 	 * e.g. 'information/contact' → 'information_contact'

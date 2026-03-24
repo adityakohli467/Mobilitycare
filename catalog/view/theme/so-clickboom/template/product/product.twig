@@ -2391,6 +2391,9 @@ $(document).ready(function() {
                 modal.find('.captcha-image').attr('src', data.image_url);
                 modal.find('input[name="captcha"]').val('');
             }
+            if (data && data.captcha_token) {
+                modal.find('input[name="captcha_token"]').val(data.captcha_token);
+            }
         });
     });
     
