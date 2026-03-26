@@ -445,12 +445,7 @@ class ControllerExtensionSoconfigQuickview extends Controller {
 			$data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']);
 			$data['rating'] = (int)$product_info['rating'];
 
-			// Captcha
-			if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('review', (array)$this->config->get('config_captcha_page'))) {
-				$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'));
-			} else {
-				$data['captcha'] = '';
-			}
+			$data['captcha'] = '';
 
 			$data['share'] = $this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']);
 
@@ -602,15 +597,6 @@ class ControllerExtensionSoconfigQuickview extends Controller {
 
 			if (empty($this->request->post['rating']) || $this->request->post['rating'] < 0 || $this->request->post['rating'] > 5) {
 				$json['error'] = $this->language->get('error_rating');
-			}
-
-			// Captcha
-			if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('review', (array)$this->config->get('config_captcha_page'))) {
-				$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-				if ($captcha) {
-					$json['error'] = $captcha;
-				}
 			}
 
 			if (!isset($json['error'])) {

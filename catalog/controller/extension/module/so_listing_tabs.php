@@ -198,8 +198,8 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
             $quoteProducts = $this->model_catalog_demo_request->getProductsByCategory(101);
             $data = $this->readData($setting);
             
-            // Use placeholder for captcha in template - will be replaced after cache
-            $data['captcha_image_data'] = '%%CAPTCHA_PLACEHOLDER%%';
+            // Captcha removed - no longer needed
+            $data['captcha_image_data'] = '';
             $data['captcha_key'] = '';
             
             $data['products']  = $quoteProducts;
@@ -219,71 +219,6 @@ class ControllerExtensionModuleSolistingtabs extends Controller {
 				$Cache_Lite->_cleanDir($folder_cache);
 		       
 				$_data = $this->load->view('extension/module/so_listing_tabs/'.$setting['store_layout'], $data);
-			}
-			
-			// Detect captcha form in rendered HTML. Check for BOTH:
-			// 1) %%CAPTCHA_PLACEHOLDER%% — fresh render or correctly cached template
-			// 2) class="captcha-image" — stale cache that has an old baked-in base64
-			//    image instead of the placeholder (pre-fix code was cached by Cache Lite)
-			$has_placeholder = (strpos($_data, '%%CAPTCHA_PLACEHOLDER%%') !== false);
-			$has_captcha_class = (strpos($_data, 'class="captcha-image"') !== false);
-			
-			if ($has_placeholder || $has_captcha_class) {
-			    // If another so_listing_tabs module instance already generated a
-			    // captcha in THIS request, reuse that value. This prevents two
-			    // module instances (e.g. desktop #1239 + mobile #1284) from each
-			    // generating separate values and overwriting session['listing_captcha'].
-			    if (!empty($this->session->data['listing_captcha_request_id'])
-			        && $this->session->data['listing_captcha_request_id'] === session_id() . '_' . $_SERVER['REQUEST_TIME_FLOAT']
-			        && !empty($this->session->data['listing_captcha'])) {
-			        $captcha_value = $this->session->data['listing_captcha'];
-			    } else {
-			        $captcha_value = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-			        $this->session->data['listing_captcha'] = $captcha_value;
-			        $this->session->data['listing_captcha_request_id'] = session_id() . '_' . $_SERVER['REQUEST_TIME_FLOAT'];
-			    }
-                
-                // Generate captcha image
-                $image = imagecreatetruecolor(150, 35);
-                $white = imagecolorallocate($image, 255, 255, 255);
-                $black = imagecolorallocate($image, 0, 0, 0);
-                $red = imagecolorallocatealpha($image, 255, 0, 0, 75);
-                $green = imagecolorallocatealpha($image, 0, 255, 0, 75);
-                $blue = imagecolorallocatealpha($image, 0, 0, 255, 75);
-                imagefilledrectangle($image, 0, 0, 150, 35, $white);
-                imagefilledellipse($image, ceil(rand(5, 145)), ceil(rand(0, 35)), 30, 30, $red);
-                imagefilledellipse($image, ceil(rand(5, 145)), ceil(rand(0, 35)), 30, 30, $green);
-                imagefilledellipse($image, ceil(rand(5, 145)), ceil(rand(0, 35)), 30, 30, $blue);
-                imagefilledrectangle($image, 0, 0, 150, 0, $black);
-                imagefilledrectangle($image, 149, 0, 149, 34, $black);
-                imagefilledrectangle($image, 0, 0, 0, 34, $black);
-                imagefilledrectangle($image, 0, 34, 150, 34, $black);
-                imagestring($image, 10, intval((150 - (strlen($captcha_value) * 9)) / 2), intval((35 - 15) / 2), $captcha_value, $black);
-                ob_start();
-                imagejpeg($image);
-                $image_data = ob_get_clean();
-                imagedestroy($image);
-                $fresh_captcha_src = 'data:image/jpeg;base64,' . base64_encode($image_data);
-                
-                // Replace placeholder with fresh captcha
-                if ($has_placeholder) {
-                    $_data = str_replace('%%CAPTCHA_PLACEHOLDER%%', $fresh_captcha_src, $_data);
-                }
-                
-                // Self-healing: replace stale baked-in base64 captcha image from old cache.
-                // Pattern matches: src="data:image/jpeg;base64,..." alt="Captcha" class="captcha-image"
-                if (!$has_placeholder && $has_captcha_class) {
-                    $_data = preg_replace(
-                        '/src="data:image\/jpeg;base64,[^"]*"(\s+alt="Captcha"\s+class="captcha-image")/',
-                        'src="' . $fresh_captcha_src . '"$1',
-                        $_data,
-                        1 // replace only the first occurrence
-                    );
-                    // Invalidate stale cache so next request uses the placeholder version
-                    if ($use_cache) {
-                        $Cache_Lite->_cleanDir($folder_cache);
-                    }
-                }
 			}
             
             return $_data;

@@ -428,14 +428,8 @@
         		$data['footer'] = $this->load->controller('common/footer');
         		$data['header'] = $this->load->controller('common/header');
 
-			  
-               // Captcha
-				if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('register', (array)$this->config->get('config_captcha_page'))) {
-					$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'));
-					
-				} else {
-					$data['captcha'] = '';
-				}
+			   
+               $data['captcha'] = '';
 
                 $data['column_right_blog'] = $this->load->controller('common/right_blog');
                 $store_id = $this->config->get('config_store_id');
@@ -590,14 +584,6 @@
 					$json['error'] = $this->language->get('error_text');
 				}
 	
-				if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('register', (array)$this->config->get('config_captcha_page'))) {
-					$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-					if ($captcha) {
-						$json['error'] = $captcha;
-					}
-				}
-				
 				if (!isset($json['error'])) {
 					//print_r($this->request->post); exit;
 					$this->model_extension_simple_blog_article->addArticleComment($this->request->get['simple_blog_article_id'], $this->request->post);

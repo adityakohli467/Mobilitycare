@@ -98,11 +98,7 @@ class ControllerInformationAutochairEnquiry extends Controller {
         
         
         
-        	if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-	    	} else {
-			$data['captcha'] = '';
-		    }
+        $data['captcha'] = '';
 
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
@@ -208,15 +204,6 @@ if ((isset($this->request->post['item_height'])) && ($item_height === '' || !pre
     $this->error['item_height'] = 'Please enter a valid height (integer or decimal).';
 }
 
-
-        // Captcha validation
-        if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') 
-            && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-            if ($captcha) {
-                $this->error['captcha'] = $captcha;
-            }
-        }
 
         return !$this->error;
     }

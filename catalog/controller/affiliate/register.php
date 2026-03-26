@@ -269,12 +269,7 @@ class ControllerAffiliateRegister extends Controller {
 			$data['confirm'] = '';
 		}
 
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('register', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-		} else {
-			$data['captcha'] = '';
-		}
+		$data['captcha'] = '';
 
 		if ($this->config->get('config_affiliate_id')) {
 			$this->load->model('catalog/information');
@@ -369,15 +364,6 @@ class ControllerAffiliateRegister extends Controller {
 			}
 		}
 			
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('register', (array)$this->config->get('config_captcha_page'))) {
-			$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-			if ($captcha) {
-				$this->error['captcha'] = $captcha;
-			}
-		}
-
 		if ($this->config->get('config_affiliate_id')) {
 			$this->load->model('catalog/information');
 

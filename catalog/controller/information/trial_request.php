@@ -114,12 +114,8 @@ class ControllerInformationTrialRequest extends Controller {
         $data['manufacturer_id'] = isset($this->request->post['manufacturer_id']) ? $this->request->post['manufacturer_id'] : '';
         $data['notes'] = isset($this->request->post['notes']) ? $this->request->post['notes'] : '';
 
-        // Captcha
-        if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            $data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-        } else {
-            $data['captcha'] = '';
-        }
+        $data['captcha'] = '';
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -208,14 +204,6 @@ class ControllerInformationTrialRequest extends Controller {
 
         if (empty($this->request->post['manufacturer_id'])) {
             $this->error['manufacturer_id'] = 'Please select a product';
-        }
-
-        // Captcha
-        if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-            if ($captcha) {
-                $this->error['captcha'] = $captcha;
-            }
         }
 
         return !$this->error;

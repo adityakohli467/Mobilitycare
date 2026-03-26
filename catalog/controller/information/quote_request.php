@@ -105,9 +105,6 @@ class ControllerInformationQuoteRequest extends Controller {
     }
 
 
-                // Clear the listing captcha after successful processing (one-time use)
-                unset($this->session->data['listing_captcha']);
-                
                 // redirect
                  $this->session->data['success'] = 'Your enquiry has been successfully submitted.';
                  $this->response->redirect($this->url->link('information/form_success/quote'));
@@ -120,11 +117,7 @@ class ControllerInformationQuoteRequest extends Controller {
         $data['error_email'] = isset($this->error['email']) ? $this->error['email'] : '';
         $data['error_phone'] = isset($this->error['phone']) ? $this->error['phone'] : '';
         
-        	if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-	    	} else {
-			$data['captcha'] = '';
-		    }
+        	$data['captcha'] = '';
 
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
@@ -147,7 +140,6 @@ class ControllerInformationQuoteRequest extends Controller {
         } else {
             $json['success'] = true;
             // Set flag so the normal POST submit skips re-validation.
-            // This prevents captcha from failing on the second validate() call.
             $this->session->data['quote_ajax_validated'] = true;
         }
     } else {
@@ -261,15 +253,6 @@ if ((isset($this->request->post['item_height'])) && ($item_height === '' || !pre
     $this->error['item_height'] = 'Please enter a valid height (integer or decimal).';
 }
 
-
-        // Captcha validation
-        if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') 
-            && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-            $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-            if ($captcha) {
-                $this->error['captcha'] = $captcha;
-            }
-        }
 
         return !$this->error;
     }

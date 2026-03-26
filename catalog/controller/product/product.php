@@ -75,12 +75,8 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 	    	$this->load->model('catalog/demo_request');
             $quoteProducts = $this->model_catalog_demo_request->getProductsByCategory(101);
            
-            // Captcha
-	    	if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-	    	} else {
-			$data['captcha'] = '';
-		    }
+            // Captcha disabled
+	    	$data['captcha'] = '';
 		    
             $data['quoteProducts']  = $quoteProducts;
            
@@ -503,12 +499,7 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 			$data['productReviews'] = $this->model_catalog_product->getProductReviews($product_id);
 // 			echo "<pre>"; print_r($data['productReviews']); exit;
 
-			// Review Captcha - use separate variable to avoid overwriting form captcha
-			if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('review', (array)$this->config->get('config_captcha_page'))) {
-				$data['review_captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'));
-			} else {
-				$data['review_captcha'] = '';
-			}
+			$data['review_captcha'] = '';
 			$data['share'] = $this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']);
 
 			$data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
@@ -804,15 +795,6 @@ public function download() {
 			
 				if (empty($this->request->post['rating']) || $this->request->post['rating'] < 0 || $this->request->post['rating'] > 5) {
 					$json['error'] = $this->language->get('error_rating');
-				}
-
-				// Captcha
-				if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('review', (array)$this->config->get('config_captcha_page'))) {
-					$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-					if ($captcha) {
-						$json['error'] = $captcha;
-					}
 				}
 
 				if (!isset($json['error'])) {

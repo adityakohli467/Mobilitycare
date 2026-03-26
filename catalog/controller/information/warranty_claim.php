@@ -126,12 +126,7 @@ class ControllerInformationWarrantyClaim extends Controller {
 			$data['phone'] = '';
 		}
 
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-		} else {
-			$data['captcha'] = '';
-		}
+		$data['captcha'] = '';
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
@@ -164,15 +159,6 @@ class ControllerInformationWarrantyClaim extends Controller {
      }
      
 	
-
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-			if ($captcha) {
-				$this->error['captcha'] = $captcha;
-			}
-		}
 
 		return !$this->error;
 	}

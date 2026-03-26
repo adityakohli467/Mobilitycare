@@ -161,12 +161,7 @@ class ControllerInformationProductEnq extends Controller {
 			$data['enquiry'] = '';
 		}
 
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-		} else {
-			$data['captcha'] = '';
-		}
+		$data['captcha'] = '';
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
@@ -217,15 +212,6 @@ class ControllerInformationProductEnq extends Controller {
      if (!is_valid_au_phone($this->request->post['phone'])) {
       $this->error['phone'] = 'Please enter a valid Australian phone number';
      }
-
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-			if ($captcha) {
-				$this->error['captcha'] = $captcha;
-			}
-		}
 
 		return !$this->error;
 	}

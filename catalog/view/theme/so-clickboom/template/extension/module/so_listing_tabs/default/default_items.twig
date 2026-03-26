@@ -341,15 +341,6 @@
 
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                                <div class="captcha-container" style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="{{ captcha_image_data }}" alt="Captcha" class="captcha-image" />
-                                    <input type="text" name="captcha" class="form-control" placeholder="Enter Captcha code" required style="max-width: 150px;" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Request</button>
                             </div>
                         </div>
@@ -557,11 +548,8 @@ $(document).on('submit', '.quoteForm', function (e) {
                 let lastError = '';
 
                 $.each(res.error, function (key, msg) {
-                    // Skip inline error for captcha (already shown in toast)
-                    if (key !== 'captcha') {
                         $('[name="' + key + '"]', form)
                             .after('<div class="text-red">' + msg + '</div>');
-                    }
                     lastError = msg;
                 });
 

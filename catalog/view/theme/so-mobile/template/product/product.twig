@@ -391,7 +391,7 @@ body.quote-modal-open .popup-marketing {
 
 
                                     <div class="alert alert-custom mt-5 hide">
-                                        <span class="emoji">ðŸ”¥</span> Limited availability: This item is popular among our customers
+                                        <span class="emoji">Ã°Å¸â€Â¥</span> Limited availability: This item is popular among our customers
                                     </div>
 
                                     
@@ -676,7 +676,7 @@ body.quote-modal-open .popup-marketing {
       <button 
         class="zoom-btn" 
         data-img="{{ item.image | slice(0, 4) == 'http' ? item.image : base_url ~ 'image/' ~ item.image }}">
-        🔍 Zoom
+        ðŸ” Zoom
       </button>
     {% else %}
       <p>No Image</p>
@@ -760,7 +760,7 @@ body.quote-modal-open .popup-marketing {
                                             {#                &nbsp;{{ entry_good }}#}
                                             {#            </div>#}
                                             {#        </div>#}
-                                            {#        {{ captcha }}#}
+                                            {#        {# {{ captcha }} #}#}
                                             {#        <div class="pull-right">#}
                                             {#            <button type="button" id="button-review" data-loading-text="{{ text_loading }}" class="btn btn-primary">{{ button_continue }}</button>#}
                                             {#        </div>#}
@@ -923,22 +923,22 @@ body.quote-modal-open .popup-marketing {
                                 <span class="rating-label">{{ entry_bad }}</span>
                                 <div class="stars-container">
                                     <input type="radio" name="rating" value="1" id="rating-1" required />
-                                    <label for="rating-1" class="star-label">★</label>
+                                    <label for="rating-1" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="2" id="rating-2" />
-                                    <label for="rating-2" class="star-label">★</label>
+                                    <label for="rating-2" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="3" id="rating-3" />
-                                    <label for="rating-3" class="star-label">★</label>
+                                    <label for="rating-3" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="4" id="rating-4" />
-                                    <label for="rating-4" class="star-label">★</label>
+                                    <label for="rating-4" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="5" id="rating-5" />
-                                    <label for="rating-5" class="star-label">★</label>
+                                    <label for="rating-5" class="star-label">â˜…</label>
                                 </div>
                                 <span class="rating-label">{{ entry_good }}</span>
                             </div>
                         </div>
                     </div>
                     
-                    {{ review_captcha }}
+                    {# {{ review_captcha }} #}
                     
                     {% else %}
                     <div class="alert alert-info">
@@ -1058,7 +1058,7 @@ body.quote-modal-open .popup-marketing {
 
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                                {{ captcha }}
+                                {# {{ captcha }} #}
                             </div>
                         </div>
 
@@ -1242,7 +1242,7 @@ body.quote-modal-open .popup-marketing {
 
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                                {{ captcha }}
+                                {# {{ captcha }} #}
                             </div>
                         </div>
 
@@ -1381,7 +1381,7 @@ body.quote-modal-open .popup-marketing {
 
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-            {{ captcha }}
+            {# {{ captcha }} #}
         </div>
     </div>
 
@@ -2002,7 +2002,7 @@ $(document).on('submit', '.bookaDemoForm', function (e) {
                 // Mark form as validated
                 form.data('validated', true);
                   $('#loaderOverlay').hide();
-                // 🔁 Trigger normal submit (this time it will pass through)
+                // ðŸ” Trigger normal submit (this time it will pass through)
                 form.trigger('submit');
                 return;
             }
@@ -2054,7 +2054,7 @@ $(document).on('submit', '.quoteForm', function (e) {
                 //  Mark form as validated
                 form.data('validated', true);
  $('#loaderOverlay').hide();
-                // 🔁 Trigger normal submit (this time it will pass through)
+                // ðŸ” Trigger normal submit (this time it will pass through)
                 form.trigger('submit');
                 return;
             }
@@ -2085,18 +2085,6 @@ $(document).ready(function() {
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('show.bs.modal', function() {
         $('.marketing-popup, #marketing-popup, [id*="marketing"], .popup-marketing').hide();
         $('body').addClass('quote-modal-open');
-
-        // Refresh captcha so it matches current session
-        var modal = $(this);
-        $.getJSON('index.php?route=extension/captcha/basic/refresh&captcha_name=product_product', function(data) {
-            if (data && data.image_url) {
-                modal.find('.captcha-image').attr('src', data.image_url);
-                modal.find('input[name="captcha"]').val('');
-            }
-            if (data && data.captcha_token) {
-                modal.find('input[name="captcha_token"]').val(data.captcha_token);
-            }
-        });
     });
     
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('hidden.bs.modal', function() {

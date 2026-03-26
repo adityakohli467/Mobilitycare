@@ -16,19 +16,6 @@ class ControllerInformationMarketingPopup extends Controller {
       return;
     }
     
-    // Captcha validation
-    if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-        $captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-        
-        if ($captcha) {
-            $json['success'] = false;
-            $json['message'] = $captcha;
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-            return;
-        }
-    }
-    
     $this->load->model('catalog/product');
 
         $product_name = 'Not specified / General request';

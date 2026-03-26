@@ -22,12 +22,7 @@ class ControllerInformationNdis extends Controller {
          $data['marketing_popup'] = $this->load->controller('common/marketing_popup');
          
         	$data['action'] = '/contact-mobilitycare/';
-        // Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-		} else {
-			$data['captcha'] = '';
-		}
+        $data['captcha'] = '';
 		
 		if (isset($this->error['name'])) {
 			$data['error_name'] = $this->error['name'];

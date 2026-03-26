@@ -130,12 +130,7 @@ class ControllerCheckoutGuest extends Controller {
 			$data['shipping_address'] = true;
 		}
 
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('guest', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'));
-		} else {
-			$data['captcha'] = '';
-		}
+		$data['captcha'] = '';
 		
 		$this->response->setOutput($this->load->view('checkout/guest', $data));
 	}
@@ -222,14 +217,6 @@ class ControllerCheckoutGuest extends Controller {
                 }
 			}
 
-			// Captcha
-			if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('guest', (array)$this->config->get('config_captcha_page'))) {
-				$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-				if ($captcha) {
-					$json['error']['captcha'] = $captcha;
-				}
-			}
 		}
 
 		if (!$json) {

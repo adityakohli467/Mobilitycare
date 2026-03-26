@@ -31,12 +31,7 @@ class ControllerDealerFindDealer extends Controller {
        
         
         
-        	// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-		} else {
-			$data['captcha'] = '';
-		}
+        $data['captcha'] = '';
 		
 		$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
 		

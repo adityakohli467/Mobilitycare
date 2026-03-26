@@ -523,7 +523,7 @@
     	
 		
      <div class="alert alert-custom mt-5 hide">
-        <span class="emoji">ðŸ”¥</span> Limited availability: This item is popular among our customers
+        <span class="emoji">Ã°Å¸â€Â¥</span> Limited availability: This item is popular among our customers
     </div>
 					
 
@@ -1093,22 +1093,22 @@
                                 <span class="rating-label">{{ entry_bad }}</span>
                                 <div class="stars-container">
                                     <input type="radio" name="rating" value="1" id="rating-1" required />
-                                    <label for="rating-1" class="star-label">★</label>
+                                    <label for="rating-1" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="2" id="rating-2" />
-                                    <label for="rating-2" class="star-label">★</label>
+                                    <label for="rating-2" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="3" id="rating-3" />
-                                    <label for="rating-3" class="star-label">★</label>
+                                    <label for="rating-3" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="4" id="rating-4" />
-                                    <label for="rating-4" class="star-label">★</label>
+                                    <label for="rating-4" class="star-label">â˜…</label>
                                     <input type="radio" name="rating" value="5" id="rating-5" />
-                                    <label for="rating-5" class="star-label">★</label>
+                                    <label for="rating-5" class="star-label">â˜…</label>
                                 </div>
                                 <span class="rating-label">{{ entry_good }}</span>
                             </div>
                         </div>
                     </div>
                     
-                    {{ review_captcha }}
+                    {# {{ review_captcha }} #}
                     
                     {% else %}
                     <div class="alert alert-info">
@@ -1257,7 +1257,7 @@
           <input type="hidden" name="is_manufacturer_or_product" value="1" />	
 
           <div class="form-group">
-            {{ captcha }}
+            {# {{ captcha }} #}
           </div>
 
           <div class="form-group text-right">
@@ -1469,7 +1469,7 @@
  <input type="hidden" name="is_manufacturer_or_product" value="1" />
  <input type="hidden" name="manufacturer_id" value="{{ product_id }}" />
           <div class="form-group">
-            {{ captcha }}
+            {# {{ captcha }} #}
           </div>
 
           <div class="form-group text-right">
@@ -1607,7 +1607,7 @@
 
           <div class="row">
             <div class="col-sm-12 text-right">
-              {{ captcha }}
+              {# {{ captcha }} #}
               
               <button type="submit" class="btn btn-primary" style="margin-top:10px;">
                 <i class="fa fa-paper-plane"></i> Submit Your Request
@@ -2299,7 +2299,7 @@ $(document).on('submit', '.bookaDemoForm', function (e) {
                 // Mark form as validated
                 form.data('validated', true);
  $('#loaderOverlay').hide();
-                // 🔁 Trigger normal submit (this time it will pass through)
+                // ðŸ” Trigger normal submit (this time it will pass through)
                 form.trigger('submit');
                 return;
             }
@@ -2351,7 +2351,7 @@ $(document).on('submit', '.quoteForm', function (e) {
                 //  Mark form as validated
                 form.data('validated', true);
  $('#loaderOverlay').hide();
-                // 🔁 Trigger normal submit (this time it will pass through)
+                // ðŸ” Trigger normal submit (this time it will pass through)
                 form.trigger('submit');
                 return;
             }
@@ -2383,18 +2383,6 @@ $(document).ready(function() {
         $('#healthProModal').modal('hide');
         $('#marketing-popup-wrapper').hide();
         $('body').addClass('quote-modal-open');
-
-        // Refresh captcha so it matches current session (prevents stale captcha from multi-tab or long page idle)
-        var modal = $(this);
-        $.getJSON('index.php?route=extension/captcha/basic/refresh&captcha_name=product_product', function(data) {
-            if (data && data.image_url) {
-                modal.find('.captcha-image').attr('src', data.image_url);
-                modal.find('input[name="captcha"]').val('');
-            }
-            if (data && data.captcha_token) {
-                modal.find('input[name="captcha_token"]').val(data.captcha_token);
-            }
-        });
     });
     
     $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('hidden.bs.modal', function() {

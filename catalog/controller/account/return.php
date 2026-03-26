@@ -417,12 +417,7 @@ class ControllerAccountReturn extends Controller {
 			$data['comment'] = '';
 		}
 
-		// Captcha
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('return', (array)$this->config->get('config_captcha_page'))) {
-			$data['captcha'] = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha'), $this->error);
-		} else {
-			$data['captcha'] = '';
-		}
+		$data['captcha'] = '';
 
 		if ($this->config->get('config_return_id')) {
 			$this->load->model('catalog/information');
@@ -487,14 +482,6 @@ class ControllerAccountReturn extends Controller {
 
 		if (empty($this->request->post['return_reason_id'])) {
 			$this->error['reason'] = $this->language->get('error_reason');
-		}
-
-		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('return', (array)$this->config->get('config_captcha_page'))) {
-			$captcha = $this->load->controller('extension/captcha/' . $this->config->get('config_captcha') . '/validate');
-
-			if ($captcha) {
-				$this->error['captcha'] = $captcha;
-			}
 		}
 
 		if ($this->config->get('config_return_id')) {
