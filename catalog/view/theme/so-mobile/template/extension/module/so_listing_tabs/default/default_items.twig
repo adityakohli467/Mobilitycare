@@ -321,6 +321,7 @@
                         </div>
  <input type="hidden" name="is_manufacturer_or_product" value="1" />
  <input type="hidden" name="manufacturer_id" class="selected_manufacturer_id"  />
+                        {# Captcha removed
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <div class="captcha-container" style="display: flex; align-items: center; gap: 10px;">
@@ -329,6 +330,7 @@
                                 </div>
                             </div>
                         </div>
+                        #}
 
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
@@ -525,11 +527,8 @@ function openModal(productId, productNameOverride) {
                 let lastError = '';
 
                 $.each(res.error, function (key, msg) {
-                    // Skip inline error for captcha (already shown in toast)
-                    if (key !== 'captcha') {
                         $('[name="' + key + '"]', form)
                             .after('<div class="text-red">' + msg + '</div>');
-                    }
                     lastError = msg;
                 });
 
