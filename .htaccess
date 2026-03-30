@@ -286,7 +286,7 @@ RewriteRule ^index\.php$ /blog? [R=301,L]
 RewriteRule ^blog/([0-9]+)/?$ index.php?route=extension/simple_blog/article/view&simple_blog_article_id=$1 [L,QSA]
 
 # Blog individual articles: redirect ugly URL to clean URL
-RewriteCond %{QUERY_STRING} route=extension/simple_blog/article/view&simple_blog_article_id=([0-9]+) [NC]
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=extension/simple_blog/article/view&simple_blog_article_id=([0-9]+) [NC]
 RewriteRule ^index\.php$ /blog/%1? [R=301,L]
 
 

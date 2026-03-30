@@ -10,11 +10,14 @@ class ControllerStartupSeoUrl extends Controller {
 		if (isset($this->request->get['_route_'])) {
 			$parts = explode('/', $this->request->get['_route_']);
 			
+			$had_shop_prefix = false;
+
 			if (isset($parts[0]) && $parts[0] == 'buy') {
     array_shift($parts); // remove 'buy' prefix for products
 }
 if (isset($parts[0]) && $parts[0] == 'shop') {
     array_shift($parts); // remove 'shop' prefix for categories
+    $had_shop_prefix = true;
 }
 
 
@@ -22,6 +25,9 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
 			if (utf8_strlen(end($parts)) == 0) {
 				array_pop($parts);
 			}
+
+			$category_count = 0;
+			$last_category_keyword = '';
 
 			foreach ($parts as $part) {
 				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($part) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
@@ -34,6 +40,9 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
 					}
 
 					if ($url[0] == 'category_id') {
+						$category_count++;
+						$last_category_keyword = $part;
+
 						if (!isset($this->request->get['path'])) {
 							$this->request->get['path'] = $url[1];
 						} else {
@@ -57,6 +66,13 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
 
 					break;
 				}
+			}
+
+			// 301 redirect nested category URLs to canonical short URL
+			if ($had_shop_prefix && $category_count > 1 && !isset($this->request->get['product_id'])) {
+				header('HTTP/1.1 301 Moved Permanently');
+				header('Location: /shop/' . $last_category_keyword);
+				exit;
 			}
 
 			if (!isset($this->request->get['route'])) {
@@ -101,20 +117,15 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
 } elseif ($key == 'path') {
     $categories = explode('_', $value);
 
-    foreach ($categories as $i => $category) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = 'category_id=" . (int)$category . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+    // Use only the leaf (last) category for clean canonical URLs
+    $last_category = end($categories);
 
-        if ($query->num_rows && $query->row['keyword']) {
-            // Add '/shop/' before the first category
-            if ($i == 0) {
-                $url .= '/shop/' . $query->row['keyword'];
-            } else {
-                $url .= '/' . $query->row['keyword'];
-            }
-        } else {
-            $url = '';
-            break;
-        }
+    $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = 'category_id=" . (int)$last_category . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+    if ($query->num_rows && $query->row['keyword']) {
+        $url .= '/shop/' . $query->row['keyword'];
+    } else {
+        $url = '';
     }
 
     unset($data[$key]);
