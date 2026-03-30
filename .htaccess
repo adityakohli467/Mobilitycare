@@ -25,7 +25,7 @@ RewriteRule ^organise-a-product-trial/?$ index.php?route=information/trial_reque
 # Product Demonstration
 RewriteRule ^organise-a-product-demonstration/?$ index.php?route=information/demo_request [L,QSA]
 # Funding Support
-RewriteRule ^am-i-eligible-for-funding-support/?$ index.php?route=information/funding_support [L,QSA]
+RewriteRule ^am-i-eligible-for-funding-support/?$ /funding-support [R=301,L]
 
 RewriteRule ^funding-support/?$ index.php?route=information/funding_support [L,QSA]
 RewriteRule ^ndis/?$ index.php?route=information/ndis [L,QSA]
@@ -99,6 +99,10 @@ RewriteRule ^index\.php$ /autochair-smart-lifter-enquiry/? [R=301,L,QSD]
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/find_dealer_form[\s&] [NC]
 RewriteRule ^index\.php$ /request-local-dealer/? [R=301,L,QSD]
 
+# Become a Dealer
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=dealer/dealer[\s&] [NC]
+RewriteRule ^index\.php$ /become-a-dealer/? [R=301,L,QSD]
+
 # NDIS
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/ndis[\s&] [NC]
 RewriteRule ^index\.php$ /ndis/? [R=301,L,QSD]
@@ -109,9 +113,8 @@ RewriteRule ^index\.php$ /customer-service/? [R=301,L,QSD]
 
 RewriteRule ^sitemap\.xml$ index.php?route=extension/feed/google_sitemap [L,QSA]
 
-
-
-
+# 404 fix: /mangar-lifting-cushion → correct manufacturer URL
+RewriteRule ^mangar-lifting-cushion/?$ /shop/mangar-lifting-cushion [R=301,L]
 
 # Redirect old topro product tag URLs
 RewriteCond %{THE_REQUEST} \s/product-tag/topro
@@ -122,7 +125,7 @@ RewriteRule ^buy/smart-transfer/?$ https://www.mobilitycare.net.au/buy/autochair
 RewriteRule ^shop/mobility-aids/power-assist-wheelchair/?$ https://www.mobilitycare.net.au/shop/mobility-aids/wheelchairs/power-assist-wheelchairs [R=301,L]
 
 RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/toileting/?$ [NC]
-RewriteRule ^.*$ /shop/mobility-aids/toilet-aids? [R=301,L]
+RewriteRule ^.*$ /shop/toilet-aids? [R=301,L]
 
 RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/rollators-walkers-walking-aids/?$ [NC]
 RewriteRule ^.*$ /shop/mobility-aids/walking-aids/rollators-walking-frames? [R=301,L]
@@ -207,7 +210,7 @@ RewriteRule ^about-us/?$ index.php?route=information/aboutUs [L,QSA]
 RewriteRule ^blog/?$ index.php?route=extension/simple_blog/article [L,QSA]
 RewriteRule ^terms-conditions/?$ index.php?route=information/information&information_id=5 [L,QSA]
 RewriteRule ^privacy-policy/?$ index.php?route=information/information&information_id=3 [L,QSA]
-RewriteRule ^faq/?$ index.php?route=information/support [L,QSA]
+RewriteRule ^faq/?$ /customer-service [R=301,L]
 RewriteRule ^delivery-information/?$ index.php?route=information/information&information_id=6 [L,QSA]
 RewriteRule ^demo-videos/?$ index.php?route=information/information&information_id=7 [L,QSA]
 RewriteRule ^featured-products/?$ index.php?route=product/category&path=101 [L,QSA]
@@ -274,9 +277,8 @@ RewriteRule ^index\.php$ /delivery-information? [R=301,L]
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/information&information_id=7[\s?] [NC]
 RewriteRule ^index\.php$ /demo-videos? [R=301,L]
 
-# faq
-RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/support[\s?] [NC]
-RewriteRule ^index\.php$ /faq? [R=301,L]
+# faq → customer-service (duplicate eliminated)
+# (redirect already handled above in rewrite rules)
 
 # blog
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=extension/simple_blog/article[\s?] [NC]
