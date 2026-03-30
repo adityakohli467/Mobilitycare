@@ -64,6 +64,16 @@ fbq('track', 'PageView');
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
 <link href="https://fonts.googleapis.com/css2?family=Avalon-Bold&display=swap" rel="stylesheet">
 
+<style>
+/* Force font-display: swap on icon fonts to prevent FOIT/FOUT layout shifts */
+@font-face { font-family: 'Glyphicons Halflings'; font-display: swap; }
+@font-face { font-family: 'FontAwesome'; font-display: swap; }
+/* Reserve space for header to prevent CLS during load */
+.header-center { min-height: 70px; }
+.logo { min-height: 56px; }
+.so-homeslider .item.banner a { display: block; aspect-ratio: 1920/840; }
+</style>
+
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
 {# =========== Begin General CSS ==============#}
 {% if direction=='ltr' %} {{soconfig.addCss('catalog/view/javascript/bootstrap/css/bootstrap.min.css')}}
@@ -119,7 +129,7 @@ fbq('track', 'PageView');
 {% for analytic in analytics %}{{ analytic }}{% endfor %}
 
 {% if soconfig.get_settings('layoutstyle') == 'boxed'  %} 
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800&display=swap" rel="stylesheet">
 <style type="text/css">
 body {
     background-color:{{ soconfig.get_settings('theme_bgcolor') ? soconfig.get_settings('theme_bgcolor') : 'none' }} ;       

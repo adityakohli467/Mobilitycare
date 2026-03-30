@@ -267,9 +267,9 @@
   -webkit-border-radius: 50%;
   opacity: 1;
   right: 20px;
-  -webkit-transition: all 0.3s ease-in-out 0s;
-  -moz-transition: all 0.3s ease-in-out 0s;
-  transition: all 0.3s ease-in-out 0s;
+  -webkit-transition: transform 0.3s ease-in-out 0s, opacity 0.3s ease-in-out 0s;
+  -moz-transition: transform 0.3s ease-in-out 0s, opacity 0.3s ease-in-out 0s;
+  transition: transform 0.3s ease-in-out 0s, opacity 0.3s ease-in-out 0s;
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
@@ -277,7 +277,9 @@
   transform: scale(1);
 }
 .back-to-top.hidden-top {
-  bottom: -100px;
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
   opacity: 0;
   -webkit-transform: scale(0);
   -moz-transform: scale(0);
