@@ -17,7 +17,7 @@ class ControllerExtensionModuleSoAskQuestion extends Controller {
             $data['base'] = $this->config->get('config_url');
         }
         // In the controller that loads the page with modal
-$data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquestion/sendData', '', true);
+        $data['find_dealer_submit_url'] = $this->url->link('extension/module/so_askquestion/sendData', '', true);
         $data['status'] = $this->config->get('module_so_askquestion_status');
         $data['show_name'] = $this->config->get('module_so_askquestion_show_name');
         $data['require_name'] = $this->config->get('module_so_askquestion_require_name');
