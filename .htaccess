@@ -1,6 +1,9 @@
 ############################################################
 # OpenCart .htaccess for ROOT (public_html)
 ############################################################
+# PHP memory limit
+php_value memory_limit 256M
+
 # Enable mod_rewrite
 Options +FollowSymlinks
 RewriteEngine On
