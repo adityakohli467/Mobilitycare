@@ -406,12 +406,12 @@ class ModelExtensionModuleSomegamenu extends Model {
                           if(isset($array['categories'][$i]['children'])) {
                            if(!empty($array['categories'][$i]['children'])) {
                            $link = $this->url->link('product/category', 'path=' . $path . $info_category['category_id']);    
-                           $output .= '<h6 > <a class="menuwithchild" href="'.$link.'" onclick="window.location = \''.$link.'\';">' . $info_category['name'] . '</a></h6>';
+                           $output .= '<span class="menu-title"> <a class="menuwithchild" href="'.$link.'" onclick="window.location = \''.$link.'\';">'. $info_category['name'] . '</a></span>';
                            $output .= $this->getCategoriesChildren($array['categories'][$i]['children'], $info_category['category_id'], 1, $array['submenu'],$limit);
                           }else{
                             $link = $this->url->link('product/category', 'path=' . $path . $info_category['category_id']);
-                            $output .= '<h6><a class="menuwithoutchild" href="'.$link.'" onclick="window.location = \''.$link.'\';">'.$info_category['name'].'';
-                            $output .= '</a></h6>';   
+                            $output .= '<span class="menu-title"><a class="menuwithoutchild" href="'.$link.'" onclick="window.location = \''.$link.'\';">'. $info_category['name'].'';
+                            $output .= '</a></span>';
                           }
                             }
                             $output .= '</div>';

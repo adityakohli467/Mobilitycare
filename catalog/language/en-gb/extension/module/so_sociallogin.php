@@ -1,7 +1,7 @@
 <?php
 // Heading
 $_['heading_title'] = 'So Social Login';
-$_['text_colregister'] = '<h2>NEW HERE?</h2>
+$_['text_colregister'] = '<h3>NEW HERE?</h3>
                             <p class="note-reg">Registration is free and easy!</p>
                             <ul class="list-log">
                                 <li>Faster checkout</li>

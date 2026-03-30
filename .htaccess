@@ -216,6 +216,41 @@ RewriteRule ^brands/?$ index.php?route=product/manufacturer&path=101 [L,QSA]
 
 
 ############################################################
+# 301 Redirects: Old Category URLs → New URLs (SEO migration)
+############################################################
+# Lift Chairs & Recliners (was 1,085 clicks/quarter)
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/lift-chairs-recliners/?$ [NC]
+RewriteRule ^.*$ /shop/lift-chairs-recliners? [R=301,L]
+
+# Wheelchairs
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/wheelchairs/?$ [NC]
+RewriteRule ^.*$ /shop/wheelchairs? [R=301,L]
+
+# Duplicate content fix: /wheelchairs → /shop/wheelchairs
+RewriteCond %{REQUEST_URI} ^/wheelchairs/?$ [NC]
+RewriteRule ^.*$ /shop/wheelchairs? [R=301,L]
+
+# Vehicle Access and Modifications
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/vehicle-access-and-modifications/?$ [NC]
+RewriteRule ^.*$ /shop/vehicle-access-and-modifications? [R=301,L]
+
+# Scooters
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/scooters/?$ [NC]
+RewriteRule ^.*$ /shop/scooters? [R=301,L]
+
+# Beds
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/beds/?$ [NC]
+RewriteRule ^.*$ /shop/beds? [R=301,L]
+
+# Daily Living Aids
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/daily-living-aids/?$ [NC]
+RewriteRule ^.*$ /shop/daily-living-aids? [R=301,L]
+
+# Pressure Care
+RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/pressure-care/?$ [NC]
+RewriteRule ^.*$ /shop/pressure-care? [R=301,L]
+
+############################################################
 # Correct Old → New Redirects for Static Pages (301)
 ############################################################
 
@@ -246,6 +281,13 @@ RewriteRule ^index\.php$ /faq? [R=301,L]
 # blog
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=extension/simple_blog/article[\s?] [NC]
 RewriteRule ^index\.php$ /blog? [R=301,L]
+
+# Blog individual articles: rewrite clean URL to OpenCart route
+RewriteRule ^blog/([0-9]+)/?$ index.php?route=extension/simple_blog/article/view&simple_blog_article_id=$1 [L,QSA]
+
+# Blog individual articles: redirect ugly URL to clean URL
+RewriteCond %{QUERY_STRING} route=extension/simple_blog/article/view&simple_blog_article_id=([0-9]+) [NC]
+RewriteRule ^index\.php$ /blog/%1? [R=301,L]
 
 
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=product/category&path=101[\s?] [NC]

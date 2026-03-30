@@ -1,7 +1,24 @@
 {#=====Check Home page=====#}
 {% set barStatic = soconfig.get_settings('barnav') ? '' : 'bar-static' %}
 {%  set menuMobileHeader = 1 %}
-
+<style>
+/* Fix landscape breakage */
+@media screen and (orientation: landscape) {
+	body, html {
+		overflow-x: hidden;
+	}
+}
+/* Fix horizontal shift/scroll */
+.content-main, .container, .row {
+	max-width: 100vw;
+	overflow-x: hidden;
+}
+/* Fix cart button hidden by back-to-top button */
+.back-to-top {
+	bottom: 80px !important;
+	right: 15px !important;
+}
+</style>
 {% if  menuMobileHeader == 1 %}
  {# ===== HOLIDAY MESSAGE BANNER - MOBILE ONLY ===== #}
   {#<div class="holiday-banner" style=" position: fixed;  z-index: 999;;background-color: #ea3a3c; color: white; padding: 10px 15px; text-align: center; font-size: 14px; line-height: 1.4;">#}
@@ -100,7 +117,7 @@
 		<a class="btn btn-link btn-nav pull-right toggle-panel" href="#panel-menu">
 			<span class="icon icon-bars"></span>
 		</a>
-		<h1 class="title">{{title}}</h1>
+		<span class="title" role="heading" aria-level="2">{{title}}</span>
 	</header>
 	
 {% endif %}

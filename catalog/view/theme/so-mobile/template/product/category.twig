@@ -18,6 +18,14 @@
     padding: 12px;
 }
 
+.category-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #101d2f;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
 </style>
 {{ header }}
 {% include 'so-clickboom/template/soconfig/breadcrumbs.twig' %}
@@ -27,6 +35,9 @@
     <div id="content" class="col-xs-12">
     	
 		<div class="products-category clearfix">
+			
+			{#===== Category H1 Heading for SEO =======#}
+			<h1 class="category-heading">{{ heading_title }}</h1>
 			
 			{#===== Show Description Category =======#}
 			{% if thumb %}
