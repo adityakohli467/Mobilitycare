@@ -102,7 +102,7 @@
         {% for item in list %}        
     <div class="item banner">
         <a href="{{ item.url }}" title="{{ item.title }}" target="{{ item_link_target }}" style="height: 600px;">
-            <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ item.thumb }}" alt="{{ item.title }}" width="1920" height="840" style="width:100%;height:auto;aspect-ratio:1920/840;" />
+            <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ item.thumb }}" alt="{{ item.title }}" width="1920" height="840" />
         </a>
         <div class="sohomeslider-description banner-content">
             {% if item.caption %} 
