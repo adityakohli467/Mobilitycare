@@ -8,9 +8,8 @@ class ControllerInformationSupport extends Controller {
 		$this->document->setTitle('Customer Support & Service | MobilityCare Australia');
 		$this->document->setDescription('Get help with your mobility equipment. Contact MobilityCare customer support for product enquiries, warranty claims, demonstrations, repairs and after-sales service.');
 
-		if (isset($this->request->get['route'])) {
-			$this->document->addLink($this->config->get('config_url'), 'canonical');
-		}
+		$server = $this->config->get('config_ssl') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+		$this->document->addLink(rtrim($server, '/') . '/customer-service', 'canonical');
         
         $data['title'] = 'Customer Support';
 		$data['column_left'] = $this->load->controller('common/column_left');

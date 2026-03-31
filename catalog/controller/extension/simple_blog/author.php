@@ -4,7 +4,7 @@
 			$this->language->load('extension/simple_blog/article');
 			
 			$data['error_no_database'] = '';			
-			$this->document->setTitle($this->language->get('heading_title'));
+			$this->document->setTitle('Blog Author | ' . $this->config->get('config_name'));
 			$this->document->addStyle('catalog/view/javascript/simple_blog/css/style.css');
 			
 			$this->load->model('extension/simple_blog/article');			

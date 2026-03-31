@@ -7,7 +7,8 @@ class ControllerInformationContact extends Controller {
 
         $this->document->setTitle('Contact Us | MobilityCare Australia');
         $this->document->setDescription('Contact MobilityCare for enquiries about mobility aids, wheelchairs, rollators, scooter hoists and assistive equipment. We are here to help across Australia.');
-        $this->document->addLink($this->url->link('information/contact'), 'canonical');
+        $server = $this->config->get('config_ssl') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+        $this->document->addLink(rtrim($server, '/') . '/contact-mobilitycare', 'canonical');
         $this->load->model('catalog/demo_request');
          $this->load->model('catalog/manufacturer');
         $data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();

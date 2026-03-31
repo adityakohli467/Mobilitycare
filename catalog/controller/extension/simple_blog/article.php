@@ -7,13 +7,13 @@
 			/*======Show Themeconfig=======*/
 			$data['soconfig'] = $this->soconfig;
 
+			if($this->config->get('simple_blog_heading')) {
+				$this->document->setTitle($this->config->get('simple_blog_heading'));
+			} else {
+				$this->document->setTitle('Blog | ' . $this->config->get('config_name'));
+			}
+
 			if(!$this->checkDatabase()) {
-				
-				if($this->config->has('simple_blog_heading')) {
-					$this->document->setTitle($this->config->get('simple_blog_heading'));
-				} else {
-					$this->document->setTitle($this->language->get('heading_title'));
-				}
 				$this->document->addStyle('catalog/view/javascript/simple_blog/css/style.css');
 				
 				$this->load->model('extension/simple_blog/article');

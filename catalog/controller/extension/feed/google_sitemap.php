@@ -6,8 +6,11 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
 
 			// Homepage
+			$homeUrl = $this->config->get('config_ssl') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+			$homeUrl = rtrim($homeUrl, '/');
+
 			$output .= '<url>' . "\n";
-			$output .= '  <loc>' . $this->escapeUrl($this->config->get('config_ssl') ? $this->config->get('config_ssl') : $this->config->get('config_url')) . '</loc>' . "\n";
+			$output .= '  <loc>' . $this->escapeUrl($homeUrl) . '</loc>' . "\n";
 			$output .= '  <lastmod>' . date('Y-m-d\TH:i:sP') . '</lastmod>' . "\n";
 			$output .= '  <changefreq>daily</changefreq>' . "\n";
 			$output .= '  <priority>1.0</priority>' . "\n";
@@ -44,9 +47,24 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
 
+			// Manufacturer SEO URLs that redirect — use final destination instead
+			$manufacturerRedirects = array(
+				'mangar-lifting-cushion' => 'shop/mangar-lifting-cushion'
+			);
+
 			foreach ($manufacturers as $manufacturer) {
+				$loc = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']);
+
+				// Replace redirecting manufacturer URLs with their final destination
+				foreach ($manufacturerRedirects as $old => $new) {
+					if (strpos($loc, '/' . $old) !== false) {
+						$loc = str_replace('/' . $old, '/' . $new, $loc);
+						break;
+					}
+				}
+
 				$output .= '<url>' . "\n";
-				$output .= '  <loc>' . $this->escapeUrl($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id'])) . '</loc>' . "\n";
+				$output .= '  <loc>' . $this->escapeUrl($loc) . '</loc>' . "\n";
 				$output .= '  <changefreq>weekly</changefreq>' . "\n";
 				$output .= '  <priority>0.7</priority>' . "\n";
 				$output .= '</url>' . "\n";
@@ -66,17 +84,16 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			$server = $this->config->get('config_ssl') ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
+			// Canonical custom pages (no redirects, no duplicates)
 			$customUrls = array(
 				'organise-a-product-trial',
 				'organise-a-product-demonstration',
-				'am-i-eligible-for-funding-support',
 				'funding-support',
 				'ndis',
 				'place-an-order',
 				'request-quote',
 				'warranty-claim',
 				'contact-mobilitycare',
-				'product_enq',
 				'find-a-dealer',
 				'become-a-dealer',
 				'customer-service',
@@ -84,9 +101,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				'autochair-smart-lifter-enquiry',
 				'about-us',
 				'blog',
-				'faq',
 				'brands',
-				'register',
 				'request-local-dealer'
 			);
 

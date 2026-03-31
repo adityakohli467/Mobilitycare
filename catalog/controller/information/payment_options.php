@@ -4,6 +4,7 @@ class ControllerInformationPaymentOptions extends Controller {
 
 	public function index() {
 		$this->load->language('information/contact');
+		$this->document->setTitle('Payment Options | ' . $this->config->get('config_name'));
 		$data['title'] = 'Payment Options';
         $data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
