@@ -18,11 +18,11 @@
 {#====  Loader breadcrumbs ==== #}
 {% include 'so-clickboom/template/soconfig/breadcrumbs.twig' %}
 <style>
-/* iOS scroll-lock: when a modal is open, pin the body so it doesn't scroll */
+/* iOS scroll-lock: prevent background scroll without position:fixed (which freezes inputs) */
+html.ios-modal-open,
 body.ios-modal-open {
-  position: fixed;
-  width: 100%;
   overflow: hidden;
+  height: 100%;
 }
 /* Hide marketing popup when quote/demo modals are open */
 body.quote-modal-open .marketing-popup,
@@ -2077,18 +2077,28 @@ $(document).on('submit', '.quoteForm', function (e) {
     });
 });
 
-// iOS scroll-lock: save scroll position on modal open, restore on close
+// iOS scroll-lock: prevent background scroll without position:fixed (which freezes inputs on iOS)
 (function() {
     var scrollY = 0;
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     if (isIOS) {
+        var preventBgScroll = function(e) {
+            var el = e.target;
+            while (el && el !== document.body) {
+                if (el.scrollHeight > el.clientHeight && el.closest('.modal')) return;
+                el = el.parentElement;
+            }
+            e.preventDefault();
+        };
         $(document).on('show.bs.modal', '.modal', function() {
             scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            $('body').addClass('ios-modal-open').css('top', '-' + scrollY + 'px');
+            $('html, body').addClass('ios-modal-open');
+            document.addEventListener('touchmove', preventBgScroll, { passive: false });
         });
         $(document).on('hidden.bs.modal', '.modal', function() {
             if (!$('.modal.in').length) {
-                $('body').removeClass('ios-modal-open').css('top', '');
+                $('html, body').removeClass('ios-modal-open');
+                document.removeEventListener('touchmove', preventBgScroll);
                 window.scrollTo(0, scrollY);
             }
         });
