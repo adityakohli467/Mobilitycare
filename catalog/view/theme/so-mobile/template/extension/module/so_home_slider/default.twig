@@ -1,7 +1,18 @@
 {% set count_item = list|length %}
 
 <div class="module sohomepage-slider {{ class_suffix}}">
-    <style>.sohomeslider-inner-{{ module}}{aspect-ratio:1920/840;overflow:hidden;}.sohomeslider-inner-{{ module}} .item img{width:100%;height:auto;}</style>
+    <style>
+    /* Show first slide immediately — don't wait for owl.carousel JS */
+    .sohomeslider-inner-{{ module}}{aspect-ratio:1920/840;overflow:hidden;}
+    .sohomeslider-inner-{{ module}} .item img{width:100%;height:auto;display:block;}
+    .sohomeslider-inner-{{ module}} .item:first-child{display:block !important;opacity:1 !important;}
+    .sohomeslider-inner-{{ module}} .item:not(:first-child){display:none;}
+    .sohomeslider-inner-{{ module}}.owl2-loaded .item{display:block;}
+    .sohomeslider-inner-{{ module}}.owl2-loaded .item:not(:first-child){display:block;}
+    </style>
+    {% if list %}
+    <link rel="preload" as="image" href="{{ list[0].thumb }}" fetchpriority="high">
+    {% endif %}
     {% if disp_title_module %}
       <h3 class="modtitle">{{ head_name}}</h3>
     {% endif %}

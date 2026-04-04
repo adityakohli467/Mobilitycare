@@ -19,6 +19,10 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="preconnect" href="https://www.google-analytics.com">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
+<style>/* Critical: prevent owl.carousel from hiding hero until JS loads */
+.owl2-carousel.owl2-loading{opacity:1 !important;}
+.sohomepage-slider .so-homeslider{opacity:1 !important;display:block !important;}
+</style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->

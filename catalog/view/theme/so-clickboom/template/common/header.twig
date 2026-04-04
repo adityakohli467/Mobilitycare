@@ -61,6 +61,10 @@ fbq('track', 'PageView');
 <title>{{ title }}</title>
 <base href="{{ base }}" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>/* Critical: prevent owl.carousel from hiding hero until JS loads */
+.owl2-carousel.owl2-loading{opacity:1 !important;}
+.sohomepage-slider .so-homeslider{opacity:1 !important;display:block !important;}
+</style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
