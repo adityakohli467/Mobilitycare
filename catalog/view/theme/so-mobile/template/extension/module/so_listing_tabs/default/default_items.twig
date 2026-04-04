@@ -412,9 +412,8 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 2000;
-    display: flex; /* Use flexbox to center the loader */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    justify-content: center;
+    align-items: center;
 }
 .loader {
     border: 4px solid #f3f3f3;
@@ -494,9 +493,10 @@ function openModal(productId, productNameOverride) {
     }
 }
 
- $('#loaderOverlay').hide();
+ $('.loader-overlay').hide();
  $(document).on('submit', '.quoteForm', function (e) {
-    $('#loaderOverlay').show();
+    var $loader = $(this).closest('.modal').find('.loader-overlay');
+    $loader.css('display', 'flex').show();
     // Guard: allow normal submit after validation
     if ($(this).data('validated') === true) {
         return true; // allow normal submit
@@ -516,13 +516,13 @@ function openModal(productId, productNameOverride) {
             if (res.success) {
                 // Mark form as validated
                 form.data('validated', true);
-                $('#loaderOverlay').hide();
+                $loader.hide();
                 // Trigger normal submit (this time it will pass through)
                 form.trigger('submit');
                 return;
             }
 
-            $('#loaderOverlay').hide();
+            $loader.hide();
             if (res.error) {
                 let lastError = '';
 
