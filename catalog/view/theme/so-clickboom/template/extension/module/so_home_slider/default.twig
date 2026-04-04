@@ -85,6 +85,7 @@
 
 </style>
 <div class="module sohomepage-slider {{ class_suffix}}">
+    <style>.sohomeslider-inner-{{ module}}{aspect-ratio:1920/840;overflow:hidden;}.sohomeslider-inner-{{ module}} .item img{width:100%;height:auto;}</style>
     {% if disp_title_module %}
       <h3 class="modtitle">{{ head_name}}</h3>
     {% endif %}
@@ -102,7 +103,11 @@
         {% for item in list %}        
     <div class="item banner">
         <a href="{{ item.url }}" title="{{ item.title }}" target="{{ item_link_target }}" style="height: 600px;">
-            <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ item.thumb }}" alt="{{ item.title }}" width="1920" height="840" />
+            {% if loop.first %}
+            <img src="{{ item.thumb }}" alt="{{ item.title }}" width="1920" height="840" fetchpriority="high" />
+            {% else %}
+            <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ item.thumb }}" alt="{{ item.title }}" width="1920" height="840" loading="lazy" />
+            {% endif %}
         </a>
         <div class="sohomeslider-description banner-content">
             {% if item.caption %} 

@@ -43,8 +43,8 @@ class CoreWebVitalsFixesTest extends TestCase
     {
         $twig = $this->readTemplate('catalog/view/theme/default/template/common/header.twig');
         // Should not use protocol-relative URL (//fonts.googleapis.com) any more
-        $this->assertStringNotContainsString(
-            '//fonts.googleapis.com/css?family=Open+Sans',
+        $this->assertDoesNotMatchRegularExpression(
+            '/["\']\/\/fonts\.googleapis\.com/',
             $twig,
             'Google Fonts URL should use https:// not protocol-relative //'
         );
@@ -388,23 +388,33 @@ class CoreWebVitalsFixesTest extends TestCase
         );
     }
 
-    public function testSoMobileHeaderRecaptchaHasAsync(): void
+    public function testSoMobileHeaderRecaptchaDeferredOnInteraction(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/so-mobile/template/common/header.twig');
-        $this->assertMatchesRegularExpression(
-            '/<script[^>]+recaptcha[^>]+async[^>]*>/',
+        $this->assertStringContainsString(
+            'loadRecaptcha',
             $twig,
-            'so-mobile/header.twig: reCAPTCHA <script> must have async attribute'
+            'so-mobile/header.twig: reCAPTCHA must be deferred until user interaction'
+        );
+        $this->assertStringContainsString(
+            'recaptcha/api.js',
+            $twig,
+            'so-mobile/header.twig: reCAPTCHA API URL must be present'
         );
     }
 
-    public function testSoMobileCallRailHasAsync(): void
+    public function testSoMobileCallRailDeferred(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/so-mobile/template/common/header.twig');
-        $this->assertMatchesRegularExpression(
-            '/<script\s[^>]*async[^>]*callrail[^>]*>/',
+        $this->assertStringContainsString(
+            'callrail.com',
             $twig,
-            'so-mobile/header.twig: CallRail <script> must have async attribute'
+            'so-mobile/header.twig: CallRail URL must be present'
+        );
+        $this->assertStringContainsString(
+            'https://cdn.callrail.com',
+            $twig,
+            'so-mobile/header.twig: CallRail must use https://'
         );
     }
 

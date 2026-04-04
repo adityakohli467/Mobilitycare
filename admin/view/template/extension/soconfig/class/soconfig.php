@@ -98,21 +98,21 @@ class Soconfig{
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
 				
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
 			}else{
 				
 				if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product') $optimizeJSExclude[]='catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js';
 				
 				$js_files_to_out = 	array_diff( $this->js_files[$position], $optimizeJSExclude) ;
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
 				foreach($optimizeJSExclude as $file){
-					if(!empty($file))echo '<script src="'.$file.'"></script>'."\n";
+					if(!empty($file))echo '<script src="'.$file.'" defer></script>'."\n";
 				}
 				
 			}
 		}else{
-			foreach($js_files_to_out as $file) echo '<script src="'.$file.'"></script>'."\n";
+			foreach($js_files_to_out as $file) echo '<script src="'.$file.'" defer></script>'."\n";
 		}
     }
 	
@@ -600,7 +600,7 @@ if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] 
 				if(isset($font)){
 					if (!in_array($font->fontFamily, $systemFonts) && !in_array($font->fontFamily,$onlyfontFamily )){
 						$onlyfontFamily[]= $font->fontFamily;
-						echo '<link rel="stylesheet" href="//fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap">'."\n";
+						echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap">'."\n";
 					}
 				}
             }
