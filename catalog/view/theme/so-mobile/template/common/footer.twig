@@ -103,7 +103,18 @@
 	</div>
 	<!-- End Main wrapper -->
 	
-	
+<script>
+// Global fix: move Bootstrap modals to <body> on open.
+// Modals rendered inside owl2-carousel or listing-tabs containers inherit
+// CSS transforms (translate3d) which break position:fixed on iOS Safari,
+// causing the backdrop to sit ABOVE the modal content and freeze all input.
+$(document).on('show.bs.modal', '.modal', function() {
+    var $modal = $(this);
+    if (!$modal.parent().is('body')) {
+        $modal.appendTo('body');
+    }
+});
+</script>
 
 
 </body>
