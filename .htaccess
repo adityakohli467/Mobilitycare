@@ -20,8 +20,6 @@ RewriteRule ^(.*)$ https://www.mobilitycare.net.au/$1 [R=301,L]
 ############################################################
 # Custom SEO Routes
 ############################################################
-# Homepage: serve mobile home directly to avoid redirect chain (/ → mobile/home → /home)
-RewriteRule ^$ index.php?route=extension/mobile/home [L,QSA]
 
 # Product Trial
 RewriteRule ^organise-a-product-trial/?$ index.php?route=information/trial_request [L,QSA]
