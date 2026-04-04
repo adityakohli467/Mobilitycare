@@ -22,10 +22,9 @@
 <style>/* Critical: prevent owl.carousel from hiding hero until JS loads */
 .owl2-carousel.owl2-loading{opacity:1 !important;}
 .sohomepage-slider .so-homeslider{opacity:1 !important;display:block !important;}
-/* iOS fix: ensure modals are scrollable and interactive */
-.modal { -webkit-overflow-scrolling: touch; }
-body.modal-open { overflow: hidden; height: 100%; }
-html.modal-open { overflow: hidden; height: 100%; }
+/* iOS fix: force modal content scrollable on iOS Safari */
+.modal { -webkit-overflow-scrolling: touch; overflow-y: scroll !important; }
+.modal-body { -webkit-overflow-scrolling: touch; overflow-y: auto; max-height: calc(100vh - 160px); }
 </style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
