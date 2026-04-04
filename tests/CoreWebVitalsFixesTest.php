@@ -358,33 +358,33 @@ class CoreWebVitalsFixesTest extends TestCase
     // Lighthouse Fix Prompt — Task 2: defer/async on render-blocking scripts
     // -----------------------------------------------------------------------
 
-    public function testDefaultThemeHeaderScriptsHaveDefer(): void
+    public function testDefaultThemeHeaderScriptsNoDeferOnCore(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/default/template/common/header.twig');
-        $this->assertMatchesRegularExpression(
+        $this->assertDoesNotMatchRegularExpression(
             '/<script[^>]+jquery[^>]+defer[^>]*>/',
             $twig,
-            'default/header.twig: jQuery <script> must have defer attribute'
+            'default/header.twig: jQuery <script> must NOT have defer (breaks inline scripts)'
         );
-        $this->assertMatchesRegularExpression(
+        $this->assertDoesNotMatchRegularExpression(
             '/<script[^>]+bootstrap\.min\.js[^>]+defer[^>]*>/',
             $twig,
-            'default/header.twig: Bootstrap <script> must have defer attribute'
+            'default/header.twig: Bootstrap <script> must NOT have defer (breaks inline scripts)'
         );
-        $this->assertMatchesRegularExpression(
+        $this->assertDoesNotMatchRegularExpression(
             '/<script[^>]+common\.js[^>]+defer[^>]*>/',
             $twig,
-            'default/header.twig: common.js <script> must have defer attribute'
+            'default/header.twig: common.js <script> must NOT have defer (breaks inline scripts)'
         );
     }
 
-    public function testDefaultThemeFooterScriptsHaveDefer(): void
+    public function testDefaultThemeFooterScriptsNoDefer(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/default/template/common/footer.twig');
-        $this->assertStringContainsString(
+        $this->assertStringNotContainsString(
             'defer',
             $twig,
-            'default/footer.twig: scripts loop must have defer attribute'
+            'default/footer.twig: scripts loop must NOT have defer (breaks jQuery plugins)'
         );
     }
 

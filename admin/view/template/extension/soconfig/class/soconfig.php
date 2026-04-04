@@ -98,21 +98,21 @@ class Soconfig{
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
 				
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 			}else{
 				
 				if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product') $optimizeJSExclude[]='catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js';
 				
 				$js_files_to_out = 	array_diff( $this->js_files[$position], $optimizeJSExclude) ;
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 				foreach($optimizeJSExclude as $file){
-					if(!empty($file))echo '<script src="'.$file.'" defer></script>'."\n";
+					if(!empty($file))echo '<script src="'.$file.'"></script>'."\n";
 				}
 				
 			}
 		}else{
-			foreach($js_files_to_out as $file) echo '<script src="'.$file.'" defer></script>'."\n";
+			foreach($js_files_to_out as $file) echo '<script src="'.$file.'"></script>'."\n";
 		}
     }
 	
