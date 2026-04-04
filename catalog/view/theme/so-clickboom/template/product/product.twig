@@ -298,7 +298,7 @@
 											<input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" />
 											<span class="option-content-box" data-title="{{ option_value.name}} {{ radio_price }}" data-toggle='tooltip'>
 												{% if option_value.image %} 
-													<img src="{{ option_value.image }} " alt="{{ option_value.name}}  {{radio_price}}" /> 
+													<img src="{{ option_value.image }}" alt="{{ option_value.name }} {{radio_price}}" width="50" height="50" loading="lazy" /> {# 50x50 per controller resize #}
 												{% endif %} 
 												<span class="option-name">{{ option_value.name }} </span>
 												{% if option_value.price  and  radio_style  != '1' %} ({{ option_value.price_prefix }} {{ option_value.price }} ){% endif %} 
@@ -339,7 +339,7 @@
 											<input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" />
 											<span class="option-content-box" data-title="{{ option_value.name}} {{ radio_price }}" data-toggle='tooltip'>
 												{% if option_value.image %} 
-													<img src="{{ option_value.image }} " alt="{{ option_value.name}}  {{radio_price}}" /> 
+													<img src="{{ option_value.image }}" alt="{{ option_value.name }} {{radio_price}}" width="50" height="50" loading="lazy" /> {# 50x50 per controller resize #}
 												{% endif %} 
 
 												<span class="option-name">{{ option_value.name }} </span>
@@ -865,14 +865,14 @@
             {% if feature.image %}
 <div class="img-magnifier-container" data-image="{{ feature.image }}">
     <img src="{{ feature.image }}" alt="{{ feature.title ? feature.title ~ ' feature image' : product_name ~ ' feature ' ~ loop.index }}"
-         class="img-fluid feature-image" itemprop="image" />
+         class="img-fluid feature-image" itemprop="image" width="600" height="400" loading="lazy" /> {# guessed: feature col is ~600px wide #}
     {#<div class="img-magnifier-glass"></div>#}
 </div>
 
 
   <div class="magnifier" id="magnifier-{{ loop.index }}"></div>
             {% else %}
-              <img src="image/placeholder.png" alt="{{ product_name }} feature placeholder" class="img-fluid" />
+              <img src="image/placeholder.png" alt="{{ product_name }} feature placeholder" class="img-fluid" width="600" height="400" loading="lazy" />
             {% endif %}
           </div>
           <div class="col-sm-8 feature-text">
@@ -983,7 +983,7 @@
 								
 								{% if soconfig.get_settings('product_enablesizechart') %}
 								<div class="tab-pane " id="tab-sizechart">
-									<img src="image/{{soconfig.get_settings('img_sizechart')}}" alt="Size Chart">
+									<img src="image/{{soconfig.get_settings('img_sizechart')}}" alt="Size Chart" width="800" height="600" loading="lazy" /> {# guessed: full-width tab content #}
 								</div>
 								{% endif %}
 								
@@ -2402,4 +2402,6 @@ $(document).ready(function() {
      
     
 
-     {{ footer }} 
+{{ json_ld|raw }}
+{{ json_ld_breadcrumb|raw }}
+{{ footer }} 

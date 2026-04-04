@@ -11,6 +11,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#003264" />
 <title>{{ title }}</title>
 <base href="{{ base }}" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0"> 
@@ -90,7 +91,7 @@
 	{{ analytic }}
 {% endfor %}
 
-<script src="https://www.google.com/recaptcha/api.js?render=6Lcab9caAAAAANnUgfmoMnQTfkjagqp1xHgJ2xi3"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6Lcab9caAAAAANnUgfmoMnQTfkjagqp1xHgJ2xi3" async></script>
 
 
    <!-- Google Tag Manager -->
@@ -135,7 +136,7 @@ fbq('track', 'PageView');
 <!-- End Facebook Pixel -->
 
 <!-- CallRail (if applicable — update ID) -->
-<script type="text/javascript" src="//cdn.callrail.com/companies/221652502/0da3b62b0a183893e7ed/12/swap.js"></script> 
+<script async src="//cdn.callrail.com/companies/221652502/0da3b62b0a183893e7ed/12/swap.js"></script>
 <style>
 .navbar-menu .toggle-panel .icon-bar{
         background: #013b77 !important;

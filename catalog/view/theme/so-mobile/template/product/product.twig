@@ -18,14 +18,11 @@
 {#====  Loader breadcrumbs ==== #}
 {% include 'so-clickboom/template/soconfig/breadcrumbs.twig' %}
 <style>
-@supports (-webkit-touch-callout: none) {
-  .modal-backdrop {
-    position: relative !important;
-  }
-  
-  .modal {
-    position: relative !important;
-  }
+/* iOS scroll-lock: when a modal is open, pin the body so it doesn't scroll */
+body.ios-modal-open {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
 }
 /* Hide marketing popup when quote/demo modals are open */
 body.quote-modal-open .marketing-popup,
@@ -610,11 +607,11 @@ body.quote-modal-open .popup-marketing {
                                                         <div class="col-xs-12 col-sm-4">
                                                             {% if feature.image %}
                                                                 <div class="img-magnifier-container" data-image="{{ feature.image }}">
-                                                                    <img src="{{ feature.image }}" alt="{{ feature.title ? feature.title ~ ' feature image' : product_name ~ ' feature ' ~ loop.index }}" class="img-fluid feature-image" itemprop="image" />
+                                                                    <img src="{{ feature.image }}" alt="{{ feature.title ? feature.title ~ ' feature image' : product_name ~ ' feature ' ~ loop.index }}" class="img-fluid feature-image" itemprop="image" width="600" height="400" loading="lazy" /> {# guessed: feature col ~600px #}
                                                                     <div class="img-magnifier-glass"></div>
                                                                 </div>
                                                             {% else %}
-                                                                <img src="image/placeholder.png" alt="{{ product_name }} feature placeholder" class="img-fluid" />
+                                                                <img src="image/placeholder.png" alt="{{ product_name }} feature placeholder" class="img-fluid" width="600" height="400" loading="lazy" />
                                                             {% endif %}
                                                         </div>
                                                         <div class="col-xs-12 col-sm-8 feature-text">
@@ -710,8 +707,8 @@ body.quote-modal-open .popup-marketing {
                                                 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
                                                     {% for download in downloads %}
                                                         <div style="text-align: center;">
-                                                            <a href="{{ download.href }}" target="_blank">
-                                                                <img src="catalog/view/theme/default/image/pdfImage.png" alt="{{ download.name }}" style="width: 80px; height: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border-radius: 4px;">
+                                                            <a href="{{ download.href }}" target="_blank" rel="noopener noreferrer">
+                                                                <img src="catalog/view/theme/default/image/pdfImage.png" alt="{{ download.name }}" width="80" height="80" style="width: 80px; height: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border-radius: 4px;" loading="lazy">
                                                                 <div style="margin-top: 8px; color: #337ab7; font-weight: 500;">{{ download.name }}</div>
                                                             </a>
                                                         </div>
@@ -2079,6 +2076,24 @@ $(document).on('submit', '.quoteForm', function (e) {
         }
     });
 });
+
+// iOS scroll-lock: save scroll position on modal open, restore on close
+(function() {
+    var scrollY = 0;
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIOS) {
+        $(document).on('show.bs.modal', '.modal', function() {
+            scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            $('body').addClass('ios-modal-open').css('top', '-' + scrollY + 'px');
+        });
+        $(document).on('hidden.bs.modal', '.modal', function() {
+            if (!$('.modal.in').length) {
+                $('body').removeClass('ios-modal-open').css('top', '');
+                window.scrollTo(0, scrollY);
+            }
+        });
+    }
+})();
 
 // Hide marketing popup when quote or demo modals are open
 $(document).ready(function() {

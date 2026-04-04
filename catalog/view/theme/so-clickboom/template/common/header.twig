@@ -52,16 +52,20 @@ fbq('track', 'PageView');
 <!-- End Facebook Pixel -->
 
 <!-- CallRail (if applicable — update ID) -->
-<script type="text/javascript" src="//cdn.callrail.com/companies/221652502/0da3b62b0a183893e7ed/12/swap.js"></script> 
+<script async src="//cdn.callrail.com/companies/221652502/0da3b62b0a183893e7ed/12/swap.js"></script>
 
 
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#003264" />
 <title>{{ title }}</title>
 <base href="{{ base }}" />
-<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com">
 <link href="https://fonts.googleapis.com/css2?family=Avalon-Bold&display=swap" rel="stylesheet">
 
 <style>

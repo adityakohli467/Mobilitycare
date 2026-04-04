@@ -2,7 +2,6 @@ function initAutocomplete() {
     const input = document.getElementById('autocomplete');
     
     if (!input) {
-        console.error('Address input field not found');
         return;
     }
     
@@ -39,7 +38,6 @@ function initAutocomplete() {
         document.getElementById('input-payment-city').value = suburb;
         document.getElementById('input-payment-zone').value = state;
         document.getElementById('input-payment-postcode').value = postcode;
-        console.log("pooss",postcode)
         calculateShippngCostAutomatically(postcode);
 
         // Now trigger to load the zone (payment zone)
@@ -68,10 +66,6 @@ function updatePaymentZone(state_code) {
 }
 
 function calculateShippngCostAutomatically(postcode){
-    
-      console.log("Trigger POS shipping");
-       
-
         if(postcode.length === 0) {
             $('#shipping-results').html('<p>Please enter a postcode.</p>');
             return;

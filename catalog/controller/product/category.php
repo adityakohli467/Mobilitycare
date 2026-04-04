@@ -323,6 +323,36 @@ class ControllerProductCategory extends Controller {
             			
 
 
+            // Open Graph meta tags for category
+            $og_title = htmlspecialchars($category_info['meta_title'] ?: $category_info['name'], ENT_QUOTES, 'UTF-8');
+            $og_description = htmlspecialchars(strip_tags($category_info['meta_description'] ?: ''), ENT_QUOTES, 'UTF-8');
+            $og_url = htmlspecialchars($this->url->link('product/category', 'path=' . $this->request->get['path']), ENT_QUOTES, 'UTF-8');
+            $og_image = !empty($data['thumb']) ? htmlspecialchars($data['thumb'], ENT_QUOTES, 'UTF-8') : '';
+            $og_tags = '<meta property="og:type" content="website" />' . "\n"
+                . '<meta property="og:title" content="' . $og_title . '" />' . "\n"
+                . '<meta property="og:description" content="' . $og_description . '" />' . "\n"
+                . '<meta property="og:url" content="' . $og_url . '" />' . "\n"
+                . ($og_image ? '<meta property="og:image" content="' . $og_image . '" />' . "\n" : '')
+                . '<meta property="og:site_name" content="' . htmlspecialchars($this->config->get('config_name'), ENT_QUOTES, 'UTF-8') . '" />' . "\n"
+                . '<meta name="twitter:card" content="summary" />' . "\n"
+                . '<meta name="twitter:title" content="' . $og_title . '" />' . "\n"
+                . '<meta name="twitter:description" content="' . $og_description . '" />' . "\n";
+            $this->document->addAnalytic($og_tags);
+
+            // BreadcrumbList JSON-LD for category
+            if (!empty($data['breadcrumbs']) && count($data['breadcrumbs']) > 1) {
+                $breadcrumb_list = array('@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => array());
+                foreach ($data['breadcrumbs'] as $position => $crumb) {
+                    $breadcrumb_list['itemListElement'][] = array(
+                        '@type'    => 'ListItem',
+                        'position' => $position + 1,
+                        'name'     => $crumb['text'],
+                        'item'     => $crumb['href'],
+                    );
+                }
+                $this->document->addAnalytic('<script type="application/ld+json">' . json_encode($breadcrumb_list, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>');
+            }
+
             // Load common controllers
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -330,7 +360,6 @@ class ControllerProductCategory extends Controller {
             $data['content_bottom'] = $this->load->controller('common/content_bottom');
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header');
-          
 
             $this->response->setOutput($this->load->view('product/category', $data));
         } else {
@@ -380,7 +409,8 @@ class ControllerProductCategory extends Controller {
         $this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
-		
+
+		$url = '';
 
         $category_id = $this->request->get['path'];
         

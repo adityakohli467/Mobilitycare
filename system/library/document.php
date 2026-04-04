@@ -18,6 +18,7 @@ class Document {
 	private $links = array();
 	private $styles = array();
 	private $scripts = array();
+	private $analytics = array();
 
 	/**
      * 
@@ -148,5 +149,21 @@ class Document {
 		} else {
 			return array();
 		}
+	}
+
+	/**
+	 * Add an analytics/meta HTML snippet (e.g. OG tags, JSON-LD).
+	 *
+	 * @param	string	$html
+	 */
+	public function addAnalytic($html) {
+		$this->analytics[] = $html;
+	}
+
+	/**
+	 * @return	array
+	 */
+	public function getAnalytics() {
+		return $this->analytics;
 	}
 }

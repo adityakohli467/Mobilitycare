@@ -479,7 +479,7 @@ class ModelCatalogProduct extends Model {
 	}
 	
 	public function getCategoriesInfo($product_id) {
-		$query = $this->db->query("SELECT p2c.category_id,c.top FROM " . DB_PREFIX . "product_to_category p2c left join oc_category c on p2c.category_id = c.category_id WHERE c.top = 1 and p2c.product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT p2c.category_id,c.top FROM " . DB_PREFIX . "product_to_category p2c LEFT JOIN " . DB_PREFIX . "category c ON p2c.category_id = c.category_id WHERE c.top = 1 AND p2c.product_id = '" . (int)$product_id . "'");
 
 		return $query->rows;
 	}

@@ -14,6 +14,9 @@ class ControllerCommonHeader extends Controller {
 			}
 		}
 
+		// Merge in any analytics added via $this->document->addAnalytic() (OG tags, JSON-LD, etc.)
+		$data['analytics'] = array_merge($data['analytics'], $this->document->getAnalytics());
+
 		if ($this->request->server['HTTPS']) {
 			$server = $this->config->get('config_ssl');
 		} else {

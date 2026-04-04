@@ -590,6 +590,68 @@ foreach ($downloads as $download) {
 
 			$this->model_catalog_product->updateViewed($this->request->get['product_id']);
 			
+			// Open Graph meta tags
+			$og_image = !empty($data['thumb']) ? $data['thumb'] : '';
+			$og_title = htmlspecialchars($product_info['meta_title'] ?: $product_info['name'], ENT_QUOTES, 'UTF-8');
+			$og_description = htmlspecialchars(strip_tags($product_info['meta_description'] ?: ''), ENT_QUOTES, 'UTF-8');
+			$og_url = htmlspecialchars($data['current_url'], ENT_QUOTES, 'UTF-8');
+			$og_tags = '<meta property="og:type" content="product" />' . "\n"
+				. '<meta property="og:title" content="' . $og_title . '" />' . "\n"
+				. '<meta property="og:description" content="' . $og_description . '" />' . "\n"
+				. '<meta property="og:url" content="' . $og_url . '" />' . "\n"
+				. ($og_image ? '<meta property="og:image" content="' . htmlspecialchars($og_image, ENT_QUOTES, 'UTF-8') . '" />' . "\n" : '')
+				. '<meta property="og:site_name" content="' . htmlspecialchars($this->config->get('config_name'), ENT_QUOTES, 'UTF-8') . '" />' . "\n"
+				. '<meta name="twitter:card" content="summary_large_image" />' . "\n"
+				. '<meta name="twitter:title" content="' . $og_title . '" />' . "\n"
+				. '<meta name="twitter:description" content="' . $og_description . '" />' . "\n"
+				. ($og_image ? '<meta name="twitter:image" content="' . htmlspecialchars($og_image, ENT_QUOTES, 'UTF-8') . '" />' . "\n" : '');
+			$this->document->addAnalytic($og_tags);
+
+			// JSON-LD Product structured data
+			$json_ld = array(
+				'@context' => 'https://schema.org',
+				'@type'    => 'Product',
+				'name'     => $product_info['name'],
+				'description' => strip_tags(html_entity_decode($product_info['meta_description'] ?: $product_info['description'], ENT_QUOTES, 'UTF-8')),
+				'sku'      => $product_info['model'],
+				'brand'    => array('@type' => 'Brand', 'name' => $product_info['manufacturer'] ?: $this->config->get('config_name')),
+				'url'      => $data['current_url'],
+			);
+			if ($og_image) {
+				$json_ld['image'] = $og_image;
+			}
+			if (!empty($data['price_no_currency']) && (float)$data['price_no_currency'] > 0) {
+				$json_ld['offers'] = array(
+					'@type'         => 'Offer',
+					'priceCurrency' => $this->session->data['currency'],
+					'price'         => $data['price_no_currency'],
+					'availability'  => ($product_info['quantity'] > 0) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+					'url'           => $data['current_url'],
+				);
+			}
+			if (!empty($product_info['reviews']) && (int)$product_info['reviews'] > 0) {
+				$json_ld['aggregateRating'] = array(
+					'@type'       => 'AggregateRating',
+					'ratingValue' => (string)(int)$product_info['rating'],
+					'reviewCount' => (string)(int)$product_info['reviews'],
+				);
+			}
+			if (!empty($data['breadcrumbs']) && count($data['breadcrumbs']) > 1) {
+				$breadcrumb_list = array('@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => array());
+				foreach ($data['breadcrumbs'] as $position => $crumb) {
+					$breadcrumb_list['itemListElement'][] = array(
+						'@type'    => 'ListItem',
+						'position' => $position + 1,
+						'name'     => $crumb['text'],
+						'item'     => $crumb['href'],
+					);
+				}
+				$data['json_ld_breadcrumb'] = '<script type="application/ld+json">' . json_encode($breadcrumb_list, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+			} else {
+				$data['json_ld_breadcrumb'] = '';
+			}
+			$data['json_ld'] = '<script type="application/ld+json">' . json_encode($json_ld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');
 			$data['content_top'] = $this->load->controller('common/content_top');
