@@ -84,7 +84,13 @@ class ControllerProductCategory extends Controller {
 
         if ($category_info) {
             $this->document->setTitle($category_info['meta_title']);
-            $this->document->setDescription($category_info['meta_description']);
+            // Fallback meta description: use category name if meta_description is empty
+            if (!empty($category_info['meta_description'])) {
+                $this->document->setDescription($category_info['meta_description']);
+            } else {
+                $fallback_desc = 'Shop ' . $category_info['name'] . ' at MobilityCare Australia. Quality mobility aids with expert advice, NDIS funding support & nationwide delivery.';
+                $this->document->setDescription($fallback_desc);
+            }
             $this->document->setKeywords($category_info['meta_keyword']);
 
             $data['heading_title'] = $category_info['name'];
@@ -419,7 +425,13 @@ class ControllerProductCategory extends Controller {
 
         if ($category_info) {
             $this->document->setTitle($category_info['meta_title']);
-            $this->document->setDescription($category_info['meta_description']);
+            // Fallback meta description for subcategory listing
+            if (!empty($category_info['meta_description'])) {
+                $this->document->setDescription($category_info['meta_description']);
+            } else {
+                $fallback_desc = 'Browse ' . $category_info['name'] . ' at MobilityCare Australia. Quality mobility aids with expert advice, NDIS funding support & nationwide delivery.';
+                $this->document->setDescription($fallback_desc);
+            }
             $this->document->setKeywords($category_info['meta_keyword']);
             $data['heading_title'] = $category_info['name'];
         }

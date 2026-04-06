@@ -963,4 +963,95 @@ class CoreWebVitalsFixesTest extends TestCase
             'custom.css must set min-height on .owl2-carousel to prevent CLS during load'
         );
     }
+
+    // -----------------------------------------------------------------------
+    // SEO: Fallback meta descriptions for controllers
+    // -----------------------------------------------------------------------
+
+    private function readController(string $relativePath): string
+    {
+        $path = dirname(__DIR__) . '/' . ltrim($relativePath, '/');
+        $this->assertFileExists($path, "Controller file not found: $relativePath");
+        return file_get_contents($path);
+    }
+
+    public function testCategoryControllerHasFallbackMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/product/category.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'category.php must call setDescription'
+        );
+        $this->assertStringContainsString(
+            'Shop ',
+            $php,
+            'category.php must generate a fallback meta description with "Shop" prefix'
+        );
+    }
+
+    public function testProductControllerHasFallbackMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/product/product.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'product.php must call setDescription'
+        );
+        $this->assertStringContainsString(
+            'MobilityCare Australia',
+            $php,
+            'product.php must include MobilityCare Australia in fallback meta description'
+        );
+    }
+
+    public function testInformationControllerHasFallbackMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/information/information.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'information.php must call setDescription'
+        );
+    }
+
+    public function testSearchControllerHasMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/product/search.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'search.php must call setDescription for search result pages'
+        );
+        $this->assertStringContainsString(
+            'MobilityCare Australia',
+            $php,
+            'search.php meta description must mention MobilityCare Australia'
+        );
+    }
+
+    public function testBlogControllerHasMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/extension/simple_blog/article.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'Blog article.php must call setDescription for the blog index page'
+        );
+    }
+
+    public function testFindDealerControllerHasMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/dealer/findDealer.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'findDealer.php must call setDescription'
+        );
+        $this->assertStringContainsString(
+            'Find a MobilityCare dealer',
+            $php,
+            'findDealer.php must have a descriptive meta description about finding dealers'
+        );
+    }
 }

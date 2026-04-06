@@ -67,10 +67,13 @@ class ControllerProductSearch extends Controller {
 
 		if (isset($this->request->get['search'])) {
 			$this->document->setTitle($this->language->get('heading_title') .  ' - ' . $this->request->get['search']);
+			$this->document->setDescription('Search results for ' . htmlspecialchars($this->request->get['search'], ENT_QUOTES, 'UTF-8') . ' at MobilityCare Australia. Find quality mobility aids, wheelchairs, walkers & more.');
 		} elseif (isset($this->request->get['tag'])) {
 			$this->document->setTitle($this->language->get('heading_title') .  ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
+			$this->document->setDescription('Browse mobility aids for ' . htmlspecialchars($this->request->get['tag'], ENT_QUOTES, 'UTF-8') . ' at MobilityCare Australia. Expert advice, NDIS funding support & nationwide delivery.');
 		} else {
 			$this->document->setTitle($this->language->get('heading_title'));
+			$this->document->setDescription('Search for mobility aids, wheelchairs, walkers, scooters and more at MobilityCare Australia.');
 		}
 
 		$data['breadcrumbs'] = array();

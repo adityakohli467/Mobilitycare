@@ -340,7 +340,13 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 // 			);
 
 			$this->document->setTitle($product_info['meta_title']);
-			$this->document->setDescription($product_info['meta_description']);
+			// Fallback meta description: use product name + truncated description if meta_description is empty
+			if (!empty($product_info['meta_description'])) {
+				$this->document->setDescription($product_info['meta_description']);
+			} else {
+				$fallback_desc = $product_info['name'] . ' - Buy online at MobilityCare Australia. ' . trim(substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 120));
+				$this->document->setDescription($fallback_desc);
+			}
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');

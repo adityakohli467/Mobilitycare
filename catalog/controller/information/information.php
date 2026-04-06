@@ -22,7 +22,13 @@ class ControllerInformationInformation extends Controller {
 
 		if ($information_info) {
 			$this->document->setTitle($information_info['meta_title']);
-			$this->document->setDescription($information_info['meta_description']);
+			// Fallback meta description: use page title if meta_description is empty
+			if (!empty($information_info['meta_description'])) {
+				$this->document->setDescription($information_info['meta_description']);
+			} else {
+				$fallback_desc = $information_info['title'] . ' - MobilityCare Australia. Quality mobility aids with expert advice & nationwide delivery.';
+				$this->document->setDescription($fallback_desc);
+			}
 			$this->document->setKeywords($information_info['meta_keyword']);
 
 			$data['breadcrumbs'][] = array(
