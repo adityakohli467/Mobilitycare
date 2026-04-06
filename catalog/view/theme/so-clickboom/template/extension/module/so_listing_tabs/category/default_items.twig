@@ -26,10 +26,10 @@
 								<a href="{{ product.href }}" target="{{ item_link_target }}" title="{{ product.name_maxlength }}"  >
 									
 									{% if product_image_num ==2 %}
-										<img data-sizes="auto" src="image/catalog/productLoading.svg" data-src="{{ product.thumb }}" class="img-1 lazyload" alt="{{ product.name_maxlength }}">
-										<img data-sizes="auto" src="image/catalog/productLoading.svg" data-src="{{ product.thumb2 }}" class="img-2 lazyload" alt="{{ product.name_maxlength }}">
+										<img data-sizes="auto" src="image/catalog/productLoading.svg" data-src="{{ product.thumb }}" class="img-1 lazyload" alt="{{ product.name_maxlength }}" width="250" height="250" loading="lazy">
+										<img data-sizes="auto" src="image/catalog/productLoading.svg" data-src="{{ product.thumb2 }}" class="img-2 lazyload" alt="{{ product.name_maxlength }}" width="250" height="250" loading="lazy">
 									{% else %}
-										<img data-sizes="auto" src="image/catalog/productLoading.svg" data-src="{{ product.thumb }}" alt="{{ product.name_maxlength }}" class="lazyload">
+										<img data-sizes="auto" src="image/catalog/productLoading.svg" data-src="{{ product.thumb }}" alt="{{ product.name_maxlength }}" class="lazyload" width="250" height="250" loading="lazy">
 									{% endif %}	
 								</a>						
 							</div>
@@ -65,7 +65,7 @@
 								  		{% endif %}
 								  	{% endfor %}
 								  	</div>
-								  	<a class="rating-num"  href="{{ product.href }}" rel="nofollow" target="_blank" >{{product.reviews}}</a>
+								  	<a class="rating-num"  href="{{ product.href }}" rel="nofollow noopener noreferrer" target="_blank" >{{product.reviews}}</a>
 								</div>
 							{% endif %}
 

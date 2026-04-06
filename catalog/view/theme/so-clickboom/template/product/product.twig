@@ -955,7 +955,7 @@
     <div style="display: flex; flex-wrap: wrap; gap: 30px;">
       {% for download in downloads %}
         <div style="text-align: center;">
-          <a href="{{ download.href }}" target="_blank">
+          <a href="{{ download.href }}" target="_blank" rel="noopener noreferrer">
             <img src="catalog/view/theme/default/image/pdfImage.png" alt="{{ download.name }}" style="width: 100px; height: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border-radius: 4px;">
             <div style="margin-top: 8px; color: #337ab7; font-weight: 500;">{{ download.name }}</div>
           </a>

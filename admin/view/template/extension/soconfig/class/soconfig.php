@@ -107,12 +107,19 @@ class Soconfig{
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
 				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 				foreach($optimizeJSExclude as $file){
-					if(!empty($file))echo '<script src="'.$file.'"></script>'."\n";
+					if(!empty($file))echo '<script src="'.$file.'" defer></script>'."\n";
 				}
 				
 			}
 		}else{
-			foreach($js_files_to_out as $file) echo '<script src="'.$file.'"></script>'."\n";
+			foreach($js_files_to_out as $file) {
+				// Keep jQuery core non-deferred — inline scripts depend on $ during parsing
+				if (strpos($file, 'jquery-') !== false && strpos($file, 'jquery.') === false) {
+					echo '<script src="'.$file.'"></script>'."\n";
+				} else {
+					echo '<script src="'.$file.'" defer></script>'."\n";
+				}
+			}
 		}
     }
 	

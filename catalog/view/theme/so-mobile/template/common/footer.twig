@@ -43,7 +43,7 @@
 			<div class="footernav-bottom">
 				<div class="text-center">
 					{% if soconfig.get_settings('mimgpayment') %}
-						<p class="nomargin"><img alt="Footer Image" class="form-group" src="image/{{soconfig.get_settings('mimgpayment')}}"></p>
+						<p class="nomargin"><img alt="Payment methods" class="form-group" src="image/{{soconfig.get_settings('mimgpayment')}}" width="300" height="30" loading="lazy"></p>
 					{% endif %}
 
 					{% if soconfig.get_settings('mcopyright') is empty %}

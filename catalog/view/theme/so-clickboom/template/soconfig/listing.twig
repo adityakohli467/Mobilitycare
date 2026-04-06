@@ -99,17 +99,17 @@
 							{% endif %}
 							<div class="product-card__gallery {{class_thumbgallery}}">
 									<div class="item-img thumb-active" data-src="{{product.first_gallery['thumb']}}">
-									    <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{product.first_gallery['cart']}}" alt="{{ product.name }}"></div>
+									    <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{product.first_gallery['cart']}}" alt="{{ product.name }}" width="250" height="250" loading="lazy"></div>
 									{% set total_gallery = 2 %}
 									{% for number_gallery,image_gallery in product.image_galleries %}
 										{% if number_gallery < total_gallery %}
-										<div class="item-img" data-src="{{image_gallery.thumb}}"><img class="lazyload " data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{image_gallery.cart}}" alt="{{ product.name }}"></div>
+										<div class="item-img" data-src="{{image_gallery.thumb}}"><img class="lazyload " data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{image_gallery.cart}}" alt="{{ product.name }}" width="250" height="250" loading="lazy"></div>
 										{% endif %}
 									{% endfor %}
 							</div>
 						{% endif %}
 						<a href="{{ product.href }} " title="{{ product.name }} ">
-							<img  data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}"  title="{{ product.name }} " class="lazyload img-responsive" />
+							<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}" title="{{ product.name }}" alt="{{ product.name }}" class="lazyload img-responsive" width="250" height="250" loading="lazy" />
 						</a>
 					</div>
 					<div class="box-color-swatch"></div>
@@ -182,7 +182,7 @@
 								{% endfor %}
 
 								</div>
-								<a class="rating-num"  href="{{ product.href }}" rel="nofollow" target="_blank" >{{product.reviews}}</a>
+								<a class="rating-num"  href="{{ product.href }}" rel="nofollow noopener noreferrer" target="_blank" >{{product.reviews}}</a>
 							</div>
 							{% endif %}
 
