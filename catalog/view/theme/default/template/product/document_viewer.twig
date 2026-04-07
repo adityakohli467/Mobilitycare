@@ -6,6 +6,7 @@
     <title>{{ document_name }} | {{ site_name }}</title>
     <link rel="icon" type="image/png" href="{{ favicon }}">
     <link rel="shortcut icon" type="image/png" href="{{ favicon }}">
+    <link rel="apple-touch-icon" href="{{ favicon }}">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,7 +14,6 @@
         .doc-toolbar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             background: #042e57;
             color: #fff;
             padding: 8px 20px;
@@ -25,22 +25,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 60%;
         }
-        .doc-toolbar .doc-actions a {
-            color: #fff;
-            text-decoration: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 13px;
-            margin-left: 8px;
-            transition: background 0.2s;
-        }
-        .doc-toolbar .doc-actions a:hover { background: rgba(255,255,255,0.15); }
-        .doc-toolbar .doc-actions .btn-download {
-            background: #28a745;
-        }
-        .doc-toolbar .doc-actions .btn-download:hover { background: #218838; }
         .doc-viewer { width: 100%; height: calc(100% - 48px); border: none; }
         .fallback-message {
             display: none;
@@ -64,10 +49,6 @@
 <body>
     <div class="doc-toolbar">
         <span class="doc-title">{{ document_name }} — {{ site_name }}</span>
-        <div class="doc-actions">
-            <a href="javascript:history.back()" title="Go back">&larr; Back</a>
-            <a href="{{ download_url }}" class="btn-download" title="Download">&#8681; Download</a>
-        </div>
     </div>
     {% if is_pdf %}
         <embed src="{{ pdf_url }}" type="application/pdf" class="doc-viewer">

@@ -825,7 +825,7 @@ public function viewDocument() {
         $data['pdf_url'] = $this->url->link('product/product/download', 'download_id=' . $download_id);
         $data['is_pdf'] = ($ext === 'pdf');
         $data['download_url'] = $this->url->link('product/product/download', 'download_id=' . $download_id);
-        $data['favicon'] = 'image/catalog/favicon.png';
+        $data['favicon'] = HTTPS_SERVER . 'image/catalog/favicon.png';
         $data['site_name'] = $this->config->get('config_name');
 
         $this->document->setTitle($document_name . ' | ' . $this->config->get('config_name'));
