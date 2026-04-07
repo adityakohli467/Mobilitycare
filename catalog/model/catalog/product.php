@@ -24,6 +24,12 @@ class ModelCatalogProduct extends Model {
 
         return $query->row;
     }
+
+    public function getDownloadWithName($download_id) {
+        $query = $this->db->query("SELECT d.*, dd.name FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE d.download_id = '" . (int)$download_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+        return $query->row;
+    }
     
     public function getProductDownloads($product_id) {
     $query = $this->db->query("SELECT d.download_id, dd.name, d.filename, d.mask FROM " . DB_PREFIX . "product_to_download pd LEFT JOIN " . DB_PREFIX . "download d ON (pd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE pd.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");

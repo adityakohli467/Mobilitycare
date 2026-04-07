@@ -519,9 +519,10 @@ $downloads = $this->model_catalog_product->getProductDownloads($product_id);
 
 foreach ($downloads as $download) {
     if (is_file(DIR_DOWNLOAD . $download['filename'])) {
+        $slug = $this->slugify($download['name']) . '-' . $download['download_id'];
         $data['downloads'][] = array(
             'name' => $download['name'],
-            'href' => $this->url->link('product/product/download', 'download_id=' . $download['download_id']),
+            'href' => rtrim(HTTPS_SERVER, '/') . '/documents/' . $slug,
             'mask' => $download['mask']
         );
     }
@@ -803,6 +804,45 @@ public function download() {
     } else {
         $this->response->redirect($this->url->link('catalog/product', '', true));
     }
+}
+
+public function viewDocument() {
+    $this->load->model('catalog/product');
+
+    if (isset($this->request->get['download_id'])) {
+        $download_id = (int)$this->request->get['download_id'];
+    } else {
+        $download_id = 0;
+    }
+
+    $download_info = $this->model_catalog_product->getDownloadWithName($download_id);
+
+    if ($download_info && is_file(DIR_DOWNLOAD . $download_info['filename'])) {
+        $document_name = $download_info['name'] ?: pathinfo(basename($download_info['mask']), PATHINFO_FILENAME);
+        $ext = strtolower(pathinfo(basename($download_info['mask']), PATHINFO_EXTENSION));
+
+        $data['document_name'] = $document_name;
+        $data['pdf_url'] = $this->url->link('product/product/download', 'download_id=' . $download_id);
+        $data['is_pdf'] = ($ext === 'pdf');
+        $data['download_url'] = $this->url->link('product/product/download', 'download_id=' . $download_id);
+        $data['favicon'] = 'image/catalog/favicon.png';
+        $data['site_name'] = $this->config->get('config_name');
+
+        $this->document->setTitle($document_name . ' | ' . $this->config->get('config_name'));
+
+        $this->response->setOutput($this->load->view('product/document_viewer', $data));
+    } else {
+        $this->response->redirect($this->url->link('common/home', '', true));
+    }
+}
+
+private function slugify($text) {
+    $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+    $text = preg_replace('~[^-\w]+~', '', $text);
+    $text = trim($text, '-');
+    $text = preg_replace('~-+~', '-', $text);
+    $text = strtolower($text);
+    return $text ?: 'document';
 }
 
 
