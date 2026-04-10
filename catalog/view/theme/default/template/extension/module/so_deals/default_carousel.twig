@@ -14,10 +14,10 @@
 						{% if product_image %}
 							<a href="{{ product.href }}" target="{{ item_link_target }}">
 								{% if product_image_num ==2 %}
-									<img src="{{ product.thumb }}" class="img-thumb1 img-responsive" alt="{{ product.name }}">
-									<img src="{{ product.thumb2 }}" class="img-thumb2 img-responsive" alt="{{ product.name }}">
+									<img src="{{ product.thumb }}" class="img-thumb1 img-responsive so-deal-img" alt="{{ product.name }}" loading="lazy">
+									<img src="{{ product.thumb2 }}" class="img-thumb2 img-responsive so-deal-img" alt="{{ product.name }}" loading="lazy">
 								{% else %}
-									<img src="{{ product.thumb }}" alt="{{ product.name }}" class="img-responsive">
+									<img src="{{ product.thumb }}" alt="{{ product.name }}" class="img-responsive so-deal-img" loading="lazy">
 								{% endif %}
 							</a>
 						{% endif %}
@@ -105,10 +105,10 @@
 						{% if product_image %}
 							<a href="{{ product.href }}" target="{{ item_link_target }}">
 								{% if product_image_num ==2 %}
-									<img src="{{ product.thumb }}" class="img-thumb1 img-responsive" alt="{{ product.name }}">
-									<img src="{{ product.thumb2 }}" class="img-thumb2 img-responsive" alt="{{ product.name }}">
+									<img src="{{ product.thumb }}" class="img-thumb1 img-responsive so-deal-img" alt="{{ product.name }}" loading="lazy">
+									<img src="{{ product.thumb2 }}" class="img-thumb2 img-responsive so-deal-img" alt="{{ product.name }}" loading="lazy">
 								{% else %}
-									<img src="{{ product.thumb }}" alt="{{ product.name }}" class="img-responsive">
+									<img src="{{ product.thumb }}" alt="{{ product.name }}" class="img-responsive so-deal-img" loading="lazy">
 								{% endif %}
 							</a>
 						{% endif %}

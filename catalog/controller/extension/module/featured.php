@@ -67,6 +67,9 @@ class ControllerExtensionModuleFeatured extends Controller {
 			}
 		}
 
+		$data['image_width']  = (int)$setting['width'];
+		$data['image_height'] = (int)$setting['height'];
+
 		if ($data['products']) {
 			return $this->load->view('extension/module/featured', $data);
 		}
