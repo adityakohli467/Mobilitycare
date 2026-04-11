@@ -61,7 +61,7 @@
 									{% set classloaded = source_limit >= items.count or source_limit == 0 ? 'loaded' : '' %}
 									
 									{% if type_show == 'loadmore' %}
-										<div class="ltabs-loadmore"
+										<div class="ltabs-loadmore hidden"
 											 data-active-content=".items-category-{{ items.category_id == "*" ? 'all' : items.category_id }}"
 											 data-categoryid	="{{ items.category_id }}"
 											 data-rl_start		="{{ source_limit }}"
