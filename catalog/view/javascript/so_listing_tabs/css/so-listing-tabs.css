@@ -315,7 +315,7 @@
 
 .so-listing-tabs .ltabs-items   .ltabs-loadmore .ltabs-loadmore-btn {
 	padding: 8px 12px;
-	display: inline-block;
+	display: none !important;
 	background-color: #0088cc;
 	color: #ccc;
 	cursor: pointer;
