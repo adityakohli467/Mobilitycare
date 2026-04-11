@@ -302,8 +302,12 @@
 	z-index: 0;
 }
 
+.ltabs-loadmore {
+	display: none !important;
+}
+
 .so-listing-tabs  .ltabs-items-container .ltabs-loadmore {
-	display: block;
+	display: none;
 	overflow: hidden;
 	text-align: center;
 	margin: 0 auto;

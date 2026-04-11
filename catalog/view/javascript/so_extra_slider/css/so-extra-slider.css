@@ -292,7 +292,7 @@
 }
 
 .so-extra-slider  .ltabs-items-container .ltabs-loadmore {
-	display: block;
+	display: none;
 	overflow: hidden;
 	text-align: center;
 	margin: 0 auto;
