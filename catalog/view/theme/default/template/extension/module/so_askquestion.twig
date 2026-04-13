@@ -29,7 +29,7 @@
 
           <div class="form-group">
             <label>Phone *</label>
-            <input type="tel" name="phone" id="customerPhone" class="form-control phoneValidate" required>
+            <input type="tel" name="phone" id="customerPhone" class="form-control phoneValidate" maxlength="10" placeholder="04XX XXX XXX" required>
           </div>
 
           <div class="form-group">
@@ -102,6 +102,11 @@
       }
       if (phone === "") {
           showToast("Phone is required", "error");
+          return false;
+      }
+      var auPhoneRegex = /^(04\d{8}|0[2378]\d{8})$/;
+      if (!auPhoneRegex.test(phone)) {
+          showToast("Please enter a valid Australian phone number", "error");
           return false;
       }
       return true;
