@@ -10,7 +10,8 @@
 							<a href="tel:{{soconfig.get_settings('mphone_text')}}"><i class="fa fa-phone"></i> {{soconfig.get_settings('mphone_text')}}</a>
 						{% endif %}
 						{% if soconfig.get_settings('memail_status') %}
-							<a href="mailto:{{soconfig.get_settings('memail_text')}}" class="need-help-padding" target="_top"><i class="fa fa-envelope-o"></i>  {{text_emailus}}</a>
+							{% set memail_safe = soconfig.get_settings('memail_text')|replace({'@': '&#64;'}) %}
+							<a href="mailto:{{ memail_safe|raw }}" class="need-help-padding" target="_top"><i class="fa fa-envelope-o"></i>  {{text_emailus}}</a>
 						{% endif %}
 					</div>
 				</div>

@@ -1,22 +1,38 @@
 User-agent: *
+
+# Core system paths
 Disallow: /admin/
 Disallow: /system/
 Disallow: /storage/
-Disallow: /catalog/controller/
-Disallow: /catalog/model/
-Disallow: /index.php?route=account/
-Disallow: /index.php?route=checkout/
-Disallow: /index.php?route=product/search
-Disallow: /index.php?route=extension/module/so_sociallogin/
-Disallow: /index.php?route=information/information/agree
-Disallow: /index.php?route=information/payment_options
-Disallow: /index.php?route=extension/simple_blog/author
-Disallow: /wishlist
-Disallow: /compare
+
+# Account & transactional pages
+Disallow: /index.php?route=account/*
+Disallow: /index.php?route=checkout/*
 Disallow: /cart
 Disallow: /checkout
 
-# Allow site assets
+# Duplicate content - sorting, filtering, pagination
+Disallow: /index.php?route=product/category&sort=
+Disallow: /index.php?route=product/category&order=
+Disallow: /index.php?route=product/category&limit=
+Disallow: /index.php?route=product/search*
+
+# Wishlist & Compare (both URL forms)
+Disallow: /wishlist
+Disallow: /index.php?route=account/wishlist
+Disallow: /compare
+Disallow: /index.php?route=product/compare
+
+# Internal/utility routes
+Disallow: /index.php?route=common/
+Disallow: /index.php?route=error/
+Disallow: /index.php?route=sitemap/
+Disallow: /index.php?route=information/information/agree
+Disallow: /index.php?route=information/payment_options
+Disallow: /index.php?route=extension/module/so_sociallogin/*
+Disallow: /index.php?route=extension/simple_blog/author
+
+# Allow assets for rendering
 Allow: /catalog/view/javascript/
 Allow: /catalog/view/theme/
 Allow: /image/
