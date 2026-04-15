@@ -607,7 +607,8 @@ if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] 
 				if(isset($font)){
 					if (!in_array($font->fontFamily, $systemFonts) && !in_array($font->fontFamily,$onlyfontFamily )){
 						$onlyfontFamily[]= $font->fontFamily;
-						echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap">'."\n";
+						echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap" media="print" onload="this.media=\'all\'">'."\n";
+						echo '<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap"></noscript>'."\n";
 					}
 				}
             }

@@ -263,7 +263,7 @@
 
 				<div id="product">	
 					{% if options %} 
-					<h3>{{ text_option }}</h3>
+					<h2>{{ text_option }}</h2>
 					{% for option in options %}
 						
 						{% if option.type == 'select' %}
@@ -426,7 +426,7 @@
 
 					<div class="box-cart clearfix form-group">
 						{% if recurrings %}
-						<h3>{{ text_payment_recurring }}</h3>
+						<h2>{{ text_payment_recurring }}</h2>
 						<div class="form-group required">
 							<select name="recurring_id" class="form-control">
 							<option value="">{{ text_select }}</option>
@@ -530,9 +530,9 @@
     <!-- Badges -->
 <div class="row trustedByRow">
     <div class="col-xs-12 text-center" style="padding:30px 10px;">
-      <h4 style="font-weight:bold; margin-bottom:5px;">
+      <p style="font-weight:bold; margin-bottom:5px; font-size:18px;">
         Trusted by Health Professionals &amp; Backed by Mobilitycare's 250+ Dealer Partners
-      </h4>
+      </p>
       <p style="color:#666; font-size:15px; margin-bottom:0;">
         Recommended by Neurologists, Physiatrists and Allied Health Experts
       </p>
@@ -782,7 +782,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-lightbulb-o"></i> <strong>Is This Right for You?</strong></h4>
+        <h3 class="text-black"><i class="fa fa-lightbulb-o"></i> <strong>Is This Right for You?</strong></h3>
         <p class="text-black">{{ product.right_for_you }}</p>
       </div>
     </div>
@@ -793,7 +793,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-heart"></i> <strong>Why You will Love It</strong></h4>
+        <h3 class="text-black"><i class="fa fa-heart"></i> <strong>Why You will Love It</strong></h3>
         <ul>
           {% for line in product.why_love|split('\n') %}
             {% if line|trim is not empty %}
@@ -812,7 +812,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-trophy"></i> <strong>What Makes It Different</strong></h4>
+        <h3 class="text-black"><i class="fa fa-trophy"></i> <strong>What Makes It Different</strong></h3>
         <ul>
           {% for line in product.what_different|split('\n') %}
             {% if line|trim is not empty %}
@@ -829,7 +829,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-star"></i> <strong>Built for Everyday Life</strong></h4>
+        <h3 class="text-black"><i class="fa fa-star"></i> <strong>Built for Everyday Life</strong></h3>
         <ul>
           {% for line in product.everyday_life|split('\n') %}
             {% if line|trim is not empty %}
@@ -924,7 +924,7 @@
 						     	<div class="tab-pane" id="tab-Specifications">
 							   
     {%   if product_specs is not empty %}
-        <h4 class="panel-title">{{ item.title }}</h4>
+        <h3 class="panel-title">{{ item.title }}</h3>
                 {% for item in product_specs %}
                 {% if item.image %}
                                         {# Use slice to check if the image URL starts with "http" #}
@@ -939,7 +939,7 @@
     {% else %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">Specifications</h4>
+                <h3 class="panel-title">Specifications</h3>
             </div>
             <div class="panel-body">
                 <p>No specifications available.</p>

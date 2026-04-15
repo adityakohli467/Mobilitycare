@@ -20,7 +20,7 @@
 {% set related_col_xs = soconfig.get_settings('product_related_column_xs')  %}
 
 <div class="clearfix module related-horizontal ">
-	<h3 class="modtitle hidden"><span>{{ text_related }} </span></h3>
+	<h2 class="modtitle hidden"><span>{{ text_related }} </span></h2>
 	
     <div class="related-products products-list  contentslider" data-rtl="{{direction}}" data-autoplay="no" data-pagination="no" data-delay="4" data-speed="0.6" data-margin="30"  data-items_column0="{{related_col_lg}}" data-items_column1="{{related_col_md}}" data-items_column2="{{related_col_sm}}"
 			data-items_column3="{{related_col_xs}}" data-items_column4="1" data-arrows="yes" data-lazyload="yes" data-loop="no" data-hoverpause="yes">
@@ -76,7 +76,7 @@
 					 
 					<div class="right-block">	
 						<div class="caption">					
-							<h4><a href="{{ product.href }} ">{{ product.name }} </a></h4>
+							<h3><a href="{{ product.href }} ">{{ product.name }} </a></h3>
 							{# {%  if soconfig.get_settings('rating_status') %} #}
 							<div class="rating">
 					

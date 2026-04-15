@@ -5,7 +5,7 @@
  * @license	GNU General Public License
  * @copyright(C) 2008-2017 opencartworks.com. All rights reserved.
  ******************************************************
-#}
+-#}
 <!DOCTYPE html>
 <html dir="{{ direction }}" lang="{{ lang }}">
 <head>
@@ -23,8 +23,8 @@
 .owl2-carousel.owl2-loading{opacity:1 !important;}
 .sohomepage-slider .so-homeslider{opacity:1 !important;display:block !important;}
 /* iOS fix: force modal content scrollable on iOS Safari */
-.modal { -webkit-overflow-scrolling: touch; overflow-y: scroll !important; }
-.modal-body { -webkit-overflow-scrolling: touch; overflow-y: auto; max-height: calc(100vh - 160px); }
+.modal{-webkit-overflow-scrolling:touch;overflow-y:scroll !important;}
+.modal-body{-webkit-overflow-scrolling:touch;overflow-y:auto;max-height:calc(100vh - 160px);}
 /* CLS fix: reserve space for product image containers */
 .product-image-container{aspect-ratio:1/1;background:#f5f5f5;overflow:hidden;}
 .product-image-container img{width:100%;height:100%;object-fit:contain;}
@@ -32,6 +32,10 @@ img{max-width:100%;height:auto;}
 /* CLS fix: prevent font swap layout shift */
 @font-face{font-family:'Glyphicons Halflings';font-display:swap;}
 @font-face{font-family:'FontAwesome';font-display:swap;}
+/* Critical layout */
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+a{text-decoration:none;}
+.container{max-width:100%;margin:0 auto;padding:0 15px;box-sizing:border-box;}
 </style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}

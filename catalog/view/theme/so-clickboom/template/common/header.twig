@@ -5,7 +5,7 @@
  * @license	GNU General Public License
  * @copyright(C) 2008-2017 opencartworks.com. All rights reserved.
  ******************************************************
-#}
+-#}
 <!DOCTYPE html>
 <html dir="{{ direction }}" lang="{{ lang }}">
 <head>
@@ -90,6 +90,14 @@ window.addEventListener('load', function() {
 @font-face{font-family:'FontAwesome';font-display:swap;}
 /* Global img max-width */
 img{max-width:100%;height:auto;}
+/* Feature box - moved inline to avoid render-blocking CSS for above-fold */
+.feature-box{text-align:center;padding:6px;color:#fff;font-size:14px;font-weight:700;overflow:hidden;}
+.light-blue{background-color:#044488;}.medium-blue{background-color:#023b77;}.dark-blue{background-color:#003264;}
+.feature-box i{margin-right:5px;}
+/* Critical layout: prevent FOUC for nav and content */
+.container{max-width:1170px;margin:0 auto;padding:0 15px;box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+a{text-decoration:none;}
 </style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
@@ -172,34 +180,6 @@ body {
 </style>
 {% endif %} 
 
-<style>
-.feature-box {
-  text-align: center;
-  padding: 6px;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-
-.light-blue {
-  background-color: #044488; /* Light  indigo */
- 
-}
-
-.medium-blue {
-  background-color: #023b77; /* Medium purple */
-}
-
-.dark-blue {
-  background-color: #003264; /* Dark purple */
-}
-
-.feature-box i {
-  margin-right: 5px;
-}
-</style>
  
 </head>
 {# =========== Add class Body ==============#}
