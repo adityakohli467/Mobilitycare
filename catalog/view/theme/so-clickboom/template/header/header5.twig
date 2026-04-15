@@ -492,12 +492,13 @@
  
 <!-- Google Maps: only load on pages that have the #map element (Find a Dealer) -->
 <script>
-(function(){
-    if(!document.getElementById('map')) return;
-    var s=document.createElement('script');
-    s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBYD_DZ8jWG9LqYaiKxr-3VAiN_JPkVzCk&libraries=places&callback=initMap';
-    s.async=true;s.defer=true;document.head.appendChild(s);
-})();
+function loadGoogleMaps(){
+  if(window._mapsLoading)return;window._mapsLoading=true;
+  var s=document.createElement('script');
+  s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBYD_DZ8jWG9LqYaiKxr-3VAiN_JPkVzCk&libraries=places&callback=initMap';
+  s.async=true;s.defer=true;document.head.appendChild(s);
+}
+$(document).ready(function(){if(document.getElementById('map')){loadGoogleMaps();}});
 </script>
 <script>
     

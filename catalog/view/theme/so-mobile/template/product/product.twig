@@ -1,4 +1,4 @@
-﻿{{ header }}
+{{ header }}
 <link href="catalog/view/theme/so-mobile/css/product.css" rel="stylesheet">
 <style>
 .cartButtons a {
@@ -667,7 +667,7 @@ body.quote-modal-open .popup-marketing {
       <button 
         class="zoom-btn" 
         data-img="{{ item.image | slice(0, 4) == 'http' ? item.image : base_url ~ 'image/' ~ item.image }}">
-        ðŸ” Zoom
+        &#128269; Zoom
       </button>
     {% else %}
       <p>No Image</p>
