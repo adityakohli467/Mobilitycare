@@ -70,6 +70,10 @@ class Session {
 		}
 		
 		$this->data = $this->adaptor->read($session_id);
+
+		if (!is_array($this->data)) {
+			$this->data = array();
+		}
 		
 		return $session_id;
 	}
