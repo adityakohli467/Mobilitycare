@@ -929,7 +929,7 @@
                 {% if item.image %}
                                         {# Use slice to check if the image URL starts with "http" #}
                                        
-<img src="{{ item.image | slice(0, 4) == 'http' ? item.image : base_url ~ 'image/' ~ item.image }}" alt="{{ item.title }}"  />
+<img src="{{ item.image | slice(0, 4) == 'http' ? item.image : base_url ~ 'image/' ~ item.image }}" alt="{{ item.title }}" width="800" height="600" loading="lazy" />
                                     {% else %}
                                         No Image
                                     {% endif %}

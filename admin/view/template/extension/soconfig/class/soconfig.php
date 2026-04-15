@@ -264,7 +264,7 @@ if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] 
 		?>
 		
 		<?php if (!empty($config_logo) || !empty($config_logoMobile) ) { ?>
-		   <a href="<?php echo $href_home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $titleLogo; ?>" alt="<?php echo $titleLogo; ?>" /></a>
+		   <a href="<?php echo $href_home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $titleLogo; ?>" alt="<?php echo $titleLogo; ?>" width="180" height="45" /></a>
 		 <?php } else { ?>
 			<a href="<?php echo $href_home; ?>"><?php echo $titleLogo; ?></a>
 		<?php } ?> 

@@ -9,11 +9,19 @@
         <testsuite name="MobilityCare Core Web Vitals Fixes">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
+        <testsuite name="PHP 8.1 Compatibility">
+            <file>tests/PHP81CompatibilityTest.php</file>
+        </testsuite>
+        <testsuite name="Form Validation">
+            <file>tests/FormValidationTest.php</file>
+        </testsuite>
     </testsuites>
 
     <coverage>
         <include>
             <directory suffix=".php">catalog/controller/product</directory>
+            <directory suffix=".php">system/library/so</directory>
+            <directory suffix=".php">catalog/model/extension/payment</directory>
         </include>
     </coverage>
 
