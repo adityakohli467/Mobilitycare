@@ -145,31 +145,33 @@ $(document).ready(function () {
     return; // modal not present on page
   }
   
-  if(!sessionStorage.getItem('healthProModalShownFlag')){
-     localStorage.removeItem('healthProModalShown') 
-  }
-
   if (localStorage.getItem('healthProModalShown')) {
     return;
   }
-  
- sessionStorage.setItem('healthProModalShownFlag', '1');
+
+  var modalAlreadyShown = false;
 
   function isQuoteOrDemoModalOpen() {
     // Check if any quote or demo modal is currently open
     return $('#bookaDemoModal').hasClass('in') || 
            $('#customQuoteModal').hasClass('in') || 
            $('#customQuoteModalForVM').hasClass('in') ||
+           $('#askQuestionModal').hasClass('in') ||
            $('#bookaDemoModal').is(':visible') || 
            $('#customQuoteModal').is(':visible') || 
-           $('#customQuoteModalForVM').is(':visible');
+           $('#customQuoteModalForVM').is(':visible') ||
+           $('#askQuestionModal').is(':visible');
   }
 
   function showModal() {
-    // Don't show if a quote/demo modal is already open
+    // Don't show if already shown or dismissed, or if another modal is open
+    if (modalAlreadyShown || localStorage.getItem('healthProModalShown')) {
+      return;
+    }
     if (isQuoteOrDemoModalOpen()) {
       return;
     }
+    modalAlreadyShown = true;
     $('#healthProModal').modal({
       backdrop: 'static',
       keyboard: false
@@ -180,17 +182,11 @@ $(document).ready(function () {
 
   // Show after 30 seconds
   setTimeout(function() {
-    if (!isQuoteOrDemoModalOpen()) {
-      showModal();
-    }
+    showModal();
   }, 30000);
 
   // Or when user scrolls ~60% of page
   function scrollTrigger() {
-    // Don't show if a quote/demo modal is already open
-    if (isQuoteOrDemoModalOpen()) {
-      return;
-    }
     var scrollPos = $(window).scrollTop() + $(window).height();
     if (scrollPos / $(document).height() >= 0.6) {
       showModal();
@@ -199,8 +195,8 @@ $(document).ready(function () {
 
   $(window).on('scroll', scrollTrigger);
 
-  // Hide marketing popup when quote/demo modals open
-  $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM').on('show.bs.modal', function() {
+  // Hide marketing popup when quote/demo/ask modals open
+  $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM, #askQuestionModal').on('show.bs.modal', function() {
     $('#healthProModal').modal('hide');
   });
 
