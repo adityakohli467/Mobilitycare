@@ -98,14 +98,14 @@ class Soconfig{
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
 				
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 			}else{
 				
 				if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product') $optimizeJSExclude[]='catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js';
 				
 				$js_files_to_out = 	array_diff( $this->js_files[$position], $optimizeJSExclude) ;
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 				foreach($optimizeJSExclude as $file){
 					if(!empty($file))echo '<script src="'.$file.'" defer></script>'."\n";
 				}
@@ -113,12 +113,7 @@ class Soconfig{
 			}
 		}else{
 			foreach($js_files_to_out as $file) {
-				// Keep jQuery core non-deferred — inline scripts depend on $ during parsing
-				if (strpos($file, 'jquery-') !== false && strpos($file, 'jquery.') === false) {
-					echo '<script src="'.$file.'"></script>'."\n";
-				} else {
-					echo '<script src="'.$file.'" defer></script>'."\n";
-				}
+				echo '<script src="'.$file.'"></script>'."\n";
 			}
 		}
     }
@@ -142,21 +137,9 @@ class Soconfig{
 				}
 			}
 		}else{
-			// Critical CSS (bootstrap) loaded normally, rest async via media=print/onload
-			$critical = array('bootstrap');
 			foreach($css_files_to_out as $file) {
-				$is_critical = false;
-				foreach($critical as $keyword) {
-					if(strpos($file, $keyword) !== false) { $is_critical = true; break; }
-				}
-				if($is_critical) {
-					echo '<link rel="stylesheet" href="'.$file.'">'."\n";
-				} else {
-					echo '<link rel="stylesheet" href="'.$file.'" media="print" onload="this.media=\'all\'">'."\n";
-					echo '<noscript><link rel="stylesheet" href="'.$file.'"></noscript>'."\n";
-				}
+				echo '<link rel="stylesheet" href="'.$file.'">'."\n";
 			}
-			
 		}
 		
 		//Add Google Font on Header
