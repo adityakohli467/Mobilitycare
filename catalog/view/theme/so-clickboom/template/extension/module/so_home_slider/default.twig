@@ -141,8 +141,6 @@
         </div>
     <script type="text/javascript">      
       var total_item = {{ count_item }} ;
-      /* Defer carousel init to after page interactive */
-      function initHomeSlider() {
       $(".sohomeslider-inner-{{ module}}").owlCarousel2({
          
           animateOut: '{{ animateOut}}',
@@ -183,13 +181,6 @@
           }
         },
       });
-      }
-      /* Init on DOMContentLoaded or requestIdleCallback for best LCP */
-      if (window.requestIdleCallback) {
-        requestIdleCallback(initHomeSlider, {timeout: 1500});
-      } else {
-        $(initHomeSlider);
-      }
     </script>
     </div>
     {% else %}  
