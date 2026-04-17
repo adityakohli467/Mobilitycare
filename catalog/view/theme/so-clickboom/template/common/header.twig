@@ -136,18 +136,15 @@ a{text-decoration:none;}
 {{soconfig.addJs('catalog/view/javascript/lazysizes/lazysizes.min.js')}}
 {% if class=='information-information' %} {{soconfig.addJs('catalog/view/javascript/soconfig/js/typo/element.js')}} {% endif %}
 {% if soconfig.get_settings('toppanel_status') %}{{soconfig.addJs('catalog/view/javascript/soconfig/js/toppanel.js')}}{% endif %}
-{% if soconfig.get_settings('typelayout') =='3' %}
-	{{soconfig.addJs('catalog/view/javascript/soconfig/js/slick.js')}}
-{% endif %}
 {{soconfig.addJs('catalog/view/javascript/soconfig/js/slick.js')}}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/common.js')}}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/so.custom.js')}}
+{% if class[:15] == 'product-product' or class[:12] == 'information-' or class[:9] == 'checkout-' %}
 {{soconfig.addJs('catalog/view/javascript/googleMapIntegration.js')}}
 {{soconfig.addJs('catalog/view/javascript/googleAddressAutocomplete.js')}}
 {{soconfig.addJs('catalog/view/javascript/formValidate.js')}}
-
+{% endif %}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/custom.js')}}
-{{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/wow.js')}}
 
 {% for script in scripts %} {{soconfig.addJs(script)}} {% endfor %}
 {# =========== Begin Other CSS & JS  ==============#}
