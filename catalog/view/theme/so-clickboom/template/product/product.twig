@@ -894,21 +894,21 @@
     {
       "@context": "https://schema.org",
       "@type": "Product",
-      "name": "{{ heading_title }}",
-      "image": ["{{ last_feature_image }}"],
-       "offers": {
-      "@type": "Offer",
-      "priceCurrency": "AUD",
-      "price": "{{ price|replace({'$':'', ',':''}) }}"
-  },
-      "description": "{{ product_description }}",
+      "name": "{{ heading_title|e('js') }}",
+      "image": ["{{ last_feature_image|e('js') }}"],
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "AUD",
+        "price": "{{ price|replace({'$':'', ',':''})|e('js') }}"
+      },
+      "description": "{{ product_description|striptags|e('js') }}",
       "additionalProperty": [
         {% for feature in product_features %}
         {
           "@type": "PropertyValue",
-          "name": "{{ feature.title }}",
-          "value": "{{ feature.text }}",
-          "image": "{{ feature.image }}"
+          "name": "{{ feature.title|e('js') }}",
+          "value": "{{ feature.text|striptags|e('js') }}",
+          "image": "{{ feature.image|e('js') }}"
         }{% if not loop.last %},{% endif %}
         {% endfor %}
       ]

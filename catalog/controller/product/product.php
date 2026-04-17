@@ -626,6 +626,8 @@ foreach ($downloads as $download) {
 			);
 			if ($og_image) {
 				$json_ld['image'] = $og_image;
+			} else {
+				$json_ld['image'] = $this->config->get('config_ssl') . 'image/placeholder.png';
 			}
 			if (!empty($data['price_no_currency']) && (float)$data['price_no_currency'] > 0) {
 				$json_ld['offers'] = array(
