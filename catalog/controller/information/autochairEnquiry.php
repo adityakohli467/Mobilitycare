@@ -85,7 +85,7 @@ class ControllerInformationAutochairEnquiry extends Controller {
 
                 // redirect
                  $this->session->data['success'] = 'Your enquiry has been successfully submitted.';
-                 $this->response->redirect($this->url->link('information/form_success/autochair'));
+                 $this->response->redirect('/thank-you-autochair');
             } 
         }
 

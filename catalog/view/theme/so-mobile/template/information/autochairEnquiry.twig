@@ -36,7 +36,7 @@ steps for you.
    
     
     <div class="demo-request-right col-md-12 col-sm-12">
-        <form action="{{ action }}" method="post" id="requestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/autochairEnquiry/validateAjax">
+        <form action="{{ action }}" method="post" id="requestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/autochairEnquiry/validateAjax">
             
                <!-- VEHICLE MAKE SECTION -->
 <div class="section-header" style="background:#eee; padding:8px; font-weight:bold; margin-top:15px;">VEHICLE MAKE</div>
@@ -170,7 +170,7 @@ steps for you.
             <div class="col-sm-6">
               <div class="form-group required">
                 <label>Are you contacting us as? *</label>
-                <select name="contact_type" class="form-control contact_type" id="contact_type">
+                <select name="contact_type" class="form-control contact_type" id="contact_type" required>
                   <option value="" disabled selected>Are you contacting us as?</option>
                   <option value="For Myself">For Myself</option>
                   <option value="For a Friend/Family Member">For a Friend/Family Member</option>

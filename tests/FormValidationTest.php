@@ -239,6 +239,181 @@ class FormValidationTest extends TestCase
         $this->assertStringContainsString('{{ action }}', $content, 'AutoChair form must have an action');
     }
 
+    /**
+     * @dataProvider autochairTemplateProvider
+     */
+    public function testAutoChairAjaxValidateUrlIsAbsolute(string $theme): void
+    {
+        $content = $this->readFile("catalog/view/theme/{$theme}/template/information/autochairEnquiry.twig");
+        $this->assertStringContainsString(
+            'data-validate-url="/index.php?route=information/autochairEnquiry/validateAjax"',
+            $content,
+            "AutoChair form in {$theme} must use absolute AJAX validate URL (leading /)"
+        );
+    }
+
+    /**
+     * @dataProvider autochairTemplateProvider
+     */
+    public function testAutoChairContactTypeHasRequired(string $theme): void
+    {
+        $content = $this->readFile("catalog/view/theme/{$theme}/template/information/autochairEnquiry.twig");
+        // Find the contact_type select and check it has required attribute
+        $this->assertMatchesRegularExpression(
+            '/name="contact_type"[^>]*required/',
+            $content,
+            "AutoChair contact_type select in {$theme} must have required attribute"
+        );
+    }
+
+    /**
+     * @dataProvider autochairTemplateProvider
+     */
+    public function testAutoChairFormIncludesAjaxValidateScript(string $theme): void
+    {
+        $content = $this->readFile("catalog/view/theme/{$theme}/template/information/autochairEnquiry.twig");
+        $this->assertStringContainsString(
+            'form-ajax-validate.js',
+            $content,
+            "AutoChair template in {$theme} must include the shared AJAX validation script"
+        );
+    }
+
+    public function testAutoChairControllerRedirectsToThankYouPage(): void
+    {
+        $content = $this->readFile('catalog/controller/information/autochairEnquiry.php');
+        $this->assertStringContainsString(
+            "redirect('/thank-you-autochair')",
+            $content,
+            'AutoChair controller must redirect to /thank-you-autochair on success'
+        );
+    }
+
+    public function testAutoChairControllerSavesToDatabase(): void
+    {
+        $content = $this->readFile('catalog/controller/information/autochairEnquiry.php');
+        $this->assertStringContainsString(
+            'addAutochairEnquiry',
+            $content,
+            'AutoChair controller must save enquiry to database'
+        );
+    }
+
+    public function testAutoChairControllerSendsMail(): void
+    {
+        $content = $this->readFile('catalog/controller/information/autochairEnquiry.php');
+        $this->assertStringContainsString(
+            '$mail->send()',
+            $content,
+            'AutoChair controller must send admin notification email'
+        );
+        $this->assertStringContainsString(
+            '$customerMail->send()',
+            $content,
+            'AutoChair controller must send customer confirmation email'
+        );
+    }
+
+    public function testAutoChairControllerHasValidateAjaxMethod(): void
+    {
+        $content = $this->readFile('catalog/controller/information/autochairEnquiry.php');
+        $this->assertStringContainsString(
+            'public function validateAjax()',
+            $content,
+            'AutoChair controller must have validateAjax method for AJAX validation'
+        );
+    }
+
+    public function testAutoChairThankYouControllerMethodExists(): void
+    {
+        $content = $this->readFile('catalog/controller/information/form_success.php');
+        $this->assertStringContainsString(
+            'public function autochair()',
+            $content,
+            'form_success controller must have autochair() method'
+        );
+    }
+
+    public function testAutoChairModelMethodExists(): void
+    {
+        $content = $this->readFile('catalog/model/catalog/demo_request.php');
+        $this->assertStringContainsString(
+            'function addAutochairEnquiry',
+            $content,
+            'demo_request model must have addAutochairEnquiry method'
+        );
+    }
+
+    public function testAutoChairAdminPageExists(): void
+    {
+        $content = $this->readFile('admin/controller/catalog/form_request.php');
+        $this->assertStringContainsString(
+            'AutochairEnq',
+            $content,
+            'Admin form_request controller must have AutochairEnq method'
+        );
+    }
+
+    public static function autochairTemplateProvider(): array
+    {
+        return [
+            'desktop (so-clickboom)' => ['so-clickboom'],
+            'mobile (so-mobile)'     => ['so-mobile'],
+        ];
+    }
+
+    /**
+     * @group integration
+     */
+    public function testAutoChairFormPageReturns200(): void
+    {
+        if (!getenv('SITE_URL')) {
+            $this->markTestSkipped('Set SITE_URL env to run live integration tests');
+        }
+        $response = $this->httpGet($this->siteUrl . '/autochair-smart-lifter-enquiry/');
+        $this->assertGreaterThanOrEqual(200, $response['status'], 'Autochair enquiry page should return 200');
+        $this->assertLessThan(400, $response['status'], 'Autochair enquiry page returned error: ' . $response['status']);
+    }
+
+    /**
+     * @group integration
+     */
+    public function testAutoChairThankYouPageReturns200(): void
+    {
+        if (!getenv('SITE_URL')) {
+            $this->markTestSkipped('Set SITE_URL env to run live integration tests');
+        }
+        $response = $this->httpGet($this->siteUrl . '/thank-you-autochair');
+        $this->assertGreaterThanOrEqual(200, $response['status'], 'Autochair thank-you page should return 200');
+        $this->assertLessThan(400, $response['status'], 'Autochair thank-you page returned error: ' . $response['status']);
+    }
+
+    /**
+     * @group integration
+     * @group mobile
+     */
+    public function testAutoChairMobilePageReturns200(): void
+    {
+        if (!getenv('SITE_URL')) {
+            $this->markTestSkipped('Set SITE_URL env to run live integration tests');
+        }
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 15,
+                'header' => "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1\r\n",
+            ],
+            'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
+        ]);
+        $response = @file_get_contents($this->siteUrl . '/autochair-smart-lifter-enquiry/', false, $context);
+        $statusCode = 0;
+        if (isset($http_response_header[0])) {
+            preg_match('/HTTP\/\d\.?\d?\s+(\d{3})/', $http_response_header[0], $m);
+            $statusCode = (int)($m[1] ?? 0);
+        }
+        $this->assertGreaterThanOrEqual(200, $statusCode, 'Mobile autochair page should return 200');
+        $this->assertLessThan(400, $statusCode, 'Mobile autochair page returned error: ' . $statusCode);
+    }
+
     // -------------------------------------------------------------------
     // LightDrive Enquiry Form
     // -------------------------------------------------------------------
