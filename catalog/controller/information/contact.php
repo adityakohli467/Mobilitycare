@@ -27,7 +27,11 @@ class ControllerInformationContact extends Controller {
                if($skip_validation || $this->validate()){
                      $mailMessageHtml = $this->mailHtml($this->request->post);
                 //   echo "<pre>"; print_r($this->request->post); exit;
-                 $this->model_catalog_demo_request->addContactFormInfo($this->request->post);
+                 try {
+                     $this->model_catalog_demo_request->addContactFormInfo($this->request->post);
+                 } catch (\Throwable $dbError) {
+                     $this->log->write('CONTACT FORM DB SAVE ERROR: ' . $dbError->getMessage());
+                 }
 
                 // Admin notification email
                 try {

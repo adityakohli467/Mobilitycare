@@ -46,8 +46,13 @@ class ControllerInformationWarrantyClaim extends Controller {
        }
 
          // Save warranty claim details
-         $this->model_catalog_warranty_claim->addClaim($this->request->post);
+         try {
+             $this->model_catalog_warranty_claim->addClaim($this->request->post);
+         } catch (\Throwable $dbError) {
+             $this->log->write('WARRANTY CLAIM DB SAVE ERROR: ' . $dbError->getMessage());
+         }
          
+                try {
                 $mail = new Mail($this->config->get('config_mail_engine'));
                 $mail->parameter = $this->config->get('config_mail_parameter');
                 $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
@@ -63,6 +68,26 @@ class ControllerInformationWarrantyClaim extends Controller {
                 $mail->setSubject('New Warranty claim');
                 $mail->setText('New warranty claim form has been submitted. Please login to admin and navigate to "Forms > Warrant Claim" to check the full details.');
                 $mail->send();
+                } catch (\Throwable $e) {
+                    $this->log->write('WARRANTY CLAIM ADMIN MAIL ERROR: ' . $e->getMessage());
+                    try {
+                        $fallback = new Mail($this->config->get('config_mail_engine'));
+                        $fallback->parameter = $this->config->get('config_mail_parameter');
+                        $fallback->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+                        $fallback->smtp_username = $this->config->get('config_mail_smtp_username');
+                        $fallback->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+                        $fallback->smtp_port = $this->config->get('config_mail_smtp_port');
+                        $fallback->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+                        $fallback->setTo($this->config->get('config_email'));
+                        $fallback->setFrom('enquiries@mobilitycare.net.au');
+                        $fallback->setSender('MobilityCare');
+                        $fallback->setSubject('[ALERT] Warranty Claim Received - Email Delivery Issue');
+                        $fallback->setText('A warranty claim was saved to the database but the notification email failed. Error: ' . $e->getMessage() . '. Please check admin panel > Forms > Warranty Claim.');
+                        $fallback->send();
+                    } catch (\Throwable $e2) {
+                        $this->log->write('WARRANTY CLAIM FALLBACK MAIL ERROR: ' . $e2->getMessage());
+                    }
+                }
                 
  
          $this->session->data['success'] = 'Your warranty claim has been successfully submitted.';

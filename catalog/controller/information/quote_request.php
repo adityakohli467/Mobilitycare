@@ -36,7 +36,11 @@ class ControllerInformationQuoteRequest extends Controller {
                 $mailMessageHtml = $this->mailHtml($this->request->post);
 
                 // Save in database FIRST so data is never lost even if mail fails
-                $this->model_catalog_demo_request->addQuoteRequest($this->request->post);
+                try {
+                    $this->model_catalog_demo_request->addQuoteRequest($this->request->post);
+                } catch (\Throwable $dbError) {
+                    $this->log->write('QUOTE REQUEST DB SAVE ERROR: ' . $dbError->getMessage());
+                }
 
                 try {
     $mail = new Mail($this->config->get('config_mail_engine'));

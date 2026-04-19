@@ -414,6 +414,195 @@ class FormValidationTest extends TestCase
         $this->assertLessThan(400, $statusCode, 'Mobile autochair page returned error: ' . $statusCode);
     }
 
+    // ===================================================================
+    // SECTION: All Forms — Mail try/catch, Fallback, AJAX URL Tests
+    // ===================================================================
+
+    /**
+     * Verify all form controllers wrap admin mail in try/catch.
+     * @dataProvider allFormControllerProvider
+     */
+    public function testControllerHasMailTryCatch(string $controller, string $label): void
+    {
+        $content = $this->readFile($controller);
+        $this->assertMatchesRegularExpression(
+            '/try\s*\{[^}]*\$mail->send\(\)/',
+            $content,
+            "{$label} controller must wrap admin \$mail->send() in try/catch"
+        );
+    }
+
+    /**
+     * Verify all form controllers have a fallback retry on admin mail failure.
+     * @dataProvider allFormControllerProvider
+     */
+    public function testControllerHasMailFallbackRetry(string $controller, string $label): void
+    {
+        $content = $this->readFile($controller);
+        $this->assertStringContainsString(
+            'FALLBACK MAIL ERROR',
+            $content,
+            "{$label} controller must have a fallback retry when admin mail fails"
+        );
+    }
+
+    /**
+     * Verify all form controllers that have customer mail wrap it in try/catch.
+     * @dataProvider formControllersWithCustomerMailProvider
+     */
+    public function testControllerHasCustomerMailTryCatch(string $controller, string $label): void
+    {
+        $content = $this->readFile($controller);
+        $this->assertMatchesRegularExpression(
+            '/try\s*\{[^}]*\$customerMail->send\(\)/s',
+            $content,
+            "{$label} controller must wrap customer \$customerMail->send() in try/catch"
+        );
+    }
+
+    /**
+     * Verify all form controllers save to DB before sending mail.
+     * @dataProvider allFormControllerProvider
+     */
+    public function testControllerSavesDbBeforeMail(string $controller, string $label): void
+    {
+        $content = $this->readFile($controller);
+        $dbPos = strpos($content, '$this->model_');
+        $mailPos = strpos($content, '$mail->send()');
+        $this->assertNotFalse($dbPos, "{$label} controller must have a model (DB) call");
+        $this->assertNotFalse($mailPos, "{$label} controller must send mail");
+        $this->assertLessThan($mailPos, $dbPos, "{$label} controller must save to DB before sending mail");
+    }
+
+    /**
+     * Verify all form controllers redirect after successful submission.
+     * @dataProvider allFormControllerProvider
+     */
+    public function testControllerRedirectsOnSuccess(string $controller, string $label): void
+    {
+        $content = $this->readFile($controller);
+        $this->assertMatchesRegularExpression(
+            '/redirect\(/',
+            $content,
+            "{$label} controller must redirect after successful submission"
+        );
+    }
+
+    /**
+     * Verify all mobile templates use absolute AJAX validate URLs.
+     * @dataProvider mobileFormTemplateProvider
+     */
+    public function testMobileTemplateHasAbsoluteAjaxUrl(string $template, string $label): void
+    {
+        $content = $this->readFile("catalog/view/theme/so-mobile/template/information/{$template}");
+        $this->assertMatchesRegularExpression(
+            '/data-validate-url="\/index\.php/',
+            $content,
+            "Mobile {$label} template must use absolute AJAX validate URL (leading /)"
+        );
+    }
+
+    /**
+     * Verify all desktop templates use absolute AJAX validate URLs.
+     * @dataProvider desktopFormTemplateWithAjaxProvider
+     */
+    public function testDesktopTemplateHasAbsoluteAjaxUrl(string $template, string $label): void
+    {
+        $path = "catalog/view/theme/so-clickboom/template/information/{$template}";
+        if (!file_exists($this->baseDir . '/' . $path)) {
+            $this->markTestSkipped("Template not found: {$path}");
+        }
+        $content = $this->readFile($path);
+        $this->assertMatchesRegularExpression(
+            '/data-validate-url="\/index\.php/',
+            $content,
+            "Desktop {$label} template must use absolute AJAX validate URL (leading /)"
+        );
+    }
+
+    /**
+     * Verify all mobile templates include the shared AJAX validation script.
+     * @dataProvider mobileFormTemplateProvider
+     */
+    public function testMobileTemplateIncludesAjaxValidateScript(string $template, string $label): void
+    {
+        $content = $this->readFile("catalog/view/theme/so-mobile/template/information/{$template}");
+        $this->assertStringContainsString(
+            'form-ajax-validate.js',
+            $content,
+            "Mobile {$label} template must include form-ajax-validate.js"
+        );
+    }
+
+    // --- Data Providers ---
+
+    public static function allFormControllerProvider(): array
+    {
+        return [
+            'contact'         => ['catalog/controller/information/contact.php', 'Contact'],
+            'demo_request'    => ['catalog/controller/information/demo_request.php', 'Demo Request'],
+            'trial_request'   => ['catalog/controller/information/trial_request.php', 'Trial Request'],
+            'quote_request'   => ['catalog/controller/information/quote_request.php', 'Quote Request'],
+            'find_dealer'     => ['catalog/controller/information/find_dealer_form.php', 'Find Dealer'],
+            'warranty_claim'  => ['catalog/controller/information/warranty_claim.php', 'Warranty Claim'],
+            'funding_support' => ['catalog/controller/information/funding_support.php', 'Funding Support'],
+            'lightdrive'      => ['catalog/controller/information/lightDriveEnquiry.php', 'Light Drive'],
+            'autochair'       => ['catalog/controller/information/autochairEnquiry.php', 'Autochair'],
+            'place_order'     => ['catalog/controller/information/place_order.php', 'Place Order'],
+            'product_enq'     => ['catalog/controller/information/product_enq.php', 'Product Enquiry'],
+        ];
+    }
+
+    public static function formControllersWithCustomerMailProvider(): array
+    {
+        return [
+            'contact'         => ['catalog/controller/information/contact.php', 'Contact'],
+            'demo_request'    => ['catalog/controller/information/demo_request.php', 'Demo Request'],
+            'trial_request'   => ['catalog/controller/information/trial_request.php', 'Trial Request'],
+            'quote_request'   => ['catalog/controller/information/quote_request.php', 'Quote Request'],
+            'find_dealer'     => ['catalog/controller/information/find_dealer_form.php', 'Find Dealer'],
+            'funding_support' => ['catalog/controller/information/funding_support.php', 'Funding Support'],
+            'lightdrive'      => ['catalog/controller/information/lightDriveEnquiry.php', 'Light Drive'],
+            'autochair'       => ['catalog/controller/information/autochairEnquiry.php', 'Autochair'],
+            'place_order'     => ['catalog/controller/information/place_order.php', 'Place Order'],
+            'product_enq'     => ['catalog/controller/information/product_enq.php', 'Product Enquiry'],
+        ];
+    }
+
+    public static function mobileFormTemplateProvider(): array
+    {
+        return [
+            'contact'         => ['contact.twig', 'Contact'],
+            'demo_request'    => ['demo_request.twig', 'Demo Request'],
+            'trial_request'   => ['trial_request.twig', 'Trial Request'],
+            'quote_request'   => ['quote_request.twig', 'Quote Request'],
+            'find_dealer'     => ['find_dealer.twig', 'Find Dealer'],
+            'warranty_claim'  => ['warranty_claim.twig', 'Warranty Claim'],
+            'funding_support' => ['funding_support.twig', 'Funding Support'],
+            'lightdrive'      => ['lightDriveEnquiry.twig', 'Light Drive'],
+            'autochair'       => ['autochairEnquiry.twig', 'Autochair'],
+            'place_order'     => ['place_order.twig', 'Place Order'],
+            'product_enq'     => ['product_enq.twig', 'Product Enquiry'],
+        ];
+    }
+
+    public static function desktopFormTemplateWithAjaxProvider(): array
+    {
+        return [
+            'contact'         => ['contact.twig', 'Contact'],
+            'demo_request'    => ['demo_request.twig', 'Demo Request'],
+            'trial_request'   => ['trial_request.twig', 'Trial Request'],
+            'quote_request'   => ['quote_request.twig', 'Quote Request'],
+            'find_dealer'     => ['find_dealer.twig', 'Find Dealer'],
+            'warranty_claim'  => ['warranty_claim.twig', 'Warranty Claim'],
+            'funding_support' => ['funding_support.twig', 'Funding Support'],
+            'lightdrive'      => ['lightDriveEnquiry.twig', 'Light Drive'],
+            'autochair'       => ['autochairEnquiry.twig', 'Autochair'],
+            'place_order'     => ['place_order.twig', 'Place Order'],
+            'product_enq'     => ['product_enq.twig', 'Product Enquiry'],
+        ];
+    }
+
     // -------------------------------------------------------------------
     // LightDrive Enquiry Form
     // -------------------------------------------------------------------

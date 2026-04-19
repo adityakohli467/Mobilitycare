@@ -55,7 +55,7 @@ $car_year  = isset($data['car_year']) ? $this->db->escape($data['car_year']) : '
 $body_type = isset($data['body_type']) ? $this->db->escape($data['body_type']) : '';
 
 
-$this->db->query("INSERT INTO " . DB_PREFIX . "oc_findDealer_requests SET 
+$this->db->query("INSERT INTO " . DB_PREFIX . "findDealer_requests SET 
     fullname = '" . $fullname . "', 
     email = '" . $email . "', 
     phone = '" . $phone . "', 
@@ -75,62 +75,102 @@ $this->db->query("INSERT INTO " . DB_PREFIX . "oc_findDealer_requests SET
     
     
     public function addFundingSupport($data) {
+        $fullname = isset($data['fullname']) ? $this->db->escape($data['fullname']) : '';
+        $email = isset($data['email']) ? $this->db->escape($data['email']) : '';
+        $phone = isset($data['phone']) ? $this->db->escape($data['phone']) : '';
+        $postcode = isset($data['postcode']) ? $this->db->escape($data['postcode']) : '';
+        $manufacturer_id = isset($data['manufacturer_id']) ? (int)$data['manufacturer_id'] : 0;
+        $message = isset($data['message']) ? $this->db->escape($data['message']) : '';
+
         $this->db->query("INSERT INTO " . DB_PREFIX . "funding_support SET 
-            fullname = '" . $this->db->escape($data['fullname']) . "', 
-            email = '" . $this->db->escape($data['email']) . "', 
-            phone = '" . $this->db->escape($data['phone']) . "', 
-            postcode = '" . $this->db->escape($data['postcode']) . "', 
-            manufacturer_id = '" . $this->db->escape($data['manufacturer_id']) . "', 
-            message = '" . $this->db->escape($data['message']) . "', 
+            fullname = '{$fullname}', 
+            email = '{$email}', 
+            phone = '{$phone}', 
+            postcode = '{$postcode}', 
+            manufacturer_id = '{$manufacturer_id}', 
+            message = '{$message}', 
             date_added = NOW()");
     }
     
       public function addContactFormInfo($data) {
+        $fullname = isset($data['name']) ? $this->db->escape($data['name']) : '';
+        $email = isset($data['email']) ? $this->db->escape($data['email']) : '';
+        $phone = isset($data['phone']) ? $this->db->escape($data['phone']) : '';
+        $postcode = isset($data['postcode']) ? $this->db->escape($data['postcode']) : '';
+        $manufacturer_id = isset($data['manufacturer_id']) ? (int)$data['manufacturer_id'] : 0;
+        $contact_type = isset($data['contact_type']) ? $this->db->escape($data['contact_type']) : '';
+        $healthcare_profession = isset($data['healthcare_profession']) ? $this->db->escape($data['healthcare_profession']) : '';
+        $inquiry_reason = isset($data['inquiry_reason']) ? $this->db->escape($data['inquiry_reason']) : '';
+        $message = isset($data['enquiry']) ? $this->db->escape($data['enquiry']) : '';
+
        $this->db->query("
         INSERT INTO " . DB_PREFIX . "contact_forms SET 
-        fullname = '" . $this->db->escape($data['name']) . "', 
-        email = '" . $this->db->escape($data['email']) . "', 
-        phone = '" . $this->db->escape($data['phone']) . "', 
-        postcode = '" . $this->db->escape($data['postcode']) . "', 
-        manufacturer_id = '" . (int)$data['manufacturer_id'] . "', 
-        contact_type = '" . $this->db->escape($data['contact_type']) . "', 
-        healthcare_profession = '" . $this->db->escape($data['healthcare_profession']) . "', 
-        inquiry_reason = '" . $this->db->escape($data['inquiry_reason']) . "', 
-        message = '" . $this->db->escape($data['enquiry']) . "', 
+        fullname = '{$fullname}', 
+        email = '{$email}', 
+        phone = '{$phone}', 
+        postcode = '{$postcode}', 
+        manufacturer_id = '{$manufacturer_id}', 
+        contact_type = '{$contact_type}', 
+        healthcare_profession = '{$healthcare_profession}', 
+        inquiry_reason = '{$inquiry_reason}', 
+        message = '{$message}', 
         date_added = NOW()
 ");
 
     }
     
      public function addPlaceOrder($data) {
+        $fullname = isset($data['fullname']) ? $this->db->escape($data['fullname']) : '';
+        $email = isset($data['email']) ? $this->db->escape($data['email']) : '';
+        $phone = isset($data['phone']) ? $this->db->escape($data['phone']) : '';
+        $postcode = isset($data['postcode']) ? $this->db->escape($data['postcode']) : '';
+        $business_name = isset($data['business_name']) ? $this->db->escape($data['business_name']) : '';
+        $contact_type = isset($data['contact_type']) ? $this->db->escape($data['contact_type']) : '';
+        $healthcare_profession = isset($data['healthcare_profession']) ? $this->db->escape($data['healthcare_profession']) : '';
+        $manufacturer_id = isset($data['manufacturer_id']) ? (int)$data['manufacturer_id'] : 0;
+        $message = isset($data['message']) ? $this->db->escape($data['message']) : '';
+
         $this->db->query("INSERT INTO " . DB_PREFIX . "place_orderForm SET 
-            fullname = '" . $this->db->escape($data['fullname']) . "', 
-            email = '" . $this->db->escape($data['email']) . "', 
-            phone = '" . $this->db->escape($data['phone']) . "', 
-            postcode = '" . $this->db->escape($data['postcode']) . "', 
-            business_name = '" . $this->db->escape($data['business_name']) . "', 
-            contact_type = '" . $this->db->escape($data['contact_type']) . "', 
-            healthcare_profession = '" . $this->db->escape($data['healthcare_profession']) . "', 
-            manufacturer_id = '" . $this->db->escape($data['manufacturer_id']) . "', 
-            message = '" . $this->db->escape($data['message']) . "', 
+            fullname = '{$fullname}', 
+            email = '{$email}', 
+            phone = '{$phone}', 
+            postcode = '{$postcode}', 
+            business_name = '{$business_name}', 
+            contact_type = '{$contact_type}', 
+            healthcare_profession = '{$healthcare_profession}', 
+            manufacturer_id = '{$manufacturer_id}', 
+            message = '{$message}', 
             date_added = NOW()");
     }
     
     public function addProductTrialRequest($data) {
         // product_id = manufactureer id
+        $fullname = isset($data['fullname']) ? $this->db->escape($data['fullname']) : '';
+        $email = isset($data['email']) ? $this->db->escape($data['email']) : '';
+        $phone = isset($data['phone']) ? $this->db->escape($data['phone']) : '';
+        $organisation = isset($data['organisation']) ? $this->db->escape($data['organisation']) : '';
+        $address = isset($data['address']) ? $this->db->escape($data['address']) : '';
+        $postcode = isset($data['postcode']) ? $this->db->escape($data['postcode']) : '';
+        $profession = isset($data['profession']) ? $this->db->escape($data['profession']) : '';
+        $profession_other = isset($data['profession_other']) ? $this->db->escape($data['profession_other']) : '';
+        $client_fullname = isset($data['client_fullname']) ? $this->db->escape($data['client_fullname']) : '';
+        $client_phone = isset($data['client_phone']) ? $this->db->escape($data['client_phone']) : '';
+        $manufacturer_id = isset($data['manufacturer_id']) ? (int)$data['manufacturer_id'] : 0;
+        $notes = isset($data['notes']) ? $this->db->escape($data['notes']) : '';
+
         $this->db->query("INSERT INTO " . DB_PREFIX . "producttrial_requests SET 
-            fullname = '" . $this->db->escape($data['fullname']) . "', 
-            email = '" . $this->db->escape($data['email']) . "', 
-            phone = '" . $this->db->escape($data['phone']) . "', 
-            organisation = '" . $this->db->escape($data['organisation']) . "', 
-            address = '" . $this->db->escape($data['address']) . "', 
-            postcode = '" . $this->db->escape($data['postcode']) . "',
-            profession = '" . $this->db->escape($data['profession']) . "', 
-            profession_other = '" . (isset($data['profession_other']) ? $this->db->escape($data['profession_other']) : '') . "', 
-            client_fullname = '" . (isset($data['client_fullname']) ? $this->db->escape($data['client_fullname']) : '') . "', 
-            client_phone = '" . (isset($data['client_phone']) ? $this->db->escape($data['client_phone']) : '') . "', 
-            manufacturer_id = '" . (int)$this->db->escape($data['manufacturer_id']) . "', 
-            notes = '" . (isset($data['notes']) ? $this->db->escape($data['notes']) : '') . "', 
+            fullname = '{$fullname}', 
+            email = '{$email}', 
+            phone = '{$phone}', 
+            organisation = '{$organisation}', 
+            address = '{$address}', 
+            postcode = '{$postcode}',
+            profession = '{$profession}', 
+            profession_other = '{$profession_other}', 
+            client_fullname = '{$client_fullname}', 
+            client_phone = '{$client_phone}', 
+            manufacturer_id = '{$manufacturer_id}', 
+            notes = '{$notes}', 
             date_added = NOW()");
     }
     
@@ -205,7 +245,7 @@ $this->db->query("INSERT INTO " . DB_PREFIX . "oc_findDealer_requests SET
         contact_type = '{$contact_type}', 
         healthcare_profession = '{$healthcare_profession}',
         quote_type = '{$quote_type}', 
-        manufacturer_id = '', 
+        manufacturer_id = 0, 
         additional_info = '{$additional_info}', 
         vehicle_make = '{$vehicle_make}',
         vehicle_model = '{$vehicle_model}',
@@ -239,7 +279,7 @@ $this->db->query("INSERT INTO " . DB_PREFIX . "oc_findDealer_requests SET
         contact_type = '{$contact_type}', 
         healthcare_profession = '{$healthcare_profession}',
         quote_type = '{$quote_type}', 
-        manufacturer_id = '', 
+        manufacturer_id = 0, 
         additional_info = '{$additional_info}', 
         is_manufacturer_or_product = 1,
         date_added = NOW()");
@@ -258,16 +298,26 @@ $this->db->query("INSERT INTO " . DB_PREFIX . "oc_findDealer_requests SET
     }
     
     public function addProductEnquiry($data) {
+        $fullname = isset($data['fullname']) ? $this->db->escape($data['fullname']) : '';
+        $email = isset($data['email']) ? $this->db->escape($data['email']) : '';
+        $phone = isset($data['phone']) ? $this->db->escape($data['phone']) : '';
+        $postcode = isset($data['postcode']) ? $this->db->escape($data['postcode']) : '';
+        $contact_type = isset($data['contact_type']) ? $this->db->escape($data['contact_type']) : '';
+        $healthcare_profession = isset($data['healthcare_profession']) ? $this->db->escape($data['healthcare_profession']) : '';
+        $inquiry_reason = isset($data['inquiry_reason']) ? $this->db->escape($data['inquiry_reason']) : '';
+        $manufacturer_id = isset($data['manufacturer_id']) ? (int)$data['manufacturer_id'] : 0;
+        $message = isset($data['message']) ? $this->db->escape($data['message']) : '';
+
         $this->db->query("INSERT INTO " . DB_PREFIX . "product_inquiry SET 
-            fullname = '" . $this->db->escape($data['fullname']) . "', 
-            email = '" . $this->db->escape($data['email']) . "', 
-            phone = '" . $this->db->escape($data['phone']) . "', 
-            postcode = '" . $this->db->escape($data['postcode']) . "', 
-            contact_type = '" . $this->db->escape($data['contact_type']) . "', 
-            healthcare_profession = '" . $this->db->escape(isset($data['healthcare_profession']) ? $data['healthcare_profession'] : '') . "', 
-            inquiry_reason = '" . $this->db->escape($data['inquiry_reason']) . "', 
-            manufacturer_id = '" . $this->db->escape($data['manufacturer_id']) . "', 
-            message = '" . $this->db->escape($data['message']) . "', 
+            fullname = '{$fullname}', 
+            email = '{$email}', 
+            phone = '{$phone}', 
+            postcode = '{$postcode}', 
+            contact_type = '{$contact_type}', 
+            healthcare_profession = '{$healthcare_profession}', 
+            inquiry_reason = '{$inquiry_reason}', 
+            manufacturer_id = '{$manufacturer_id}', 
+            message = '{$message}', 
             date_added = NOW()");
             
          

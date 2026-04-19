@@ -1,4 +1,4 @@
-﻿{{ header }}
+{{ header }}
   <link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
 
   <div class="row">{{ column_left }}
@@ -32,7 +32,7 @@ To see if you're eligible to receive Government funding for the mobility aids yo
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/funding_support/validateAjax">
+        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/funding_support/validateAjax">
             
             <div class="">
                <input type="text" name="fullname"  placeholder="Full Name *" required>
@@ -142,4 +142,4 @@ To see if you're eligible to receive Government funding for the mobility aids yo
     //             });
     //         });
      </script>
-<script src="catalog/view/javascript/form-ajax-validate.js"></script>
+<script src="/catalog/view/javascript/form-ajax-validate.js"></script>
