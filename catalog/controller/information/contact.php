@@ -158,7 +158,7 @@ class ControllerInformationContact extends Controller {
 
 		$data['button_submit'] = $this->language->get('button_submit');
 
-		$data['action'] = '/contact-mobilitycare/';
+		$data['action'] = '/contact-mobilitycare';
 
 		$this->load->model('tool/image');
 

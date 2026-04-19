@@ -127,7 +127,7 @@ class ControllerInformationTrialRequest extends Controller {
 
         $data['button_submit'] = 'Submit Your Request';
 
-        $data['action'] = '/organise-a-product-trial/';
+        $data['action'] = '/organise-a-product-trial';
 
         // Form field defaults
         $data['fullname'] = isset($this->request->post['fullname']) ? $this->request->post['fullname'] : $this->customer->getFirstName();

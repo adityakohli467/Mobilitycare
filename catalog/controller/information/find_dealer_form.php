@@ -146,7 +146,7 @@ class ControllerInformationFindDealerForm extends Controller {
 
 		$data['button_submit'] = 'Submit your request';
 
-		$data['action'] = '/request-local-dealer/';
+		$data['action'] = '/request-local-dealer';
 
 
 		if (isset($this->request->post['name'])) {

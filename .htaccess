@@ -19,7 +19,9 @@ RewriteRule ^(.*)$ https://www.mobilitycare.net.au/$1 [R=301,L]
 
 ############################################################
 # Remove trailing slash (canonical: no trailing slash)
+# IMPORTANT: Skip POST requests — a 301 converts POST→GET, losing form data
 ############################################################
+RewriteCond %{REQUEST_METHOD} !POST
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R=301,L]

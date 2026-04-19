@@ -111,7 +111,7 @@ class ControllerInformationAutochairEnquiry extends Controller {
             } 
         }
 
-        $data['action'] = '/autochair-smart-lifter-enquiry/';
+        $data['action'] = '/autochair-smart-lifter-enquiry';
         
         $data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $data['error_fullname'] = isset($this->error['fullname']) ? $this->error['fullname'] : '';

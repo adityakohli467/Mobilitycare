@@ -140,7 +140,7 @@ class ControllerInformationDemoRequest extends Controller {
 
 		$data['button_submit'] = 'Submit your request';
 
-		$data['action'] = '/organise-a-product-demonstration/';
+		$data['action'] = '/organise-a-product-demonstration';
 
 
 		if (isset($this->request->post['name'])) {

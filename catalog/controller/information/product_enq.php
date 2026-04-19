@@ -146,7 +146,7 @@ class ControllerInformationProductEnq extends Controller {
 
 		$data['button_submit'] = $this->language->get('button_submit');
 
-		$data['action'] = '/product_enq/';
+		$data['action'] = '/product_enq';
 
 		$this->load->model('tool/image');
 

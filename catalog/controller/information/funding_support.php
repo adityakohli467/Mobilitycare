@@ -146,7 +146,7 @@ class ControllerInformationFundingSupport extends Controller {
 
 		$data['button_submit'] = 'Submit your request';
 
-		$data['action'] = '/funding-support/';
+		$data['action'] = '/funding-support';
 
 
 		if (isset($this->request->post['name'])) {

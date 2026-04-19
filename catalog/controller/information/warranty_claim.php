@@ -130,7 +130,7 @@ class ControllerInformationWarrantyClaim extends Controller {
 
 		$data['button_submit'] = 'Submit your request';
 
-		$data['action'] = '/warranty-claim/';
+		$data['action'] = '/warranty-claim';
         
 
 		if (isset($this->request->post['full_name'])) {
