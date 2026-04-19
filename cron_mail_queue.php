@@ -60,8 +60,10 @@ try {
         exit(0);
     }
 
-    // Load the OpenCart Mail class
+    // Load the OpenCart Mail class + adaptors
     require_once DIR_SYSTEM . 'library/mail.php';
+    require_once DIR_SYSTEM . 'library/mail/smtp.php';
+    require_once DIR_SYSTEM . 'library/mail/mail.php';
 
     // Get SMTP config from the DB settings table
     $configResult = $db->query("
