@@ -31,14 +31,27 @@
 							<div class="{{ moduleid }} product-image-container {% if product_image_num  == 2 %} {{ 'second_img' }} {% endif %}	">
 								<a href="{{ product.href }}" target="{{ item_link_target }}" title="{{ product.name_maxlength }}"  >
 									
+									{% set is_first_visible = (i == 1 and cls is defined and 'ltabs-items-selected' in cls) %}
 									{% if product_image_num ==2 %}
+										{% if is_first_visible %}
+										<img src="{{ product.thumb }}" class="img-1" alt="{{ product.name_maxlength }}" fetchpriority="high" width="600" height="600">
+										{% else %}
 										<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}" class="img-1 lazyload" alt="{{ product.name_maxlength }}">
+										{% endif %}
 										<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb2 }}" class="img-2 lazyload" alt="{{ product.name_maxlength }}">
 									{% else %}
 {% if moduleid =='1284' %}
+{% if is_first_visible %}
+<img src="{{ product.featureImage }}" alt="{{ product.name_maxlength }}" fetchpriority="high" width="600" height="600">
+{% else %}
 <img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.featureImage }}" alt="{{ product.name_maxlength }}" class="lazyload">
+{% endif %}
 	{% else %}
+{% if is_first_visible %}
+<img src="{{ product.thumb }}" alt="{{ product.name_maxlength }}" fetchpriority="high" width="600" height="600">
+{% else %}
 <img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}" alt="{{ product.name_maxlength }}" class="lazyload">
+{% endif %}
 
 	{% endif %}	
 	{% endif %}	
