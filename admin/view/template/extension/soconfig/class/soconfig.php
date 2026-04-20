@@ -102,16 +102,16 @@ class Soconfig{
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
 				
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 			}else{
 				
 				if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product') $optimizeJSExclude[]='catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js';
 				
 				$js_files_to_out = 	array_diff( $this->js_files[$position], $optimizeJSExclude) ;
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
 				foreach($optimizeJSExclude as $file){
-					if(!empty($file))echo '<script src="'.$file.'" defer></script>'."\n";
+					if(!empty($file))echo '<script src="'.$file.'"></script>'."\n";
 				}
 				
 			}
@@ -138,22 +138,8 @@ class Soconfig{
 		
 		if ($this->get_settings('cssminify','0') == 1){
 			if(empty($CSSExclude) && $optimizeCSSExclude !== array_intersect( $this->css_files[$position], $optimizeCSSExclude)){
-				// Split critical vs deferred
-				$critical_files = array();
-				$deferred_files = array();
-				foreach($css_files_to_out as $f) {
-					$is_defer = false;
-					foreach($defer_patterns as $p) { if(strpos($f, $p) !== false) { $is_defer = true; break; } }
-					if($is_defer) { $deferred_files[] = $f; } else { $critical_files[] = $f; }
-				}
-				if($critical_files) {
-					$combined_css_style = $this->minifier->get_compliled_css_file_path($critical_files);
-					echo '<link rel="stylesheet" href="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_css_style.'">'."\n";
-				}
-				foreach($deferred_files as $df) {
-					echo '<link rel="stylesheet" href="'.$df.'" media="print" onload="this.media=\'all\'">'."\n";
-					echo '<noscript><link rel="stylesheet" href="'.$df.'"></noscript>'."\n";
-				}
+				$combined_css_style = $this->minifier->get_compliled_css_file_path($css_files_to_out);
+				echo '<link rel="stylesheet" href="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_css_style.'">'."\n";
 			}else{
 				$css_files_to_out = 	array_diff( $this->css_files[$position], $optimizeCSSExclude) ;
 				$combined_css_style = $this->minifier->get_compliled_css_file_path($css_files_to_out);
