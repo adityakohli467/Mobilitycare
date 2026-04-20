@@ -26,6 +26,9 @@ class ControllerExtensionModuleSopagebuilder extends Controller {
 		/* Add Style */
 		$this->document->addStyle('catalog/view/javascript/so_page_builder/css/style_render_'.$setting['moduleid'].'.css');	
 		$this->document->addScript('catalog/view/javascript/so_page_builder/js/section.js');
+		$this->document->addScript('catalog/view/javascript/so_page_builder/js/modernizr.video.js');
+		$this->document->addScript('catalog/view/javascript/so_page_builder/js/swfobject.js');
+		$this->document->addScript('catalog/view/javascript/so_page_builder/js/video_background.js');
 		$this->document->addStyle('catalog/view/javascript/so_page_builder/css/style.css');	
 		
 		$template = 'extension/module/so_page_builder/default';

@@ -129,31 +129,9 @@ a{text-decoration:none;}
 {% if not has_canonical %}
 <link href="{{ canonical }}" rel="canonical" />
 {% endif %}
-{% if analytics %}
-<!-- Defer admin analytics until after page load -->
-<script type="text/deferred-analytics">
-{% for analytic in analytics %}
-{{ analytic }}
+	{% for analytic in analytics %}
+	{{ analytic }}
 {% endfor %}
-</script>
-<script>
-window.addEventListener('load', function() {
-  setTimeout(function() {
-    var block = document.querySelector('script[type="text/deferred-analytics"]');
-    if (!block) return;
-    var tmp = document.createElement('div');
-    tmp.innerHTML = block.textContent;
-    var scripts = tmp.querySelectorAll('script');
-    for (var i = 0; i < scripts.length; i++) {
-      var s = document.createElement('script');
-      if (scripts[i].src) { s.src = scripts[i].src; s.async = true; }
-      else { s.textContent = scripts[i].textContent; }
-      document.head.appendChild(s);
-    }
-  }, 3000);
-});
-</script>
-{% endif %}
 
 <!-- reCAPTCHA v3 (deferred until user interaction) -->
 <script>
