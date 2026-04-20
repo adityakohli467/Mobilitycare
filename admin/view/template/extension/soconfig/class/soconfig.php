@@ -93,19 +93,24 @@ class Soconfig{
 		$optimizeJSExclude = array();
 		if(isset($JSExcludes))foreach ($JSExcludes as $JSExclude) $optimizeJSExclude[] = $JSExclude['namecss'];
 		$js_files_to_out = isset($this->js_files[$position]) ? $this->js_files[$position] : array();
+
+		// jQuery must load synchronously (inline scripts depend on it)
+		// Everything else can be deferred
+		$sync_patterns = array('jquery-2.1.1', 'jquery.min.js');
+
 		if ($this->get_settings('jsminify','0') == 1){
 			
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
 				
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
 			}else{
 				
 				if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product') $optimizeJSExclude[]='catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js';
 				
 				$js_files_to_out = 	array_diff( $this->js_files[$position], $optimizeJSExclude) ;
 				$combined_js = $this->minifier->get_compliled_js_file_path($js_files_to_out);
-				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'"></script>'."\n";
+				echo '<script src="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_js.'" defer></script>'."\n";
 				foreach($optimizeJSExclude as $file){
 					if(!empty($file))echo '<script src="'.$file.'" defer></script>'."\n";
 				}
@@ -113,7 +118,13 @@ class Soconfig{
 			}
 		}else{
 			foreach($js_files_to_out as $file) {
-				echo '<script src="'.$file.'"></script>'."\n";
+				$is_sync = false;
+				foreach($sync_patterns as $p) { if(strpos($file, $p) !== false) { $is_sync = true; break; } }
+				if($is_sync) {
+					echo '<script src="'.$file.'"></script>'."\n";
+				} else {
+					echo '<script src="'.$file.'" defer></script>'."\n";
+				}
 			}
 		}
     }
@@ -123,11 +134,27 @@ class Soconfig{
 		if(isset($CSSExcludes)) foreach ($CSSExcludes as $CSSExclude)$optimizeCSSExclude[] = $CSSExclude['namecss'];
 		$css_files_to_out = isset($this->css_files[$position]) ? $this->css_files[$position] : array();
 
+		// Non-critical CSS patterns — load async with print/onload trick
+		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke');
 		
 		if ($this->get_settings('cssminify','0') == 1){
 			if(empty($CSSExclude) && $optimizeCSSExclude !== array_intersect( $this->css_files[$position], $optimizeCSSExclude)){
-				$combined_css_style = $this->minifier->get_compliled_css_file_path($css_files_to_out);
-				echo '<link rel="stylesheet" href="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_css_style.'">'."\n";
+				// Split critical vs deferred
+				$critical_files = array();
+				$deferred_files = array();
+				foreach($css_files_to_out as $f) {
+					$is_defer = false;
+					foreach($defer_patterns as $p) { if(strpos($f, $p) !== false) { $is_defer = true; break; } }
+					if($is_defer) { $deferred_files[] = $f; } else { $critical_files[] = $f; }
+				}
+				if($critical_files) {
+					$combined_css_style = $this->minifier->get_compliled_css_file_path($critical_files);
+					echo '<link rel="stylesheet" href="'.SOCONFIG_CACHE_DIR.'/minify/'.$combined_css_style.'">'."\n";
+				}
+				foreach($deferred_files as $df) {
+					echo '<link rel="stylesheet" href="'.$df.'" media="print" onload="this.media=\'all\'">'."\n";
+					echo '<noscript><link rel="stylesheet" href="'.$df.'"></noscript>'."\n";
+				}
 			}else{
 				$css_files_to_out = 	array_diff( $this->css_files[$position], $optimizeCSSExclude) ;
 				$combined_css_style = $this->minifier->get_compliled_css_file_path($css_files_to_out);
@@ -138,7 +165,14 @@ class Soconfig{
 			}
 		}else{
 			foreach($css_files_to_out as $file) {
-				echo '<link rel="stylesheet" href="'.$file.'">'."\n";
+				$is_defer = false;
+				foreach($defer_patterns as $p) { if(strpos($file, $p) !== false) { $is_defer = true; break; } }
+				if($is_defer) {
+					echo '<link rel="stylesheet" href="'.$file.'" media="print" onload="this.media=\'all\'">'."\n";
+					echo '<noscript><link rel="stylesheet" href="'.$file.'"></noscript>'."\n";
+				} else {
+					echo '<link rel="stylesheet" href="'.$file.'">'."\n";
+				}
 			}
 		}
 		

@@ -71,7 +71,9 @@ a{text-decoration:none;}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/so.custom.js')}}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/common.js')}}
 {% for script in scripts %} {{soconfig.addJs(script)}} {% endfor %}
+{% if class[:12] == 'information-' or class[:9] == 'checkout-' %}
 {{soconfig.addJs('catalog/view/javascript/formValidate.js')}}
+{% endif %}
 
 
 {# =========== Begin Other CSS & JS  ==============#}
@@ -81,8 +83,8 @@ a{text-decoration:none;}
 
 
 {# =========== Begin Google Font ==============#}
-{% if soconfig.get_settings('murl_body')  and  soconfig.get_settings('mbody_status') ==  'google' %} <link href='{{ soconfig.get_settings('murl_body') }}' rel='stylesheet' type='text/css'> {% endif %} 	
-{% if soconfig.get_settings('murl_heading')  and  soconfig.get_settings('mheading_status') ==  'google' %} <link href='{{ soconfig.get_settings('murl_heading') }}' rel='stylesheet' type='text/css'> {% endif %} 	
+{% if soconfig.get_settings('murl_body')  and  soconfig.get_settings('mbody_status') ==  'google' %} <link href='{{ soconfig.get_settings('murl_body') }}&display=swap' rel='stylesheet' media="print" onload="this.media='all'"> {% endif %} 	
+{% if soconfig.get_settings('murl_heading')  and  soconfig.get_settings('mheading_status') ==  'google' %} <link href='{{ soconfig.get_settings('murl_heading') }}&display=swap' rel='stylesheet' media="print" onload="this.media='all'"> {% endif %} 	
 {% if mselector_body %}
 	<style type="text/css">
 		{% if soconfig.get_settings('mbody_status') == 'google' %} {{ (mselector_body~'{font-family:'~ soconfig.get_settings('mfamily_body')~'}') }}

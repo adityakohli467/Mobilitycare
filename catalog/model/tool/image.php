@@ -7,8 +7,16 @@ class ModelToolImage extends Model {
 
 		$extension = pathinfo($filename, PATHINFO_EXTENSION);
 
+		// Serve WebP if browser supports it and GD can create it
+		$use_webp = function_exists('imagewebp') 
+			&& isset($this->request->server['HTTP_ACCEPT']) 
+			&& strpos($this->request->server['HTTP_ACCEPT'], 'image/webp') !== false
+			&& in_array(strtolower($extension), ['jpg', 'jpeg', 'png']);
+
+		$out_extension = $use_webp ? 'webp' : $extension;
+
 		$image_old = $filename;
-		$image_new = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . (int)$width . 'x' . (int)$height . '.' . $extension;
+		$image_new = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . (int)$width . 'x' . (int)$height . '.' . $out_extension;
 
 		if (!is_file(DIR_IMAGE . $image_new) || (filemtime(DIR_IMAGE . $image_old) > filemtime(DIR_IMAGE . $image_new))) {
 			list($width_orig, $height_orig, $image_type) = getimagesize(DIR_IMAGE . $image_old);
@@ -32,9 +40,14 @@ class ModelToolImage extends Model {
 			if ($width_orig != $width || $height_orig != $height) {
 				$image = new Image(DIR_IMAGE . $image_old);
 				$image->resize($width, $height);
-				$image->save(DIR_IMAGE . $image_new, 75);
+				$image->save(DIR_IMAGE . $image_new, $use_webp ? 80 : 75);
 			} else {
-				copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);
+				if ($use_webp) {
+					$image = new Image(DIR_IMAGE . $image_old);
+					$image->save(DIR_IMAGE . $image_new, 80);
+				} else {
+					copy(DIR_IMAGE . $image_old, DIR_IMAGE . $image_new);
+				}
 			}
 		}
 		

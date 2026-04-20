@@ -548,6 +548,10 @@ Options -Indexes
   </FilesMatch>
   # Keep-Alive
   Header set Connection keep-alive
+  # Vary header for WebP content negotiation (image model serves WebP based on Accept)
+  <FilesMatch "\.(jpg|jpeg|png)$">
+    Header append Vary Accept
+  </FilesMatch>
 </IfModule>
 
 # php -- BEGIN cPanel-generated handler, do not edit
