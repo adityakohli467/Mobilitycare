@@ -98,7 +98,7 @@
               continue;
           }
           $content = file_get_contents($file);
-          fwrite($handler, $content);
+          fwrite($handler, ";\n" . $content);
        }
        flock($handler, LOCK_UN);
        fclose($handler);
