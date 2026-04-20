@@ -3,7 +3,7 @@
 <div class="module sohomepage-slider {{ class_suffix}}">
     <style>
     /* Show first slide immediately — don't wait for owl.carousel JS */
-    .sohomeslider-inner-{{ module}}{aspect-ratio:1920/840;overflow:hidden;}
+    .sohomeslider-inner-{{ module}}{aspect-ratio:800/350;overflow:hidden;}
     .sohomeslider-inner-{{ module}} .item img{width:100%;height:auto;display:block;}
     .sohomeslider-inner-{{ module}} .item:first-child{display:block !important;opacity:1 !important;}
     .sohomeslider-inner-{{ module}} .item:not(:first-child){display:none;}
@@ -11,7 +11,7 @@
     .sohomeslider-inner-{{ module}}.owl2-loaded .item:not(:first-child){display:block;}
     </style>
     {% if list %}
-    <link rel="preload" as="image" href="{{ list[0].thumb }}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ list[0].thumb_mobile|default(list[0].thumb) }}" fetchpriority="high">
     {% endif %}
     {% if disp_title_module %}
       <h3 class="modtitle">{{ head_name}}</h3>
@@ -32,9 +32,15 @@
             <div class="item">
                 <a href="{{ item.url}}" title="{{ item.title}}" target="{{ item_link_target}}">
                     {% if loop.first %}
-                    <img src="{{ item.thumb}}" alt="{{ item.title}}" width="1920" height="840" fetchpriority="high" />
+                    <img src="{{ item.thumb_mobile|default(item.thumb) }}" 
+                         srcset="{{ item.thumb_mobile|default(item.thumb) }} 800w, {{ item.thumb }} 1920w"
+                         sizes="100vw"
+                         alt="{{ item.title}}" width="800" height="350" fetchpriority="high" />
                     {% else %}
-                    <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ item.thumb}}" alt="{{ item.title}}" width="1920" height="840" loading="lazy" />
+                    <img class="lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" 
+                         data-src="{{ item.thumb_mobile|default(item.thumb) }}" 
+                         data-srcset="{{ item.thumb_mobile|default(item.thumb) }} 800w, {{ item.thumb }} 1920w"
+                         alt="{{ item.title}}" width="800" height="350" loading="lazy" />
                     {% endif %}
                 </a>
                 <div class="sohomeslider-description banner-content" style="width: 100%;">

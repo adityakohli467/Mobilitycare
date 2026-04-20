@@ -36,6 +36,26 @@ img{max-width:100%;height:auto;}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
 a{text-decoration:none;}
 .container{max-width:100%;margin:0 auto;padding:0 15px;box-sizing:border-box;}
+/* Critical Bootstrap grid (mobile-first) */
+*,*::before,*::after{box-sizing:border-box;}
+.row{margin-left:-15px;margin-right:-15px;display:flex;flex-wrap:wrap;}
+.row::before,.row::after{display:table;content:" ";}
+.row::after{clear:both;}
+.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-8,.col-xs-9,.col-xs-10,.col-xs-11,.col-xs-12{float:left;position:relative;min-height:1px;padding-left:15px;padding-right:15px;}
+.col-xs-12{width:100%;}.col-xs-6{width:50%;}.col-xs-4{width:33.333%;}.col-xs-3{width:25%;}.col-xs-2{width:16.667%;}.col-xs-1{width:8.333%;}
+.col-xs-8{width:66.667%;}.col-xs-9{width:75%;}.col-xs-10{width:83.333%;}.col-xs-11{width:91.667%;}
+@media(min-width:768px){.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-5,.col-sm-6,.col-sm-7,.col-sm-8,.col-sm-9,.col-sm-10,.col-sm-11,.col-sm-12{float:left;position:relative;min-height:1px;padding-left:15px;padding-right:15px;}.col-sm-12{width:100%;}.col-sm-6{width:50%;}.col-sm-4{width:33.333%;}.col-sm-3{width:25%;}}
+.hidden,.hide{display:none!important;}.show{display:block!important;}
+.text-center{text-align:center;}.text-left{text-align:left;}.text-right{text-align:right;}
+.pull-left{float:left!important;}.pull-right{float:right!important;}.clearfix::after{display:block;clear:both;content:"";}
+.img-responsive{display:block;max-width:100%;height:auto;}
+.btn{display:inline-block;margin-bottom:0;font-weight:400;text-align:center;vertical-align:middle;cursor:pointer;border:1px solid transparent;white-space:nowrap;padding:6px 12px;font-size:14px;line-height:1.42857;border-radius:4px;}
+.btn-primary{color:#fff;background-color:#337ab7;border-color:#2e6da4;}
+.form-control{display:block;width:100%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857;color:#555;background-color:#fff;border:1px solid #ccc;border-radius:4px;}
+.form-group{margin-bottom:15px;}
+.alert{padding:15px;margin-bottom:20px;border:1px solid transparent;border-radius:4px;}
+.alert-success{color:#3c763d;background-color:#dff0d8;border-color:#d6e9c6;}
+.alert-danger{color:#a94442;background-color:#f2dede;border-color:#ebccd1;}
 </style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}

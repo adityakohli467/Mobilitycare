@@ -130,9 +130,14 @@ class ControllerExtensionModuleSohomeslider extends Controller {
 			{	
 				if (isset($slide_info['description'])) $slide_info['description']  = html_entity_decode($slide_info['description'], ENT_QUOTES, 'UTF-8');
 				$image = $this->model_tool_image->resize($slide_info['image'],$setting['width'],$setting['height']);
+				// Generate mobile-optimized image (800px wide, proportional height)
+				$mobile_width = 800;
+				$mobile_height = round(($setting['height'] / $setting['width']) * $mobile_width);
+				$image_mobile = $this->model_tool_image->resize($slide_info['image'], $mobile_width, $mobile_height);
 				$list[] = array(
 					'slider_id'  	=> $slide_info['id'],
 					'thumb'       	=> $image,
+					'thumb_mobile'  => $image_mobile,
 					'title'        	=> $slide_info['title'],
 					'description' 	=> $slide_info['description'],
 					'caption'       => $slide_info['caption'],

@@ -94,10 +94,9 @@ class Soconfig{
 		if(isset($JSExcludes))foreach ($JSExcludes as $JSExclude) $optimizeJSExclude[] = $JSExclude['namecss'];
 		$js_files_to_out = isset($this->js_files[$position]) ? $this->js_files[$position] : array();
 
-		// jQuery must load synchronously (inline scripts depend on it)
-		// Everything else can be deferred
+		// jQuery must load sync (inline scripts depend on $())
 		$sync_patterns = array('jquery-2.1.1', 'jquery.min.js');
-
+		
 		if ($this->get_settings('jsminify','0') == 1){
 			
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
@@ -135,7 +134,7 @@ class Soconfig{
 		$css_files_to_out = isset($this->css_files[$position]) ? $this->css_files[$position] : array();
 
 		// Non-critical CSS patterns — load async with print/onload trick
-		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke');
+		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke', 'bootstrap.min.css', 'bootstrap.rtl.min.css');
 		
 		if ($this->get_settings('cssminify','0') == 1){
 			if(empty($CSSExclude) && $optimizeCSSExclude !== array_intersect( $this->css_files[$position], $optimizeCSSExclude)){
