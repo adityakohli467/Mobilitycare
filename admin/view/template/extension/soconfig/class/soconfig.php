@@ -134,7 +134,7 @@ class Soconfig{
 		$css_files_to_out = isset($this->css_files[$position]) ? $this->css_files[$position] : array();
 
 		// Non-critical CSS patterns — load async with print/onload trick
-		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke', 'bootstrap.min.css', 'bootstrap.rtl.min.css');
+		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke', 'bootstrap.min.css', 'bootstrap.rtl.min.css', 'animate.css', 'so_sociallogin.css');
 		
 		if ($this->get_settings('cssminify','0') == 1){
 			if(empty($CSSExclude) && $optimizeCSSExclude !== array_intersect( $this->css_files[$position], $optimizeCSSExclude)){

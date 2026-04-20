@@ -31,15 +31,27 @@
 							<div class="{{ moduleid }} product-image-container {% if product_image_num  == 2 %} {{ 'second_img' }} {% endif %}	">
 								<a href="{{ product.href }}" target="{{ item_link_target }}" title="{{ product.name_maxlength }}"  >
 									
-									{% if product_image_num ==2 %}
-										<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}" class="img-1 lazyload" alt="{{ product.name_maxlength }}">
-										<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb2 }}" class="img-2 lazyload" alt="{{ product.name_maxlength }}">
-									{% else %}
+							{% set is_active_tab = cls is defined and 'ltabs-items-selected' in cls %}
+							{% if product_image_num ==2 %}
+								{% if i == 1 and is_active_tab %}
+								<img src="{{ product.thumb }}" class="img-1" alt="{{ product.name_maxlength }}" fetchpriority="high">
+								{% else %}
+								<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}" class="img-1 lazyload" alt="{{ product.name_maxlength }}">
+								{% endif %}
+								<img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb2 }}" class="img-2 lazyload" alt="{{ product.name_maxlength }}">
+							{% else %}
 {% if moduleid =='1284' %}
+	{% if i == 1 and is_active_tab %}
+<img src="{{ product.featureImage }}" alt="{{ product.name_maxlength }}" fetchpriority="high">
+	{% else %}
 <img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.featureImage }}" alt="{{ product.name_maxlength }}" class="lazyload">
+	{% endif %}
+	{% else %}
+	{% if i == 1 and is_active_tab %}
+<img src="{{ product.thumb }}" alt="{{ product.name_maxlength }}" fetchpriority="high">
 	{% else %}
 <img data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.thumb }}" alt="{{ product.name_maxlength }}" class="lazyload">
-
+	{% endif %}
 	{% endif %}	
 	{% endif %}	
 								</a>						
