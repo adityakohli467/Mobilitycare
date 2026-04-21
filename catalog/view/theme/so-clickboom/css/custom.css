@@ -224,3 +224,30 @@ img {
   display: none !important;
 }
 
+/* ============================================================
+   Reduce header whitespace — tighter vertical spacing
+   ============================================================ */
+.typeheader-5 {
+  padding-bottom: 0;
+}
+.typeheader-5 .header-center {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.typeheader-5 .header-center .logo img {
+  max-height: 56px;
+  width: auto;
+}
+.typeheader-5 .header-center .main-menu-w {
+  margin: 0;
+  padding: 0;
+}
+.typeheader-5 .header-center .container-megamenu {
+  margin: 0;
+  padding: 0;
+}
+.horizontal ul.megamenu > li > a {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
