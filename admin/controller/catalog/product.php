@@ -69,7 +69,7 @@ class ControllerCatalogProduct extends Controller {
                         } elseif ($file['size'] > 0 && $file['error'] == UPLOAD_ERR_OK) {
                             // Generate SEO-friendly filename
                             $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
-                            $filename = $filename_base . '-' . time() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                            $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             $destination = $upload_dir . $filename;
                             error_log('Attempting to move file to: ' . $destination);
                             if (move_uploaded_file($file['tmp_name'], $destination)) {
@@ -90,7 +90,7 @@ class ControllerCatalogProduct extends Controller {
                         $url = $feature['image'];
                         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
                         $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
-                        $filename = $filename_base . '-' . time() . '.' . ($extension ? $extension : 'jpg');
+                        $filename = $filename_base . '-' . time() . '-' . $index . '.' . ($extension ? $extension : 'jpg');
                         $destination = $upload_dir . $filename;
                         error_log('Attempting to fetch URL: ' . $url);
                         $ch = curl_init($url);
@@ -288,7 +288,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         } elseif ($file['size'] > 0 && $file['error'] == UPLOAD_ERR_OK) {
                             // Generate SEO-friendly filename
                             $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
-                            $filename = $filename_base . '-' . time() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                            $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             $destination = $upload_dir . $filename;
                             error_log('Attempting to move file to: ' . $destination);
                             if (move_uploaded_file($file['tmp_name'], $destination)) {
@@ -308,7 +308,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         $url = $feature['image'];
                         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
                         $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
-                        $filename = $filename_base . '-' . time() . '.' . ($extension ? $extension : 'jpg');
+                        $filename = $filename_base . '-' . time() . '-' . $index . '.' . ($extension ? $extension : 'jpg');
                         $destination = $upload_dir . $filename;
                         error_log('Attempting to fetch URL: ' . $url);
                         $ch = curl_init($url);
@@ -410,7 +410,7 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
         } elseif ($file['size'] > 0 && $file['error'] == UPLOAD_ERR_OK) {
             // Generate SEO-friendly filename
             $filename_base = !empty($spec['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $spec['title'])) : 'spec';
-            $filename = $filename_base . '-' . time() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+            $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
             $destination = $upload_dir . $filename;
             error_log('Attempting to move file to: ' . $destination);
             if (move_uploaded_file($file['tmp_name'], $destination)) {
@@ -428,7 +428,7 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
         $url = $spec['image'];
         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
         $filename_base = !empty($spec['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $spec['title'])) : 'spec';
-        $filename = $filename_base . '-' . time() . '.' . ($extension ? $extension : 'jpg');
+        $filename = $filename_base . '-' . time() . '-' . $index . '.' . ($extension ? $extension : 'jpg');
         $destination = $upload_dir . $filename;
         error_log('Attempting to fetch URL: ' . $url);
         $ch = curl_init($url);
