@@ -117,13 +117,7 @@ class Soconfig{
 			}
 		}else{
 			foreach($js_files_to_out as $file) {
-				$is_sync = false;
-				foreach($sync_patterns as $p) { if(strpos($file, $p) !== false) { $is_sync = true; break; } }
-				if($is_sync) {
-					echo '<script src="'.$file.'"></script>'."\n";
-				} else {
-					echo '<script src="'.$file.'" defer></script>'."\n";
-				}
+				echo '<script src="'.$file.'"></script>'."\n";
 			}
 		}
     }
@@ -134,7 +128,7 @@ class Soconfig{
 		$css_files_to_out = isset($this->css_files[$position]) ? $this->css_files[$position] : array();
 
 		// Non-critical CSS patterns — load async with print/onload trick
-		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke', 'bootstrap.min.css', 'bootstrap.rtl.min.css');
+		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke');
 		
 		if ($this->get_settings('cssminify','0') == 1){
 			if(empty($CSSExclude) && $optimizeCSSExclude !== array_intersect( $this->css_files[$position], $optimizeCSSExclude)){
