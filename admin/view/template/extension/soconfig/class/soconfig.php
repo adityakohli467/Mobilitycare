@@ -91,7 +91,7 @@ class Soconfig{
 	public function js_out($JSExcludes = '',$position = 'header'){
 
 		$optimizeJSExclude = array();
-		if(isset($JSExcludes))foreach ($JSExcludes as $JSExclude) $optimizeJSExclude[] = $JSExclude['namecss'];
+		if(is_array($JSExcludes))foreach ($JSExcludes as $JSExclude) $optimizeJSExclude[] = is_array($JSExclude) ? $JSExclude['namecss'] : $JSExclude;
 		$js_files_to_out = isset($this->js_files[$position]) ? $this->js_files[$position] : array();
 
 		// jQuery must load sync (inline scripts depend on $())
@@ -124,7 +124,7 @@ class Soconfig{
 	
     public function css_out($CSSExcludes = '',$position = 'header'){
 		$optimizeCSSExclude = array();
-		if(isset($CSSExcludes)) foreach ($CSSExcludes as $CSSExclude)$optimizeCSSExclude[] = $CSSExclude['namecss'];
+		if(is_array($CSSExcludes)) foreach ($CSSExcludes as $CSSExclude)$optimizeCSSExclude[] = is_array($CSSExclude) ? $CSSExclude['namecss'] : $CSSExclude;
 		$css_files_to_out = isset($this->css_files[$position]) ? $this->css_files[$position] : array();
 
 		// Non-critical CSS patterns — load async with print/onload trick
