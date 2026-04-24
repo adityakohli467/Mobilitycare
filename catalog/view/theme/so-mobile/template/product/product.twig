@@ -340,7 +340,7 @@ body.quote-modal-open .popup-marketing {
                                             {% if display_custom_quote and display_custom_quote == 1 and display_custom_quote_for_vehicle_modification and display_custom_quote_for_vehicle_modification == 1  %}
                             <a class="btn btn-custom-blue" onclick="openVMModal({{ product_id }})"><i class="fa fa-file-text"></i> Get a Custom Quote</a>
                               {% endif %}
-                                            <a class="btn btn-custom-blue-border" onclick="openDemoModal({{ product_id }})"><i class="fa fa-calendar"></i> Book a Free Demo</a>
+                                            <a class="btn btn-custom-blue-border" onclick="openDemoModal({{ product_id }})"><i class="fa fa-calendar"></i> Ask a Question</a>
                                         </div>
                                         
                                     </div>
@@ -478,8 +478,8 @@ body.quote-modal-open .popup-marketing {
                             <div class="tabsslider {{related_position}} {% if tabs_position == 1 %} vertical-tabs col-xs-12 {% else %} horizontal-tabs col-xs-12 {% endif %}">
                                 {% if tabs_position == 2 %}
                                     <ul class="nav nav-tabs font-sn">
-                                        <li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
-                                        <li><a data-toggle="tab" href="#tab-features">Features</a></li>
+                                        <li class="active"><a data-toggle="tab" href="#tab-features">Features</a></li>
+                                        <li><a data-toggle="tab" href="#tab-description">Overview</a></li>
                                         <li><a data-toggle="tab" href="#tab-Specifications">Specs</a></li>
                                         <li><a data-toggle="tab" href="#tab-userguide">Downloads & User Guide</a></li>
                                         <li><a data-toggle="tab" href="#tab-funding">NDIS & Funding</a></li>
@@ -501,8 +501,8 @@ body.quote-modal-open .popup-marketing {
                                     </ul>
                                 {% elseif tabs_position == 1 %}
                                     <ul class="nav nav-tabs col-xs-12 col-sm-4">
-                                        <li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
-                                        <li><a data-toggle="tab" href="#tab-features">Features</a></li>
+                                        <li class="active"><a data-toggle="tab" href="#tab-features">Features</a></li>
+                                        <li><a data-toggle="tab" href="#tab-description">Overview</a></li>
                                         <li><a data-toggle="tab" href="#tab-Specifications">Specs</a></li>
                                         <li><a data-toggle="tab" href="#tab-userguide">Downloads & User Guide</a></li>
                                         <li><a data-toggle="tab" href="#tab-funding">NDIS & Funding</a></li>
@@ -525,7 +525,7 @@ body.quote-modal-open .popup-marketing {
                                 {% endif %}
 
                                 <div class="tab-content {% if tabs_position == 1 %} col-xs-12 col-sm-8 {% else %} col-xs-12 {% endif %}">
-                                    <div class="tab-pane active" id="tab-description">
+                                    <div class="tab-pane" id="tab-description">
                                         <div class="row mt-5">
                                             {% if product.right_for_you %}
                                                 <div class="col-xs-12 col-sm-6">
@@ -596,7 +596,7 @@ body.quote-modal-open .popup-marketing {
                                         </div>
                                     </div>
 
-                                    <div class="tab-pane" id="tab-features">
+                                    <div class="tab-pane active" id="tab-features">
                                         {% if product_features %}
                                             <div class="product-features">
                                                 {% for feature in product_features %}
@@ -1262,7 +1262,7 @@ body.quote-modal-open .popup-marketing {
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="bookaDemoModalLabel">Book a demo</h4>
+                <h4 class="modal-title" id="bookaDemoModalLabel">Ask a Question</h4>
             </div>
 
             <div class="modal-body">

@@ -470,7 +470,7 @@
                               {% if display_custom_quote_for_vehicle_modification and display_custom_quote_for_vehicle_modification == 1  %}
                             <a class="btn btn-custom-blue" onclick="openVMModal({{ product_id }})"><i class="fa fa-file-text"></i> Get a Custom Quote</a>
                               {% endif %}
-							 <a class="btn btn-custom-blue-border" onclick="openDemoModal({{ product_id }})"><i class="fa fa-calendar"></i> Book a Free Demo</a>		
+							 <a class="btn btn-custom-blue-border" onclick="openDemoModal({{ product_id }})"><i class="fa fa-calendar"></i> Ask a Question</a>		
 									
 								</div>
 								
@@ -750,7 +750,8 @@
 							{#========= Tabs - Left vertical =========#}
 							{% elseif tabs_position == 1  %}
 								<ul class="nav nav-tabs col-lg-3 col-sm-4">
-								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
+								<li class="active"><a data-toggle="tab" href="#tab-features">Features</a></li>
+								<li><a data-toggle="tab" href="#tab-description">Overview</a></li>
 								
 					            {% if review_status %}
 					           	 <li><a href="#tab-review" data-toggle="tab">{{ tab_review }}</a></li>
@@ -777,7 +778,7 @@
 							<div class="tab-content {% if tabs_position == 1  %} {{ 'col-lg-9 col-sm-8' }} {% endif %} col-xs-12">
 							    
 							    
-								<div class="tab-pane active" id="tab-description">
+<div class="tab-pane" id="tab-description">
 								
 								
                                <div class="row mt-5">
@@ -858,7 +859,7 @@
 
 								</div>
 								
-								 <div class="tab-pane" id="tab-features">
+								 <div class="tab-pane active" id="tab-features">
   {% if product_features %}
     <div class="product-features">
       {% for feature in product_features %}
@@ -1494,7 +1495,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="bookaDemoModalLabel">Book a demo</h4>
+        <h4 class="modal-title" id="bookaDemoModalLabel">Ask a Question</h4>
       </div>
 
       <div class="modal-body">
