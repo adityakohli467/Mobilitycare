@@ -719,8 +719,8 @@
 							{#========= Tabs - Bottom horizontal =========#}
 							{% if tabs_position == 2 %}
 							<ul class="nav nav-tabs font-sn">
-								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
 								<li><a data-toggle="tab" href="#tab-features">Features</a></li>
+								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
                                 <li><a data-toggle="tab" href="#tab-Specifications">Specs</a></li>
                                 <li><a data-toggle="tab" href="#tab-userguide">Downloads & User Guide</a></li>
                                 
@@ -750,8 +750,8 @@
 							{#========= Tabs - Left vertical =========#}
 							{% elseif tabs_position == 1  %}
 								<ul class="nav nav-tabs col-lg-3 col-sm-4">
-								<li class="active"><a data-toggle="tab" href="#tab-features">Features</a></li>
-								<li><a data-toggle="tab" href="#tab-description">Overview</a></li>
+								<li><a data-toggle="tab" href="#tab-features">Features</a></li>
+								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
 								
 					            {% if review_status %}
 					           	 <li><a href="#tab-review" data-toggle="tab">{{ tab_review }}</a></li>
@@ -778,7 +778,7 @@
 							<div class="tab-content {% if tabs_position == 1  %} {{ 'col-lg-9 col-sm-8' }} {% endif %} col-xs-12">
 							    
 							    
-<div class="tab-pane" id="tab-description">
+<div class="tab-pane active" id="tab-description">
 								
 								
                                <div class="row mt-5">
@@ -859,7 +859,7 @@
 
 								</div>
 								
-								 <div class="tab-pane active" id="tab-features">
+								 <div class="tab-pane" id="tab-features">
   {% if product_features %}
     <div class="product-features">
       {% for feature in product_features %}
