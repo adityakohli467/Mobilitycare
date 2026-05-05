@@ -482,7 +482,11 @@ if (empty($this->error)) {
 			}
 
 			$redirect_url = $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true);
-			echo '<html><head><meta http-equiv="refresh" content="0;url=' . $redirect_url . '"></head><body><script>window.location.href="' . $redirect_url . '";</script></body></html>';
+			while (ob_get_level()) { ob_end_clean(); }
+			header('Connection: close');
+			header('Content-Type: text/html');
+			echo '<html><head><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($redirect_url) . '"></head><body><script>window.location.href="' . $redirect_url . '";</script></body></html>';
+			flush();
 			exit;
 		}
 
