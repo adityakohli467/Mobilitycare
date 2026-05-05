@@ -4,7 +4,9 @@ $(document).ready(function() {
 		var element = this;
 
 		if ($(this).attr('data-lang') && $(this).attr('data-lang')!='en') {
-			$('head').append('<script type="text/javascript" src="view/javascript/summernote/lang/summernote-' + $(this).attr('data-lang') + '-' + $(this).attr('data-lang').toUpperCase() + '.min.js"></script>');
+			var lang = $(this).attr('data-lang').split(',')[0].split('.')[0];
+			var langFile = 'view/javascript/summernote/lang/summernote-' + lang + '-' + lang.toUpperCase() + '.min.js';
+			$.getScript(langFile).fail(function() {});
 		}
 
 		$(element).summernote({
