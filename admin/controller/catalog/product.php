@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class ControllerCatalogProduct extends Controller {
 	private $error = array();
 
@@ -86,6 +86,8 @@ class ControllerCatalogProduct extends Controller {
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
                         $image_content = curl_exec($ch);
                         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                         curl_close($ch);
@@ -288,6 +290,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
                         $image_content = curl_exec($ch);
                         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                         curl_close($ch);
@@ -392,6 +396,8 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         $image_content = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);

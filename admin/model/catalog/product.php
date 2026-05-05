@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class ModelCatalogProduct extends Model {
 	public function addProduct($data) {
 	    
