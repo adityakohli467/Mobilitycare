@@ -483,11 +483,9 @@ if (empty($this->error)) {
 
 			$redirect_url = str_replace('&amp;', '&', $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true));
 			while (ob_get_level()) { ob_end_clean(); }
-			header('Connection: close');
-			header('Content-Type: text/html');
-			$html_url = htmlspecialchars($redirect_url, ENT_QUOTES, 'UTF-8');
-			echo '<html><head><meta http-equiv="refresh" content="0;url=' . $html_url . '"></head><body><script>window.location.href="' . addslashes($redirect_url) . '";</script></body></html>';
-			flush();
+			header('X-Accel-Buffering: no');
+			header('Cache-Control: no-cache, no-store, must-revalidate');
+			header('Location: ' . $redirect_url, true, 302);
 			exit;
 		}
 
