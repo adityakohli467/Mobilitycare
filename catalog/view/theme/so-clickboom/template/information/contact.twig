@@ -1,3 +1,4 @@
+{{ header }}
    <link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
 
 <style>
@@ -30,7 +31,6 @@
          color:red
         }
     </style>
-    {{ header }}
 <!-- <div class="breadcrumbs">
 	<div class="inner">
 	    <div class="container">
@@ -73,7 +73,7 @@
 
         <div class="col-sm-4 col-xs-12">
             <div class="contact-box" >
-                <h4><i class="fa fa-envelope"></i> contact@mobilitycare.net.au</h4>
+                <h4><i class="fa fa-envelope"></i> contact&#64;mobilitycare.net.au</h4>
             </div>
         </div>
 
@@ -91,9 +91,9 @@
 
    
 
-<p>Weâ€™re available during the following hours: </p>
+<p>We're available during the following hours: </p>
 
-<p>Monday to Friday: 9:00 AM â€“ 5:00 PM </p>
+<p>Monday to Friday: 9:00 AM &mdash; 5:00 PM </p>
 <p>Saturday - Sunday: Closed </p>
 
 <small>(Business hours may change for public holidays) </small>
@@ -119,7 +119,7 @@
  
 			 </div>
 			<div class="col-sm-6 col-xs-12 contact-form">
-			   <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal quoteForm ajax-validate-form" data-validate-url="index.php?route=information/contact/validateAjax">
+			   <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal quoteForm ajax-validate-form" data-validate-url="/index.php?route=information/contact/validateAjax">
         <fieldset>
            
             <p>{{ comment }}</p>
@@ -462,5 +462,5 @@ document.getElementById("contact_type").addEventListener("change", function() {
 
 </script>
 <div id="loaderOverlay" class="loader-overlay" style="display:none;"><div class="loader"></div></div>
-<script src="catalog/view/javascript/form-ajax-validate.js"></script>
+<script src="/catalog/view/javascript/form-ajax-validate.js"></script>
 

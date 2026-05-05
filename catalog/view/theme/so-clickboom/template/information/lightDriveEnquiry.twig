@@ -1,4 +1,4 @@
- {{ header }}
+{{ header }}
    <link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
 
   <div class="row">{{ column_left }}
@@ -26,7 +26,7 @@ you, along with pricing and next steps.
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="quoteRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/lightDriveEnquiry/validateAjax">
+        <form action="{{ action }}" method="post" id="quoteRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/lightDriveEnquiry/validateAjax">
             
             <div class="form-group">
                <input type="text" name="fullname"  placeholder="Full Name *" class="form-control" required>
@@ -194,4 +194,4 @@ document.getElementById("contact_type").addEventListener("change", function() {
 
 //             });
      </script>
-<script src="catalog/view/javascript/form-ajax-validate.js"></script>
+<script src="/catalog/view/javascript/form-ajax-validate.js"></script>

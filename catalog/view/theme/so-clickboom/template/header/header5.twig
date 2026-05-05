@@ -206,8 +206,15 @@
 {% set hidden_headerbottom = soconfig.get_settings('toppanel_type') =='1'? 'hidden-compact' : '' %}
 
 <header id="header" class="variant typeheader-{{ typeheader ? typeheader : '1'}}">
-  {#<script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcab9caAAAAANnUgfmoMnQTfkjagqp1xHgJ2xi3"></script>#}
-  <script src="https://www.google.com/recaptcha/api.js?render=6Lcab9caAAAAANnUgfmoMnQTfkjagqp1xHgJ2xi3"></script>
+  <!-- reCAPTCHA v3 (deferred until user interaction) -->
+  <script>
+  (function(){var loaded=false;function loadRecaptcha(){if(loaded)return;loaded=true;
+  var s=document.createElement('script');s.src='https://www.google.com/recaptcha/api.js?render=6Lcab9caAAAAANnUgfmoMnQTfkjagqp1xHgJ2xi3';
+  document.head.appendChild(s);}
+  ['scroll','click','touchstart','mouseover','keydown'].forEach(function(e){
+  window.addEventListener(e,loadRecaptcha,{once:true,passive:true});});
+  })();
+  </script>
   <!-- Top bar -->
   <div class="container-fluid">
       
@@ -483,10 +490,20 @@
   </style>
 
  
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYD_DZ8jWG9LqYaiKxr-3VAiN_JPkVzCk&libraries=places&callback=initMap" async defer></script>
+<!-- Google Maps: only load on pages that have the #map element (Find a Dealer) -->
+<script>
+function loadGoogleMaps(){
+  if(window._mapsLoading)return;window._mapsLoading=true;
+  var s=document.createElement('script');
+  s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBYD_DZ8jWG9LqYaiKxr-3VAiN_JPkVzCk&libraries=places&callback=initMap';
+  s.async=true;s.defer=true;document.head.appendChild(s);
+}
+$(document).ready(function(){if(document.getElementById('map')){loadGoogleMaps();}});
+</script>
 <script>
     
     $(document).ready(function(){
+    if(!document.getElementById('map')) return;
     localStorage.setItem("updatedPostcodes", '');
     let isPageLoadCall = false;
     

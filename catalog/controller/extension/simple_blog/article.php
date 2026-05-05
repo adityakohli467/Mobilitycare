@@ -13,6 +13,8 @@
 				$this->document->setTitle('Blog | ' . $this->config->get('config_name'));
 			}
 
+			$this->document->setDescription('Read our latest articles about mobility aids, wheelchairs, NDIS funding, disability equipment & independent living at MobilityCare Australia.');
+
 			if(!$this->checkDatabase()) {
 				$this->document->addStyle('catalog/view/javascript/simple_blog/css/style.css');
 				

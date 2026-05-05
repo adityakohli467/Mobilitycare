@@ -25,54 +25,41 @@ class ControllerInformationFundingSupport extends Controller {
             if ($skip_validation || $this->validate()) {
 
                 // Save to DB
-                $this->model_catalog_demo_request->addFundingSupport($this->request->post);
+                try {
+                    $this->model_catalog_demo_request->addFundingSupport($this->request->post);
+                } catch (\Throwable $dbError) {
+                    $this->log->write('FUNDING SUPPORT DB SAVE ERROR: ' . $dbError->getMessage());
+                }
 
                 // Prepare Email
                 $mailMessageHtml = $this->mailHtml($this->request->post);
 
-                $mail = new Mail($this->config->get('config_mail_engine'));
-                $mail->parameter = $this->config->get('config_mail_parameter');
-                $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-                $mail->smtp_username = $this->config->get('config_mail_smtp_username');
-                $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-                $mail->smtp_port = $this->config->get('config_mail_smtp_port');
-                $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+                // Queue emails for async sending (instant — no SMTP wait)
+                $this->load->helper('mail_queue');
+                $replyTo = isset($this->request->post['email']) ? $this->request->post['email'] : 'enquiries@mobilitycare.net.au';
 
-                $mail->setTo($this->config->get('config_email'));
-                $mail->setFrom('enquiries@mobilitycare.net.au');
-                 $replyTo = (isset($this->request->post['email']) ? $this->request->post['email'] : 'enquiries@mobilitycare.net.au');
-                $mail->setReplyTo($replyTo);
-                $mail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
-                
-                $mail->setSubject('Funding Support');
-                $mail->setHtml($mailMessageHtml);
-                $mail->send();
-                
-                // auto reply to customer
-                
-                  if (isset($this->request->post['email'])) {
-        $customerMail = new Mail($this->config->get('config_mail_engine'));
-        $customerMail->parameter = $this->config->get('config_mail_parameter');
-        $customerMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-        $customerMail->smtp_username = $this->config->get('config_mail_smtp_username');
-        $customerMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-        $customerMail->smtp_port = $this->config->get('config_mail_smtp_port');
-        $customerMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-        $customerMail->setTo($this->request->post['email']);
-        $customerMail->setFrom('enquiries@mobilitycare.net.au');
-        $customerMail->setReplyTo('enquiries@mobilitycare.net.au');
-        $customerMail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
-        $customerMail->setSubject('Thank You for Your Enquiry - MobilityCare');
-        
-        // Load the email template
-        $data['customer_name'] = isset($this->request->post['name']) ? htmlspecialchars($this->request->post['name']) : 'Valued Customer';
-        
-        $customerMessageHtml = $this->load->view('mail/enquiry_confirmation', $data);
-        
-        $customerMail->setHtml($customerMessageHtml);
-        // PDF brochure removed — 16 MB file causes memory exhaustion on 64 MB hosts
-        $customerMail->send();
-    }
+                mail_queue_add($this->db, [
+                    'to'       => $this->config->get('config_email'),
+                    'from'     => 'enquiries@mobilitycare.net.au',
+                    'sender'   => 'MobilityCare',
+                    'reply_to' => $replyTo,
+                    'subject'  => 'Funding Support',
+                    'html'     => $mailMessageHtml,
+                    'priority' => 2,
+                ]);
+
+                if (isset($this->request->post['email']) && filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+                    $data['customer_name'] = isset($this->request->post['name']) ? htmlspecialchars($this->request->post['name']) : 'Valued Customer';
+                    $customerHtml = $this->load->view('mail/enquiry_confirmation', $data);
+                    mail_queue_add($this->db, [
+                        'to'       => $this->request->post['email'],
+                        'from'     => 'enquiries@mobilitycare.net.au',
+                        'sender'   => 'MobilityCare',
+                        'reply_to' => 'enquiries@mobilitycare.net.au',
+                        'subject'  => 'Thank You for Your Enquiry - MobilityCare',
+                        'html'     => $customerHtml,
+                    ]);
+                }
 
                  // redirect
                  $this->session->data['success'] = 'Your enquiry has been successfully submitted.';
@@ -118,7 +105,7 @@ class ControllerInformationFundingSupport extends Controller {
 
 		$data['button_submit'] = 'Submit your request';
 
-		$data['action'] = '/funding-support/';
+		$data['action'] = '/funding-support';
 
 
 		if (isset($this->request->post['name'])) {

@@ -13,8 +13,8 @@
         <h4 class="modal-title">Find a local dealer</h4>
       </div>
       <div class="modal-body">
-        <!-- Normal form submission - no AJAX -->
-        <form action="{{ find_dealer_submit_url }}" method="post" id="askQuestionForm">
+        <form id="askQuestionForm">
+          <input type="hidden" name="isAjax" value="1">
           <input type="hidden" name="product_id" value="{{ product_id|default(0) }}">
 
           <div class="form-group">
@@ -29,7 +29,7 @@
 
           <div class="form-group">
             <label>Phone *</label>
-            <input type="tel" name="phone" id="customerPhone" class="form-control phoneValidate" required>
+            <input type="tel" name="phone" id="customerPhone" class="form-control phoneValidate" maxlength="10" placeholder="04XX XXX XXX" required>
           </div>
 
           <div class="form-group">
@@ -61,6 +61,12 @@
   <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:25px 40px; border-radius:6px; font-size:18px;">
     <i class="fa fa-spinner fa-spin"></i> Processing...
   </div>
+</div>
+
+<div id="toastMessageAsk"
+     style="display:none; position:fixed; bottom:20px; left:50%;
+            transform:translateX(-50%); z-index:9999;"
+     class="alert alert-success">
 </div>
 
 <script>
@@ -104,6 +110,11 @@
           showToast("Phone is required", "error");
           return false;
       }
+      var auPhoneRegex = /^(04\d{8}|0[2378]\d{8})$/;
+      if (!auPhoneRegex.test(phone)) {
+          showToast("Please enter a valid Australian phone number", "error");
+          return false;
+      }
       return true;
   }
 
@@ -119,7 +130,38 @@
       }, 300);
   });
 
- 
+  // Submit form
+  $(document).on("submit", "#askQuestionForm", function (e) {
+      e.preventDefault();
+
+      if (!validateForm()) {
+          return;
+      }
+
+      showLoader();
+
+      $.ajax({
+          url: "index.php?route=extension/module/so_askquestion/sendData",
+          type: "POST",
+          data: $(this).serialize(),
+          dataType: "json",
+          success: function (res) {
+              hideLoader();
+
+              if (res.status === 1) {
+                  $("#askQuestionModal").modal("hide");
+                  showToast(res.success, "success");
+                  $("#askQuestionForm")[0].reset();
+              } else if (res.errors) {
+                  showToast(res.errors.map(e => e.error).join("<br>"), "error");
+              }
+          },
+          error: function () {
+              hideLoader();
+              showToast("Something went wrong. Please try again.", "error");
+          }
+      });
+  });
 
 })(jQuery);
 </script>

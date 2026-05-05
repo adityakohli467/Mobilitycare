@@ -302,8 +302,12 @@
 	z-index: 0;
 }
 
+.ltabs-loadmore {
+	display: none !important;
+}
+
 .so-listing-tabs  .ltabs-items-container .ltabs-loadmore {
-	display: block;
+	display: none;
 	overflow: hidden;
 	text-align: center;
 	margin: 0 auto;
@@ -311,7 +315,7 @@
 
 .so-listing-tabs .ltabs-items   .ltabs-loadmore .ltabs-loadmore-btn {
 	padding: 8px 12px;
-	display: inline-block;
+	display: none !important;
 	background-color: #0088cc;
 	color: #ccc;
 	cursor: pointer;

@@ -5,7 +5,11 @@
 	{% for key,image in images %}
 		<div class="col-sm-12 gallery-grid" data-index="{{key}}" >
 		<a class="thumbnail" title="{{ heading_title }}">
+			{% if loop.first %}
+			<img src="{{ image.popup }}" title="{{ heading_title }}" alt="{{ heading_title }}" loading="eager" fetchpriority="high" onload="this.closest('.content-product-left').classList.add('loaded')" />
+			{% else %}
 			<img class="lazyload"  data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ image.popup }}" title="{{ heading_title }}" alt="{{ heading_title }}" />
+			{% endif %}
 		</a>
 		</div>
 	{% endfor %}

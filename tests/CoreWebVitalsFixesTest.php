@@ -54,24 +54,29 @@ class CoreWebVitalsFixesTest extends TestCase
     // Task 2 — Async CallRail script (so-clickboom header)
     // -----------------------------------------------------------------------
 
-    public function testCallRailScriptHasAsyncAttribute(): void
+    public function testCallRailScriptIsDeferredUntilWindowLoad(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
-        $this->assertMatchesRegularExpression(
-            '/<script\s[^>]*async[^>]*cdn\.callrail\.com[^>]*>/',
+        $this->assertStringContainsString(
+            'cdn.callrail.com',
             $twig,
-            'CallRail <script> tag must have the async attribute to avoid render-blocking'
+            'CallRail URL must be present in so-clickboom header'
+        );
+        $this->assertStringContainsString(
+            "window.addEventListener('load'",
+            $twig,
+            'CallRail must be deferred until window load event'
         );
     }
 
-    public function testCallRailScriptDoesNotHaveTypeTextJavascriptBlocking(): void
+    public function testCallRailScriptDoesNotBlockRendering(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
-        // The old blocking version had type="text/javascript" without async
+        // The old blocking version had a direct <script src="...callrail..."> without deferral
         $this->assertDoesNotMatch(
-            '/<script type="text\/javascript" src="[^"]*callrail[^"]*">/',
+            '/<script\s+src="[^"]*callrail[^"]*">/',
             $twig,
-            'CallRail script must not use the old blocking pattern (no async)'
+            'CallRail script must not use a direct blocking <script src> tag'
         );
     }
 
@@ -358,33 +363,35 @@ class CoreWebVitalsFixesTest extends TestCase
     // Lighthouse Fix Prompt — Task 2: defer/async on render-blocking scripts
     // -----------------------------------------------------------------------
 
-    public function testDefaultThemeHeaderScriptsNoDeferOnCore(): void
+    public function testDefaultThemeHeaderJQueryNoDeferButOthersHaveDefer(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/default/template/common/header.twig');
+        // jQuery must NOT have defer — inline scripts depend on $ being available during parsing
         $this->assertDoesNotMatchRegularExpression(
             '/<script[^>]+jquery[^>]+defer[^>]*>/',
             $twig,
             'default/header.twig: jQuery <script> must NOT have defer (breaks inline scripts)'
         );
-        $this->assertDoesNotMatchRegularExpression(
+        // Bootstrap and common.js SHOULD have defer for performance
+        $this->assertMatchesRegularExpression(
             '/<script[^>]+bootstrap\.min\.js[^>]+defer[^>]*>/',
             $twig,
-            'default/header.twig: Bootstrap <script> must NOT have defer (breaks inline scripts)'
+            'default/header.twig: Bootstrap <script> should have defer for performance'
         );
-        $this->assertDoesNotMatchRegularExpression(
+        $this->assertMatchesRegularExpression(
             '/<script[^>]+common\.js[^>]+defer[^>]*>/',
             $twig,
-            'default/header.twig: common.js <script> must NOT have defer (breaks inline scripts)'
+            'default/header.twig: common.js <script> should have defer for performance'
         );
     }
 
-    public function testDefaultThemeFooterScriptsNoDefer(): void
+    public function testDefaultThemeFooterScriptsHaveDefer(): void
     {
         $twig = $this->readTemplate('catalog/view/theme/default/template/common/footer.twig');
-        $this->assertStringNotContainsString(
+        $this->assertStringContainsString(
             'defer',
             $twig,
-            'default/footer.twig: scripts loop must NOT have defer (breaks jQuery plugins)'
+            'default/footer.twig: scripts loop should have defer for performance'
         );
     }
 
@@ -652,5 +659,399 @@ class CoreWebVitalsFixesTest extends TestCase
     private function assertDoesNotMatch(string $pattern, string $string, string $message = ''): void
     {
         $this->assertDoesNotMatchRegularExpression($pattern, $string, $message);
+    }
+
+    // -----------------------------------------------------------------------
+    // Performance: third-party scripts deferred in so-clickboom header
+    // -----------------------------------------------------------------------
+
+    public function testSoClickboomGTMDeferredUntilLoad(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
+        $this->assertStringContainsString(
+            'googletagmanager.com',
+            $twig,
+            'so-clickboom/header.twig must contain GTM'
+        );
+        // GTM should be inside a window.addEventListener('load', ...) wrapper
+        $this->assertMatchesRegularExpression(
+            '/window\.addEventListener\s*\(\s*[\'"]load[\'"].*googletagmanager/s',
+            $twig,
+            'GTM script must be deferred until window load event'
+        );
+    }
+
+    public function testSoClickboomGADeferredUntilLoad(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
+        $this->assertMatchesRegularExpression(
+            '/window\.addEventListener\s*\(\s*[\'"]load[\'"].*google-analytics\.com/s',
+            $twig,
+            'Google Analytics must be deferred until window load event'
+        );
+    }
+
+    public function testSoClickboomFBPixelDeferredUntilLoad(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
+        $this->assertMatchesRegularExpression(
+            '/window\.addEventListener\s*\(\s*[\'"]load[\'"].*connect\.facebook\.net/s',
+            $twig,
+            'Facebook Pixel must be deferred until window load event'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Performance: reCAPTCHA deferred until user interaction in header5
+    // -----------------------------------------------------------------------
+
+    public function testSoClickboomRecaptchaDeferredOnInteraction(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/header/header5.twig');
+        $this->assertStringContainsString(
+            'loadRecaptcha',
+            $twig,
+            'header5.twig: reCAPTCHA must be deferred until user interaction'
+        );
+        $this->assertStringContainsString(
+            'recaptcha/api.js',
+            $twig,
+            'header5.twig: reCAPTCHA API URL must be present'
+        );
+        // Must NOT have a direct blocking script tag for reCAPTCHA
+        $this->assertDoesNotMatch(
+            '/<script\s+src="[^"]*recaptcha[^"]*">/',
+            $twig,
+            'header5.twig: reCAPTCHA must not use a blocking <script src> tag'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Performance: soconfig js_out adds defer to non-jQuery scripts
+    // -----------------------------------------------------------------------
+
+    public function testSoconfigJsOutAddsDeferToNonJqueryScripts(): void
+    {
+        $php = file_get_contents(
+            dirname(__DIR__) . '/admin/view/template/extension/soconfig/class/soconfig.php'
+        );
+        // The js_out method must add defer to non-jQuery scripts
+        $this->assertStringContainsString(
+            'defer',
+            $php,
+            'soconfig.php js_out() must add defer attribute to script tags'
+        );
+        // jQuery must be kept non-deferred
+        $this->assertStringContainsString(
+            'jquery-',
+            $php,
+            'soconfig.php must check for jquery- to exclude it from defer'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Performance: DNS prefetch for third-party domains
+    // -----------------------------------------------------------------------
+
+    public function testSoClickboomHeaderHasDnsPrefetch(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
+        $this->assertStringContainsString(
+            'dns-prefetch',
+            $twig,
+            'so-clickboom/header.twig must have dns-prefetch hints'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Performance: Google Font loaded asynchronously
+    // -----------------------------------------------------------------------
+
+    public function testSoClickboomGoogleFontLoadedAsync(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
+        $this->assertStringContainsString(
+            'media="print" onload="this.media=\'all\'"',
+            $twig,
+            'so-clickboom/header.twig: Google Font must use media="print" onload trick for async loading'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Performance: Cart thumbnail images have width/height
+    // -----------------------------------------------------------------------
+
+    public function testCartThumbnailsHaveDimensions(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/cart.twig');
+        $this->assertStringContainsString(
+            'width="80" height="80"',
+            $twig,
+            'Cart thumbnail images must have explicit width and height for CLS prevention'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Security: NDIS page target="_blank" links have noopener
+    // -----------------------------------------------------------------------
+
+    public function testNdisPageLinksHaveNoopener(): void
+    {
+        $twig = $this->readTemplate(
+            'catalog/view/theme/so-clickboom/template/information/ndis.twig'
+        );
+        preg_match_all('/<a[^>]+target="_blank"[^>]*>/', $twig, $matches);
+        $this->assertNotEmpty($matches[0], 'NDIS page should have target="_blank" links');
+        foreach ($matches[0] as $tag) {
+            $this->assertStringContainsString(
+                'rel="noopener noreferrer"',
+                $tag,
+                "Every target=\"_blank\" in ndis.twig must have rel=\"noopener noreferrer\": $tag"
+            );
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // CLS FIX: Product listing images have width/height attributes
+    // -----------------------------------------------------------------------
+
+    public function testSoClickboomListingImagesHaveDimensions(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/soconfig/listing.twig');
+        // The main product listing img in the product-image-container must have width and height
+        $this->assertMatchesRegularExpression(
+            '/data-src="{{ product\.thumb }}"[^>]*width="250"[^>]*height="250"/',
+            $twig,
+            'so-clickboom listing.twig: product listing images must have width="250" height="250"'
+        );
+    }
+
+    public function testSoClickboomListingImagesHaveLoadingLazy(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/soconfig/listing.twig');
+        $this->assertMatchesRegularExpression(
+            '/data-src="{{ product\.thumb }}"[^>]*loading="lazy"/',
+            $twig,
+            'so-clickboom listing.twig: product listing images must have loading="lazy"'
+        );
+    }
+
+    public function testSoClickboomListingImagesHaveAltAttribute(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/soconfig/listing.twig');
+        $this->assertMatchesRegularExpression(
+            '/data-src="{{ product\.thumb }}"[^>]*alt="{{ product\.name }}"/',
+            $twig,
+            'so-clickboom listing.twig: product listing images must have alt attribute'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // CLS FIX: Product image container has aspect-ratio in CSS
+    // -----------------------------------------------------------------------
+
+    public function testCustomCssHasProductImageContainerAspectRatio(): void
+    {
+        $css = file_get_contents(
+            dirname(__DIR__) . '/catalog/view/theme/so-clickboom/css/custom.css'
+        );
+        $this->assertStringContainsString(
+            'aspect-ratio: 1 / 1',
+            $css,
+            'custom.css must set aspect-ratio: 1/1 on .product-image-container to prevent CLS'
+        );
+        $this->assertStringContainsString(
+            'background-color: #f5f5f5',
+            $css,
+            'custom.css must set a placeholder background on .product-image-container'
+        );
+    }
+
+    public function testCustomCssHasImgMaxWidth(): void
+    {
+        $css = file_get_contents(
+            dirname(__DIR__) . '/catalog/view/theme/so-clickboom/css/custom.css'
+        );
+        $this->assertStringContainsString(
+            'max-width: 100%',
+            $css,
+            'custom.css must set img { max-width: 100% } to prevent overflow'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // CLS FIX: Critical inline CSS in header for space reservation
+    // -----------------------------------------------------------------------
+
+    public function testSoClickboomHeaderHasCriticalClsCss(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/common/header.twig');
+        $this->assertStringContainsString(
+            '.product-image-container{aspect-ratio:1/1;',
+            $twig,
+            'so-clickboom header must have inline critical CSS for product-image-container aspect-ratio'
+        );
+        $this->assertStringContainsString(
+            '#header .container-fluid{min-height:34px;}',
+            $twig,
+            'so-clickboom header must reserve min-height for feature bar'
+        );
+    }
+
+    public function testSoMobileHeaderHasCriticalClsCss(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-mobile/template/common/header.twig');
+        $this->assertStringContainsString(
+            '.product-image-container{aspect-ratio:1/1;',
+            $twig,
+            'so-mobile header must have inline critical CSS for product-image-container aspect-ratio'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // CLS FIX: Category images have width/height attributes
+    // -----------------------------------------------------------------------
+
+    public function testCategoryTwigImagesHaveDimensions(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/product/category.twig');
+        $this->assertStringContainsString(
+            'width="200" height="200"',
+            $twig,
+            'category.twig: category images must have explicit width and height'
+        );
+    }
+
+    public function testAllSubCatsTwigImagesHaveDimensions(): void
+    {
+        $twig = $this->readTemplate('catalog/view/theme/so-clickboom/template/product/allSubCats.twig');
+        $this->assertStringContainsString(
+            'width="200" height="200"',
+            $twig,
+            'allSubCats.twig: subcategory images must have explicit width and height'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // CLS FIX: Cart modal uses fixed positioning
+    // -----------------------------------------------------------------------
+
+    public function testCustomCssCartModalFixedPositioning(): void
+    {
+        $css = file_get_contents(
+            dirname(__DIR__) . '/catalog/view/theme/so-clickboom/css/custom.css'
+        );
+        $this->assertStringContainsString(
+            'position: fixed',
+            $css,
+            'custom.css must set position: fixed on cart/modal elements to prevent CLS'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // CLS FIX: Owl carousel has min-height to prevent collapse
+    // -----------------------------------------------------------------------
+
+    public function testCustomCssOwlCarouselMinHeight(): void
+    {
+        $css = file_get_contents(
+            dirname(__DIR__) . '/catalog/view/theme/so-clickboom/css/custom.css'
+        );
+        $this->assertStringContainsString(
+            '.owl2-carousel',
+            $css,
+            'custom.css must set min-height on .owl2-carousel to prevent CLS during load'
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // SEO: Fallback meta descriptions for controllers
+    // -----------------------------------------------------------------------
+
+    private function readController(string $relativePath): string
+    {
+        $path = dirname(__DIR__) . '/' . ltrim($relativePath, '/');
+        $this->assertFileExists($path, "Controller file not found: $relativePath");
+        return file_get_contents($path);
+    }
+
+    public function testCategoryControllerHasFallbackMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/product/category.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'category.php must call setDescription'
+        );
+        $this->assertStringContainsString(
+            'Shop ',
+            $php,
+            'category.php must generate a fallback meta description with "Shop" prefix'
+        );
+    }
+
+    public function testProductControllerHasFallbackMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/product/product.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'product.php must call setDescription'
+        );
+        $this->assertStringContainsString(
+            'MobilityCare Australia',
+            $php,
+            'product.php must include MobilityCare Australia in fallback meta description'
+        );
+    }
+
+    public function testInformationControllerHasFallbackMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/information/information.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'information.php must call setDescription'
+        );
+    }
+
+    public function testSearchControllerHasMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/product/search.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'search.php must call setDescription for search result pages'
+        );
+        $this->assertStringContainsString(
+            'MobilityCare Australia',
+            $php,
+            'search.php meta description must mention MobilityCare Australia'
+        );
+    }
+
+    public function testBlogControllerHasMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/extension/simple_blog/article.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'Blog article.php must call setDescription for the blog index page'
+        );
+    }
+
+    public function testFindDealerControllerHasMetaDescription(): void
+    {
+        $php = $this->readController('catalog/controller/dealer/findDealer.php');
+        $this->assertStringContainsString(
+            'setDescription',
+            $php,
+            'findDealer.php must call setDescription'
+        );
+        $this->assertStringContainsString(
+            'Find a MobilityCare dealer',
+            $php,
+            'findDealer.php must have a descriptive meta description about finding dealers'
+        );
     }
 }

@@ -16,9 +16,9 @@ final class DB {
 		$query = $this->db->query("SELECT `data` FROM `" . DB_PREFIX . "session` WHERE `session_id` = '" . $this->db->escape($session_id) . "' AND `expire` > '" . $this->db->escape(date('Y-m-d H:i:s', time())) . "'");
 
 		if ($query->num_rows) {
-			return json_decode($query->row['data'], true);
+			return json_decode($query->row['data'], true) ?: array();
 		} else {
-			return false;
+			return array();
 		}
 	}
 

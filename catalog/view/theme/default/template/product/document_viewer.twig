@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ document_name }} | {{ site_name }}</title>
+    <link rel="icon" type="image/png" href="{{ favicon }}">
+    <link rel="shortcut icon" type="image/png" href="{{ favicon }}">
+    <link rel="apple-touch-icon" href="{{ favicon }}">
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .doc-toolbar {
+            display: flex;
+            align-items: center;
+            background: #042e57;
+            color: #fff;
+            padding: 8px 20px;
+            height: 48px;
+            font-size: 14px;
+        }
+        .doc-toolbar .doc-title {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .doc-viewer { width: 100%; height: calc(100% - 48px); border: none; }
+        .fallback-message {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            height: calc(100% - 48px);
+        }
+        .fallback-message h2 { margin-bottom: 15px; color: #333; }
+        .fallback-message a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #042e57;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .fallback-message a:hover { background: #063d75; }
+    </style>
+</head>
+<body>
+    <div class="doc-toolbar">
+        <span class="doc-title">{{ document_name }} — {{ site_name }}</span>
+    </div>
+    {% if is_pdf %}
+        <embed src="{{ pdf_url }}" type="application/pdf" class="doc-viewer">
+        <noscript>
+            <div class="fallback-message" style="display:block;">
+                <h2>{{ document_name }}</h2>
+                <p>Your browser cannot display this PDF inline.</p>
+                <a href="{{ download_url }}">Download PDF</a>
+            </div>
+        </noscript>
+    {% else %}
+        <div class="fallback-message" style="display:block;">
+            <h2>{{ document_name }}</h2>
+            <p>This file will be downloaded to your device.</p>
+            <a href="{{ download_url }}">Download File</a>
+        </div>
+    {% endif %}
+</body>
+</html>

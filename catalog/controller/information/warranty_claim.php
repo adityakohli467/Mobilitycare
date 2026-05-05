@@ -46,24 +46,25 @@ class ControllerInformationWarrantyClaim extends Controller {
        }
 
          // Save warranty claim details
-         $this->model_catalog_warranty_claim->addClaim($this->request->post);
+         try {
+             $this->model_catalog_warranty_claim->addClaim($this->request->post);
+         } catch (\Throwable $dbError) {
+             $this->log->write('WARRANTY CLAIM DB SAVE ERROR: ' . $dbError->getMessage());
+         }
          
-                $mail = new Mail($this->config->get('config_mail_engine'));
-                $mail->parameter = $this->config->get('config_mail_parameter');
-                $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-                $mail->smtp_username = $this->config->get('config_mail_smtp_username');
-                $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-                $mail->smtp_port = $this->config->get('config_mail_smtp_port');
-                $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+                // Queue email for async sending (instant — no SMTP wait)
+                $this->load->helper('mail_queue');
 
-                $mail->setTo($this->config->get('config_email'));
-                 $mail->setFrom('enquiries@mobilitycare.net.au');
-    $mail->setReplyTo('enquiries@mobilitycare.net.au');
-    $mail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
-                $mail->setSubject('New Warranty claim');
-                $mail->setText('New warranty claim form has been submitted. Please login to admin and navigate to "Forms > Warrant Claim" to check the full details.');
-                $mail->send();
-                
+                mail_queue_add($this->db, [
+                    'to'       => $this->config->get('config_email'),
+                    'from'     => 'enquiries@mobilitycare.net.au',
+                    'sender'   => 'MobilityCare',
+                    'reply_to' => 'enquiries@mobilitycare.net.au',
+                    'subject'  => 'New Warranty claim',
+                    'html'     => '<p>New warranty claim form has been submitted. Please login to admin and navigate to &quot;Forms &gt; Warrant Claim&quot; to check the full details.</p>',
+                    'priority' => 2,
+                ]);
+
  
          $this->session->data['success'] = 'Your warranty claim has been successfully submitted.';
          $this->response->redirect($this->url->link('information/form_success/warranty_claim'));
@@ -105,7 +106,7 @@ class ControllerInformationWarrantyClaim extends Controller {
 
 		$data['button_submit'] = 'Submit your request';
 
-		$data['action'] = '/warranty-claim/';
+		$data['action'] = '/warranty-claim';
         
 
 		if (isset($this->request->post['full_name'])) {

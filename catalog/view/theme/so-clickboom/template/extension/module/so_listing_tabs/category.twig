@@ -30,7 +30,7 @@
 						{% if display_banner_image == 1 %}
 							<div class="item-cat-image">
 								<a href="{{ banner_image_url }}" title="" target="{{ item_link_target }}" >
-									<img class="categories-loadimage" title="" alt="" src="{{ banner_image }}"/>
+									<img class="categories-loadimage" title="" alt="Category banner" src="{{ banner_image }}" width="200" height="200" loading="lazy"/>
 								</a>
 							</div>
 						{% endif %}
@@ -47,27 +47,7 @@
 									{% else %}
 										<div class="ltabs-loading"></div>
 									{% endif %}
-									{% set classloaded = source_limit >= items.count or source_limit == 0 ? 'loaded' : '' %}
-									
-									{% if type_show == 'loadmore' %}
-										<div class="ltabs-loadmore"
-											 data-active-content=".items-category-{{ items.category_id == "*" ? 'all' : items.category_id }}"
-											 data-categoryid	="{{ items.category_id }}"
-											 data-rl_start		="{{ source_limit }}"
-											 data-rl_total		="{{ items.count }}"
-											 data-rl_allready	="All ready"
-											 data-ajaxurl		="{{ ajaxurl }}" 
-											 data-rl_load		="{{ source_limit }}" 
-											 data-moduleid		='{{ moduleid }}'
-											 >
-											<div class="ltabs-loadmore-btn {{ classloaded }}"
-												 data-label="{{ classloaded ? objlang.get('all_ready') : objlang.get('load_more') }}">
-												<span class="ltabs-image-loading"></span>
-												<i class="fa fa-plus"></i>
-											</div>
-										</div>
-									{% endif %}
-								</div>
+									</div>
 							{% endfor %}
 						</div>
 					</div>

@@ -91,8 +91,12 @@ class Soconfig{
 	public function js_out($JSExcludes = '',$position = 'header'){
 
 		$optimizeJSExclude = array();
-		if(isset($JSExcludes))foreach ($JSExcludes as $JSExclude) $optimizeJSExclude[] = $JSExclude['namecss'];
+		if(is_array($JSExcludes))foreach ($JSExcludes as $JSExclude) $optimizeJSExclude[] = is_array($JSExclude) ? $JSExclude['namecss'] : $JSExclude;
 		$js_files_to_out = isset($this->js_files[$position]) ? $this->js_files[$position] : array();
+
+		// jQuery must load sync (inline scripts depend on $())
+		$sync_patterns = array('jquery-2.1.1', 'jquery.min.js');
+		
 		if ($this->get_settings('jsminify','0') == 1){
 			
 			if(empty($JSExclude) && $optimizeJSExclude !== array_intersect( $this->js_files[$position], $optimizeJSExclude)){
@@ -112,15 +116,19 @@ class Soconfig{
 				
 			}
 		}else{
-			foreach($js_files_to_out as $file) echo '<script src="'.$file.'"></script>'."\n";
+			foreach($js_files_to_out as $file) {
+				echo '<script src="'.$file.'"></script>'."\n";
+			}
 		}
     }
 	
     public function css_out($CSSExcludes = '',$position = 'header'){
 		$optimizeCSSExclude = array();
-		if(isset($CSSExcludes)) foreach ($CSSExcludes as $CSSExclude)$optimizeCSSExclude[] = $CSSExclude['namecss'];
+		if(is_array($CSSExcludes)) foreach ($CSSExcludes as $CSSExclude)$optimizeCSSExclude[] = is_array($CSSExclude) ? $CSSExclude['namecss'] : $CSSExclude;
 		$css_files_to_out = isset($this->css_files[$position]) ? $this->css_files[$position] : array();
 
+		// Non-critical CSS patterns — load async with print/onload trick
+		$defer_patterns = array('font-awesome', 'pe-icon-7-stroke');
 		
 		if ($this->get_settings('cssminify','0') == 1){
 			if(empty($CSSExclude) && $optimizeCSSExclude !== array_intersect( $this->css_files[$position], $optimizeCSSExclude)){
@@ -135,8 +143,16 @@ class Soconfig{
 				}
 			}
 		}else{
-			foreach($css_files_to_out as $file)echo '<link rel="stylesheet" href="'.$file.'">'."\n";
-			
+			foreach($css_files_to_out as $file) {
+				$is_defer = false;
+				foreach($defer_patterns as $p) { if(strpos($file, $p) !== false) { $is_defer = true; break; } }
+				if($is_defer) {
+					echo '<link rel="stylesheet" href="'.$file.'" media="print" onload="this.media=\'all\'">'."\n";
+					echo '<noscript><link rel="stylesheet" href="'.$file.'"></noscript>'."\n";
+				} else {
+					echo '<link rel="stylesheet" href="'.$file.'">'."\n";
+				}
+			}
 		}
 		
 		//Add Google Font on Header
@@ -257,7 +273,7 @@ if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] 
 		?>
 		
 		<?php if (!empty($config_logo) || !empty($config_logoMobile) ) { ?>
-		   <a href="<?php echo $href_home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $titleLogo; ?>" alt="<?php echo $titleLogo; ?>" /></a>
+		   <a href="<?php echo $href_home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $titleLogo; ?>" alt="<?php echo $titleLogo; ?>" width="180" height="45" /></a>
 		 <?php } else { ?>
 			<a href="<?php echo $href_home; ?>"><?php echo $titleLogo; ?></a>
 		<?php } ?> 
@@ -600,7 +616,8 @@ if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] 
 				if(isset($font)){
 					if (!in_array($font->fontFamily, $systemFonts) && !in_array($font->fontFamily,$onlyfontFamily )){
 						$onlyfontFamily[]= $font->fontFamily;
-						echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap">'."\n";
+						echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap" media="print" onload="this.media=\'all\'">'."\n";
+						echo '<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family='. $font->fontFamily .':400,400i,500,600,700,&amp;subset=' . $font->fontSubset.'&amp;display=swap"></noscript>'."\n";
 					}
 				}
             }

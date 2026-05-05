@@ -25,6 +25,8 @@ class ControllerExtensionModuleBanner extends Controller {
 		}
 
 		$data['module'] = $module++;
+		$data['image_width']  = (int)$setting['width'];
+		$data['image_height'] = (int)$setting['height'];
 
 		return $this->load->view('extension/module/banner', $data);
 	}

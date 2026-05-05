@@ -1,4 +1,4 @@
- {{ header }}
+{{ header }}
    <link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
 
   <div class="row">{{ column_left }}
@@ -17,17 +17,17 @@
         <h1>Request a quote.</h1>
         <p>Get a personalised quote tailored to your needs.</p>
         <ul>
-    <li>âœ… Discover the best mobility solutions for you.</li>
-    <li>âœ… Receive a detailed pricing breakdown.</li>
-    <li>âœ… Learn about financing and funding options.</li>
-    <li>âœ… Get expert recommendations based on your requirements.</li>
-    <li>âœ… Understand the ordering and delivery process.</li>
+    <li>&#10004; Discover the best mobility solutions for you.</li>
+    <li>&#10004; Receive a detailed pricing breakdown.</li>
+    <li>&#10004; Learn about financing and funding options.</li>
+    <li>&#10004; Get expert recommendations based on your requirements.</li>
+    <li>&#10004; Understand the ordering and delivery process.</li>
         </ul>
        
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="quoteRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/quote_request/validateAjax">
+        <form action="{{ action }}" method="post" id="quoteRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/quote_request/validateAjax">
             
             <div class="form-group">
                <input type="text" name="fullname"  placeholder="Full Name *" class="form-control" required>
@@ -210,4 +210,4 @@ document.getElementById("contact_type").addEventListener("change", function() {
 
 //             });
      </script>
-<script src="catalog/view/javascript/form-ajax-validate.js"></script>
+<script src="/catalog/view/javascript/form-ajax-validate.js"></script>

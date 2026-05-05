@@ -1,4 +1,4 @@
-{{ header }}
+﻿{{ header }}
 
 {#for modal not scrolling in iphone#}
   <link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
@@ -184,6 +184,9 @@
 						{% include theme_directory~'/template/product/gallery/gallery-left.twig' %}
 					{% endif %}
 				{% endif %}
+				<script>
+				(function(){var c=document.querySelector('.content-product-left');if(c){var i=c.querySelector('img');if(i&&i.complete)c.classList.add('loaded');}})();
+				</script>
 			</div>
         	{#========== //Product Left ============#}
         	
@@ -263,7 +266,7 @@
 
 				<div id="product">	
 					{% if options %} 
-					<h3>{{ text_option }}</h3>
+					<h2>{{ text_option }}</h2>
 					{% for option in options %}
 						
 						{% if option.type == 'select' %}
@@ -426,7 +429,7 @@
 
 					<div class="box-cart clearfix form-group">
 						{% if recurrings %}
-						<h3>{{ text_payment_recurring }}</h3>
+						<h2>{{ text_payment_recurring }}</h2>
 						<div class="form-group required">
 							<select name="recurring_id" class="form-control">
 							<option value="">{{ text_select }}</option>
@@ -467,7 +470,7 @@
                               {% if display_custom_quote_for_vehicle_modification and display_custom_quote_for_vehicle_modification == 1  %}
                             <a class="btn btn-custom-blue" onclick="openVMModal({{ product_id }})"><i class="fa fa-file-text"></i> Get a Custom Quote</a>
                               {% endif %}
-							 <a class="btn btn-custom-blue-border" onclick="openDemoModal({{ product_id }})"><i class="fa fa-calendar"></i> Book a Free Demo</a>		
+							 <a class="btn btn-custom-blue-border" onclick="openDemoModal({{ product_id }})"><i class="fa fa-calendar"></i> Ask a Question</a>		
 									
 								</div>
 								
@@ -523,16 +526,16 @@
     	
 		
      <div class="alert alert-custom mt-5 hide">
-        <span class="emoji">Ã°Å¸â€Â¥</span> Limited availability: This item is popular among our customers
+        <span class="emoji">Ã°Å¸"Â¥</span> Limited availability: This item is popular among our customers
     </div>
 					
 
     <!-- Badges -->
 <div class="row trustedByRow">
     <div class="col-xs-12 text-center" style="padding:30px 10px;">
-      <h4 style="font-weight:bold; margin-bottom:5px;">
+      <p style="font-weight:bold; margin-bottom:5px; font-size:18px;">
         Trusted by Health Professionals &amp; Backed by Mobilitycare's 250+ Dealer Partners
-      </h4>
+      </p>
       <p style="color:#666; font-size:15px; margin-bottom:0;">
         Recommended by Neurologists, Physiatrists and Allied Health Experts
       </p>
@@ -716,8 +719,8 @@
 							{#========= Tabs - Bottom horizontal =========#}
 							{% if tabs_position == 2 %}
 							<ul class="nav nav-tabs font-sn">
-								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
 								<li><a data-toggle="tab" href="#tab-features">Features</a></li>
+								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
                                 <li><a data-toggle="tab" href="#tab-Specifications">Specs</a></li>
                                 <li><a data-toggle="tab" href="#tab-userguide">Downloads & User Guide</a></li>
                                 
@@ -747,6 +750,7 @@
 							{#========= Tabs - Left vertical =========#}
 							{% elseif tabs_position == 1  %}
 								<ul class="nav nav-tabs col-lg-3 col-sm-4">
+								<li><a data-toggle="tab" href="#tab-features">Features</a></li>
 								<li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
 								
 					            {% if review_status %}
@@ -774,7 +778,7 @@
 							<div class="tab-content {% if tabs_position == 1  %} {{ 'col-lg-9 col-sm-8' }} {% endif %} col-xs-12">
 							    
 							    
-								<div class="tab-pane active" id="tab-description">
+<div class="tab-pane active" id="tab-description">
 								
 								
                                <div class="row mt-5">
@@ -782,7 +786,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-lightbulb-o"></i> <strong>Is This Right for You?</strong></h4>
+        <h3 class="text-black"><i class="fa fa-lightbulb-o"></i> <strong>Is This Right for You?</strong></h3>
         <p class="text-black">{{ product.right_for_you }}</p>
       </div>
     </div>
@@ -793,7 +797,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-heart"></i> <strong>Why You will Love It</strong></h4>
+        <h3 class="text-black"><i class="fa fa-heart"></i> <strong>Why You will Love It</strong></h3>
         <ul>
           {% for line in product.why_love|split('\n') %}
             {% if line|trim is not empty %}
@@ -812,7 +816,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-trophy"></i> <strong>What Makes It Different</strong></h4>
+        <h3 class="text-black"><i class="fa fa-trophy"></i> <strong>What Makes It Different</strong></h3>
         <ul>
           {% for line in product.what_different|split('\n') %}
             {% if line|trim is not empty %}
@@ -829,7 +833,7 @@
   <div class="col-sm-6 col-xs-12">
     <div class="panel-default">
       <div class="panel-body">
-        <h4 class="text-black"><i class="fa fa-star"></i> <strong>Built for Everyday Life</strong></h4>
+        <h3 class="text-black"><i class="fa fa-star"></i> <strong>Built for Everyday Life</strong></h3>
         <ul>
           {% for line in product.everyday_life|split('\n') %}
             {% if line|trim is not empty %}
@@ -894,21 +898,21 @@
     {
       "@context": "https://schema.org",
       "@type": "Product",
-      "name": "{{ heading_title }}",
-      "image": ["{{ last_feature_image }}"],
-       "offers": {
-      "@type": "Offer",
-      "priceCurrency": "AUD",
-      "price": "{{ price|replace({'$':'', ',':''}) }}"
-  },
-      "description": "{{ product_description }}",
+      "name": "{{ heading_title|e('js') }}",
+      "image": ["{{ last_feature_image|e('js') }}"],
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "AUD",
+        "price": "{{ price|replace({'$':'', ',':''})|e('js') }}"
+      },
+      "description": "{{ product_description|striptags|e('js') }}",
       "additionalProperty": [
         {% for feature in product_features %}
         {
           "@type": "PropertyValue",
-          "name": "{{ feature.title }}",
-          "value": "{{ feature.text }}",
-          "image": "{{ feature.image }}"
+          "name": "{{ feature.title|e('js') }}",
+          "value": "{{ feature.text|striptags|e('js') }}",
+          "image": "{{ feature.image|e('js') }}"
         }{% if not loop.last %},{% endif %}
         {% endfor %}
       ]
@@ -924,12 +928,12 @@
 						     	<div class="tab-pane" id="tab-Specifications">
 							   
     {%   if product_specs is not empty %}
-        <h4 class="panel-title">{{ item.title }}</h4>
+        <h3 class="panel-title">{{ item.title }}</h3>
                 {% for item in product_specs %}
                 {% if item.image %}
                                         {# Use slice to check if the image URL starts with "http" #}
                                        
-<img src="{{ item.image | slice(0, 4) == 'http' ? item.image : base_url ~ 'image/' ~ item.image }}" alt="{{ item.title }}"  />
+<img src="{{ item.image | slice(0, 4) == 'http' ? item.image : base_url ~ 'image/' ~ item.image }}" alt="{{ item.title }}" width="800" height="600" loading="lazy" />
                                     {% else %}
                                         No Image
                                     {% endif %}
@@ -939,7 +943,7 @@
     {% else %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">Specifications</h4>
+                <h3 class="panel-title">Specifications</h3>
             </div>
             <div class="panel-body">
                 <p>No specifications available.</p>
@@ -955,7 +959,7 @@
     <div style="display: flex; flex-wrap: wrap; gap: 30px;">
       {% for download in downloads %}
         <div style="text-align: center;">
-          <a href="{{ download.href }}" target="_blank">
+          <a href="{{ download.href }}" target="_blank" rel="noopener noreferrer">
             <img src="catalog/view/theme/default/image/pdfImage.png" alt="{{ download.name }}" style="width: 100px; height: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border-radius: 4px;">
             <div style="margin-top: 8px; color: #337ab7; font-weight: 500;">{{ download.name }}</div>
           </a>
@@ -1491,7 +1495,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="bookaDemoModalLabel">Book a demo</h4>
+        <h4 class="modal-title" id="bookaDemoModalLabel">Ask a Question</h4>
       </div>
 
       <div class="modal-body">

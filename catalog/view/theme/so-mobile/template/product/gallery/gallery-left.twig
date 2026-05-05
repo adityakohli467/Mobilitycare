@@ -14,7 +14,7 @@
 </div>
 {#==== Gallery - Large image  ==== #}
 <div class="large-image  {{class_honizol}}">
-	<img itemprop="image" class="product-image-zoom lazyload" data-sizes="auto" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{popup}}" data-zoom-image="{{popup}}" title="{{ heading_title }}" alt="{{ heading_title }}" />
+	<img itemprop="image" class="product-image-zoom" src="{{popup}}" data-zoom-image="{{popup}}" title="{{ heading_title }}" alt="{{ heading_title }}" loading="eager" fetchpriority="high" onload="this.closest('.content-product-left').classList.add('loaded')" />
 	
 </div>
 

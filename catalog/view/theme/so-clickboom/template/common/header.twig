@@ -5,45 +5,51 @@
  * @license	GNU General Public License
  * @copyright(C) 2008-2017 opencartworks.com. All rights reserved.
  ******************************************************
-#}
+-#}
 <!DOCTYPE html>
 <html dir="{{ direction }}" lang="{{ lang }}">
 <head>
     
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager (deferred until window load) -->
 <script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NJLM87');
+window.addEventListener('load', function() {
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-NJLM87');
+});
 </script>
 <!-- End Google Tag Manager -->
 
-<!-- Google Analytics (Universal Analytics - deprecated but still works) -->
+<!-- Google Analytics (deferred until window load) -->
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-18508480-1', 'auto');
-ga('require', 'GTM-T9M52FR');
-ga('send', 'pageview');
+window.addEventListener('load', function() {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-18508480-1', 'auto');
+  ga('require', 'GTM-T9M52FR');
+  ga('send', 'pageview');
+});
 </script>
 <!-- End Google Analytics -->
 
-<!-- Facebook Pixel -->
+<!-- Facebook Pixel (deferred until window load) -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)n._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '270556233294516'); 
-fbq('track', 'PageView');
+window.addEventListener('load', function() {
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)n._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '270556233294516');
+  fbq('track', 'PageView');
+});
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
@@ -51,8 +57,14 @@ fbq('track', 'PageView');
 </noscript>
 <!-- End Facebook Pixel -->
 
-<!-- CallRail (if applicable — update ID) -->
-<script async src="//cdn.callrail.com/companies/221652502/0da3b62b0a183893e7ed/12/swap.js"></script>
+<!-- CallRail (deferred until window load) -->
+<script>
+window.addEventListener('load', function() {
+  var s=document.createElement('script');s.async=true;
+  s.src='https://cdn.callrail.com/companies/221652502/0da3b62b0a183893e7ed/12/swap.js';
+  document.head.appendChild(s);
+});
+</script>
 
 
 <meta charset="UTF-8" />
@@ -64,22 +76,40 @@ fbq('track', 'PageView');
 <style>/* Critical: prevent owl.carousel from hiding hero until JS loads */
 .owl2-carousel.owl2-loading{opacity:1 !important;}
 .sohomepage-slider .so-homeslider{opacity:1 !important;display:block !important;}
+/* Critical CLS fix: reserve space for header elements before CSS loads */
+#header .container-fluid{min-height:34px;}
+.header-center{min-height:50px;}
+.logo{min-height:56px;}
+/* Reserve space for product image containers */
+.product-image-container{aspect-ratio:1/1;background:#f5f5f5;overflow:hidden;}
+.product-image-container img{width:100%;height:100%;object-fit:contain;}
+/* Reserve space for category images */
+.category-image{min-height:200px;background:#f5f5f5;overflow:hidden;}
+/* Prevent font swap layout shift */
+@font-face{font-family:'Glyphicons Halflings';font-display:swap;}
+@font-face{font-family:'FontAwesome';font-display:swap;}
+/* Global img max-width */
+img{max-width:100%;height:auto;}
+/* Feature box - moved inline to avoid render-blocking CSS for above-fold */
+.feature-box{text-align:center;padding:6px;color:#fff;font-size:14px;font-weight:700;overflow:hidden;}
+.light-blue{background-color:#044488;}.medium-blue{background-color:#023b77;}.dark-blue{background-color:#003264;}
+.feature-box i{margin-right:5px;}
+/* Critical layout: prevent FOUC for nav and content */
+.container{max-width:1170px;margin:0 auto;padding:0 15px;box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+a{text-decoration:none;}
 </style>
 {% if description %}<meta name="description" content="{{ description }}" />{% endif %}
 {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<link href="https://fonts.googleapis.com/css2?family=Avalon-Bold&display=swap" rel="stylesheet">
-
-<style>
-/* Force font-display: swap on icon fonts to prevent FOIT/FOUT layout shifts */
-@font-face { font-family: 'Glyphicons Halflings'; font-display: swap; }
-@font-face { font-family: 'FontAwesome'; font-display: swap; }
-/* Reserve space for header to prevent CLS during load */
-.header-center { min-height: 70px; }
-.logo { min-height: 56px; }
-</style>
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<link rel="dns-prefetch" href="https://connect.facebook.net">
+<link rel="dns-prefetch" href="https://cdn.callrail.com">
+<link rel="dns-prefetch" href="https://www.google.com">
+<link href="https://fonts.googleapis.com/css2?family=Avalon-Bold&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Avalon-Bold&display=swap" rel="stylesheet"></noscript>
 
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
 {# =========== Begin General CSS ==============#}
@@ -106,18 +136,15 @@ fbq('track', 'PageView');
 {{soconfig.addJs('catalog/view/javascript/lazysizes/lazysizes.min.js')}}
 {% if class=='information-information' %} {{soconfig.addJs('catalog/view/javascript/soconfig/js/typo/element.js')}} {% endif %}
 {% if soconfig.get_settings('toppanel_status') %}{{soconfig.addJs('catalog/view/javascript/soconfig/js/toppanel.js')}}{% endif %}
-{% if soconfig.get_settings('typelayout') =='3' %}
-	{{soconfig.addJs('catalog/view/javascript/soconfig/js/slick.js')}}
-{% endif %}
 {{soconfig.addJs('catalog/view/javascript/soconfig/js/slick.js')}}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/common.js')}}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/so.custom.js')}}
+{% if class[:15] == 'product-product' or class[:12] == 'information-' or class[:9] == 'checkout-' %}
 {{soconfig.addJs('catalog/view/javascript/googleMapIntegration.js')}}
 {{soconfig.addJs('catalog/view/javascript/googleAddressAutocomplete.js')}}
 {{soconfig.addJs('catalog/view/javascript/formValidate.js')}}
-
+{% endif %}
 {{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/custom.js')}}
-{{soconfig.addJs('catalog/view/theme/'~theme_directory~'/js/wow.js')}}
 
 {% for script in scripts %} {{soconfig.addJs(script)}} {% endfor %}
 {# =========== Begin Other CSS & JS  ==============#}
@@ -150,34 +177,6 @@ body {
 </style>
 {% endif %} 
 
-<style>
-.feature-box {
-  text-align: center;
-  padding: 6px;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-
-.light-blue {
-  background-color: #044488; /* Light  indigo */
- 
-}
-
-.medium-blue {
-  background-color: #023b77; /* Medium purple */
-}
-
-.dark-blue {
-  background-color: #003264; /* Dark purple */
-}
-
-.feature-box i {
-  margin-right: 5px;
-}
-</style>
  
 </head>
 {# =========== Add class Body ==============#}

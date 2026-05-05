@@ -21,7 +21,7 @@ class ControllerInformationNdis extends Controller {
         
          $data['marketing_popup'] = $this->load->controller('common/marketing_popup');
          
-        	$data['action'] = '/contact-mobilitycare/';
+        	$data['action'] = '/contact-mobilitycare';
         $data['captcha'] = '';
 		
 		if (isset($this->error['name'])) {

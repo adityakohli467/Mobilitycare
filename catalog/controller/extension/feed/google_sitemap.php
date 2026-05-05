@@ -47,24 +47,9 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
 
-			// Manufacturer SEO URLs that redirect — use final destination instead
-			$manufacturerRedirects = array(
-				'mangar-lifting-cushion' => 'shop/mangar-lifting-cushion'
-			);
-
 			foreach ($manufacturers as $manufacturer) {
-				$loc = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']);
-
-				// Replace redirecting manufacturer URLs with their final destination
-				foreach ($manufacturerRedirects as $old => $new) {
-					if (strpos($loc, '/' . $old) !== false) {
-						$loc = str_replace('/' . $old, '/' . $new, $loc);
-						break;
-					}
-				}
-
 				$output .= '<url>' . "\n";
-				$output .= '  <loc>' . $this->escapeUrl($loc) . '</loc>' . "\n";
+				$output .= '  <loc>' . $this->escapeUrl($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id'])) . '</loc>' . "\n";
 				$output .= '  <changefreq>weekly</changefreq>' . "\n";
 				$output .= '  <priority>0.7</priority>' . "\n";
 				$output .= '</url>' . "\n";

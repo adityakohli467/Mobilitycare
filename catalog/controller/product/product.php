@@ -340,7 +340,13 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 // 			);
 
 			$this->document->setTitle($product_info['meta_title']);
-			$this->document->setDescription($product_info['meta_description']);
+			// Fallback meta description: use product name + truncated description if meta_description is empty
+			if (!empty($product_info['meta_description'])) {
+				$this->document->setDescription($product_info['meta_description']);
+			} else {
+				$fallback_desc = $product_info['name'] . ' - Buy online at MobilityCare Australia. ' . trim(substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 120));
+				$this->document->setDescription($fallback_desc);
+			}
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
@@ -513,9 +519,10 @@ $downloads = $this->model_catalog_product->getProductDownloads($product_id);
 
 foreach ($downloads as $download) {
     if (is_file(DIR_DOWNLOAD . $download['filename'])) {
+        $slug = $this->slugify($download['name']) . '-' . $download['download_id'];
         $data['downloads'][] = array(
             'name' => $download['name'],
-            'href' => $this->url->link('product/product/download', 'download_id=' . $download['download_id']),
+            'href' => rtrim(HTTPS_SERVER, '/') . '/documents/' . $slug,
             'mask' => $download['mask']
         );
     }
@@ -619,6 +626,8 @@ foreach ($downloads as $download) {
 			);
 			if ($og_image) {
 				$json_ld['image'] = $og_image;
+			} else {
+				$json_ld['image'] = $this->config->get('config_ssl') . 'image/placeholder.png';
 			}
 			if (!empty($data['price_no_currency']) && (float)$data['price_no_currency'] > 0) {
 				$json_ld['offers'] = array(
@@ -797,6 +806,45 @@ public function download() {
     } else {
         $this->response->redirect($this->url->link('catalog/product', '', true));
     }
+}
+
+public function viewDocument() {
+    $this->load->model('catalog/product');
+
+    if (isset($this->request->get['download_id'])) {
+        $download_id = (int)$this->request->get['download_id'];
+    } else {
+        $download_id = 0;
+    }
+
+    $download_info = $this->model_catalog_product->getDownloadWithName($download_id);
+
+    if ($download_info && is_file(DIR_DOWNLOAD . $download_info['filename'])) {
+        $document_name = $download_info['name'] ?: pathinfo(basename($download_info['mask']), PATHINFO_FILENAME);
+        $ext = strtolower(pathinfo(basename($download_info['mask']), PATHINFO_EXTENSION));
+
+        $data['document_name'] = $document_name;
+        $data['pdf_url'] = $this->url->link('product/product/download', 'download_id=' . $download_id);
+        $data['is_pdf'] = ($ext === 'pdf');
+        $data['download_url'] = $this->url->link('product/product/download', 'download_id=' . $download_id);
+        $data['favicon'] = HTTPS_SERVER . 'image/catalog/favicon.png';
+        $data['site_name'] = $this->config->get('config_name');
+
+        $this->document->setTitle($document_name . ' | ' . $this->config->get('config_name'));
+
+        $this->response->setOutput($this->load->view('product/document_viewer', $data));
+    } else {
+        $this->response->redirect($this->url->link('common/home', '', true));
+    }
+}
+
+private function slugify($text) {
+    $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+    $text = preg_replace('~[^-\w]+~', '', $text);
+    $text = trim($text, '-');
+    $text = preg_replace('~-+~', '-', $text);
+    $text = strtolower($text);
+    return $text ?: 'document';
 }
 
 

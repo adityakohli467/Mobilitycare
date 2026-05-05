@@ -9,6 +9,7 @@ class ControllerDealerFindDealer extends Controller {
 
         // $this->load->language('dealer/dealer');
         $this->document->setTitle('Find a Dealer');
+        $this->document->setDescription('Find a MobilityCare dealer near you. Nationwide network of 250+ dealers for mobility aids, wheelchairs, scooters, lift chairs & more across Australia.');
         $this->load->model('catalog/category');
         $this->load->model('dealer/dealer');
         $this->load->model('catalog/manufacturer');

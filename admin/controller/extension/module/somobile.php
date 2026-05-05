@@ -214,8 +214,8 @@ class ControllerExtensionModuleSoMobile extends Controller {
 				
 		}
 		$data['module'] = $module_info;
-		$data['listmenus'] =  $this->sortArray($module_info['mobile_general']['listmenus'],'sort') ;;
-		$data['footermenus'] = $this->sortArray($module_info['mobile_general']['footermenus'],'sort') ;
+		$data['listmenus'] = isset($module_info['mobile_general']['listmenus']) ? $this->sortArray($module_info['mobile_general']['listmenus'],'sort') : [];
+		$data['footermenus'] = isset($module_info['mobile_general']['footermenus']) ? $this->sortArray($module_info['mobile_general']['footermenus'],'sort') : [];
 
 		// ---------------------------Load module --------------------------------------------
 		/*$data['clear_cache_href'] = $this->url->link('extension/module/soconfig/clearcache', 'user_token=' . $this->session->data['user_token'].'&store_id='.$store_id, 'SSL');

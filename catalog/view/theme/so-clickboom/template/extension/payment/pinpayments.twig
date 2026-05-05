@@ -56,44 +56,38 @@
 
 
 <style>
-/* Ensure consistent input group width and alignment */
-.input-group {
+/* Scoped to #payment-ui-container to avoid colliding with Bootstrap/header styles */
+#payment-ui-container .input-group {
     width: 100%;
-}
-
-.input-group-addon {
-    padding: 6px 12px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-right: none;
-    width: 40px; /* Fixed width for addon to ensure uniformity */
-    text-align: center;
-}
-
-.input-group .form-control {
-    border-left: none;
-    border-radius: 0 4px 4px 0;
-    flex: 1; /* Ensure input takes remaining space */
-}
-
-/* Adjust row and column spacing */
-.row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.col-xs-4 {
-    padding: 0 2px; /* Consistent padding between columns */
-}
-
-/* Ensure equal height for input groups */
-.input-group {
     display: flex;
     align-items: stretch;
 }
 
-/* Fine-tune CVC alignment */
-.col-xs-4:last-child .input-group {
+#payment-ui-container .input-group-addon {
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-right: none;
+    width: 40px;
+    text-align: center;
+}
+
+#payment-ui-container .input-group .form-control {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+}
+
+#payment-ui-container .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#payment-ui-container .col-xs-4 {
+    padding: 0 2px;
+}
+
+#payment-ui-container .col-xs-4:last-child .input-group {
     width: 100%;
 }
 </style>

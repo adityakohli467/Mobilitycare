@@ -1,4 +1,4 @@
- {{ header }}
+{{ header }}
   <link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
 
   <div class="row">{{ column_left }}
@@ -16,7 +16,7 @@
    
     
     <div class="demo-request-right col-md-12 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="index.php?route=information/find_dealer_form/validateAjax">
+        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/find_dealer_form/validateAjax">
             
             <div class="">
                <input type="text" name="fullname"  placeholder="Full Name *" required>
@@ -149,4 +149,4 @@
 //                 });
 //             });
      </script>
-<script src="catalog/view/javascript/form-ajax-validate.js"></script>
+<script src="/catalog/view/javascript/form-ajax-validate.js"></script>

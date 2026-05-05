@@ -41,6 +41,36 @@
         width: 100% !important; /* Full width for col-xs-12 */
     }
 }
+
+/* Scoped pinpayments styles - keep inside #payment-ui-container only */
+#payment-ui-container .input-group {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+}
+#payment-ui-container .input-group-addon {
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-right: none;
+    width: 40px;
+    text-align: center;
+}
+#payment-ui-container .input-group .form-control {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+}
+#payment-ui-container .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+#payment-ui-container .col-xs-4 {
+    padding: 0 2px;
+}
+#payment-ui-container .col-xs-4:last-child .input-group {
+    width: 100%;
+}
 </style>
 
 <div class="container-fluid mt-5 px-5">
@@ -284,7 +314,9 @@ if ($('.so-onepagecheckout .leftScrollSection').length) {
 }
 
  if ($('#payment-ui-container').length === 0 ) {
-     $target.append('<div id="payment-ui-container">' + json['pinpayments_html'] + '</div>');
+     // Strip <style> tags from response to prevent global CSS leaking
+     var cleanHtml = json['pinpayments_html'].replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+     $target.append('<div id="payment-ui-container">' + cleanHtml + '</div>');
  }
 //  // Bind confirm button for payment
       bindConfirmOrderButtonClickForCreditCard();

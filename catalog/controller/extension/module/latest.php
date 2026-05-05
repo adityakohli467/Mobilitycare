@@ -58,6 +58,9 @@ class ControllerExtensionModuleLatest extends Controller {
 				);
 			}
 
+			$data['image_width']  = (int)$setting['width'];
+			$data['image_height'] = (int)$setting['height'];
+
 			return $this->load->view('extension/module/latest', $data);
 		}
 	}

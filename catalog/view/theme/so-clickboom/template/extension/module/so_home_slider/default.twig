@@ -112,7 +112,7 @@
          <div class="so-homeslider sohomeslider-inner-{{ module}}">
         {% for item in list %}        
     <div class="item banner">
-        <a href="{{ item.url }}" title="{{ item.title }}" target="{{ item_link_target }}" style="height: 600px;">
+        <a href="{{ item.url }}" title="{{ item.title }}" target="{{ item_link_target }}">
             {% if loop.first %}
             <img src="{{ item.thumb }}" alt="{{ item.title }}" width="1920" height="840" fetchpriority="high" />
             {% else %}

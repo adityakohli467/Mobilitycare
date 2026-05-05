@@ -1,0 +1,36 @@
+# MobilityCare Australia
+
+> Quality mobility aids and equipment with expert advice and nationwide delivery across Australia.
+
+MobilityCare Australia is an e-commerce store specialising in mobility aids, wheelchairs, vehicle mobility adaptations, and assistive equipment. We support individuals, NDIS participants, and healthcare providers with a wide range of products and services including product demonstrations, trial requests, and warranty support.
+
+## Main Pages
+
+- [Home](https://www.mobilitycare.net.au/): Browse our full range of mobility products and latest offers.
+- [About Us](https://www.mobilitycare.net.au/about-us): Learn about MobilityCare Australia and our mission.
+- [Contact Us](https://www.mobilitycare.net.au/index.php?route=information/contact): Get in touch with our team for enquiries and support.
+
+## Products & Categories
+
+- [All Products](https://www.mobilitycare.net.au/): Explore our complete catalogue of mobility aids and equipment.
+- [Autochair Enquiry](https://www.mobilitycare.net.au/autochair-enquiry): Enquire about vehicle mobility adaptations by Autochair.
+- [LightDrive Enquiry](https://www.mobilitycare.net.au/lightdrive-enquiry): Enquire about LightDrive motorised mobility solutions.
+
+## Services & Support
+
+- [NDIS Support](https://www.mobilitycare.net.au/ndis): Information on how we support NDIS participants with mobility equipment.
+- [Funding Support](https://www.mobilitycare.net.au/funding-support): Guidance on funding options available for mobility aids.
+- [Request a Quote](https://www.mobilitycare.net.au/quote-request): Request a personalised quote for products or services.
+- [Product Demonstration](https://www.mobilitycare.net.au/demo-request): Book a demonstration of our mobility products.
+- [Trial Request](https://www.mobilitycare.net.au/trial-request): Request a product trial before purchasing.
+- [Warranty Claim](https://www.mobilitycare.net.au/warranty-claim): Submit a warranty claim for your MobilityCare product.
+- [Support](https://www.mobilitycare.net.au/support): Access customer support and troubleshooting resources.
+
+## Dealers
+
+- [Find a Dealer](https://www.mobilitycare.net.au/find-a-dealer): Locate an authorised MobilityCare dealer near you.
+- [Become a Dealer](https://www.mobilitycare.net.au/become-a-dealer): Apply to become an authorised MobilityCare dealer.
+
+## Optional
+
+- [Sitemap](https://www.mobilitycare.net.au/sitemap.xml): Full XML sitemap of all pages and products.

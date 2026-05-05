@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
+         bootstrap="upload/system/storage/vendor/autoload.php"
          colors="true"
          verbose="true">
 
@@ -9,11 +9,19 @@
         <testsuite name="MobilityCare Core Web Vitals Fixes">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
+        <testsuite name="PHP 8.1 Compatibility">
+            <file>tests/PHP81CompatibilityTest.php</file>
+        </testsuite>
+        <testsuite name="Form Validation">
+            <file>tests/FormValidationTest.php</file>
+        </testsuite>
     </testsuites>
 
     <coverage>
         <include>
             <directory suffix=".php">catalog/controller/product</directory>
+            <directory suffix=".php">system/library/so</directory>
+            <directory suffix=".php">catalog/model/extension/payment</directory>
         </include>
     </coverage>
 

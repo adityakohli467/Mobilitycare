@@ -263,7 +263,7 @@ $(document).ready(function(){
 
 	
 	jQuery(document).ready(function($){
-		if($("body").hasClass("layout-5")){
+		if($("body").hasClass("layout-5") && typeof WOW !== 'undefined'){
 		    wow = new WOW(
 		      {
 		        animateClass: 'animated',
@@ -466,7 +466,7 @@ $(document).ready(function(){
 	});
 
 	jQuery(document).ready(function($){
-		if($("body").hasClass("layout-5")){
+		if($("body").hasClass("layout-5") && typeof WOW !== 'undefined'){
 		    wow = new WOW(
 		      {
 		        animateClass: 'animated',

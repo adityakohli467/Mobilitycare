@@ -36,73 +36,38 @@ class ControllerInformationQuoteRequest extends Controller {
                 $mailMessageHtml = $this->mailHtml($this->request->post);
 
                 // Save in database FIRST so data is never lost even if mail fails
-                $this->model_catalog_demo_request->addQuoteRequest($this->request->post);
-
                 try {
-    $mail = new Mail($this->config->get('config_mail_engine'));
-    $mail->parameter = $this->config->get('config_mail_parameter');
-    $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-    $mail->smtp_username = $this->config->get('config_mail_smtp_username');
-    $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-    $mail->smtp_port = $this->config->get('config_mail_smtp_port');
-    $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-    $mail->setTo($this->config->get('config_email'));
-    $mail->setFrom('enquiries@mobilitycare.net.au');
-    $replyTo = (isset($this->request->post['email']) ? $this->request->post['email'] : 'enquiries@mobilitycare.net.au');
-    $mail->setReplyTo($replyTo);
-    $mail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
-    $mail->setSubject('New Quote Request Received');
-    $mail->setHtml($mailMessageHtml);
-    $mail->send();
-    
-} catch (\Throwable $e) {
-    $this->log->write('QUOTE ADMIN MAIL ERROR: ' . $e->getMessage());
-    // Send a lightweight fallback alert to admin (no attachment)
-    try {
-        $fallback = new Mail($this->config->get('config_mail_engine'));
-        $fallback->parameter = $this->config->get('config_mail_parameter');
-        $fallback->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-        $fallback->smtp_username = $this->config->get('config_mail_smtp_username');
-        $fallback->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-        $fallback->smtp_port = $this->config->get('config_mail_smtp_port');
-        $fallback->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-        $fallback->setTo($this->config->get('config_email'));
-        $fallback->setFrom('enquiries@mobilitycare.net.au');
-        $fallback->setSender('MobilityCare');
-        $fallback->setSubject('[ALERT] Quote Request Received - Email Delivery Issue');
-        $fallback->setHtml('<p>A new quote request was saved to the database but the full notification email failed to send.</p><p><b>Error:</b> ' . htmlspecialchars($e->getMessage()) . '</p><p>Please check admin panel for the latest quote request.</p>' . $mailMessageHtml);
-        $fallback->send();
-    } catch (\Throwable $e2) {
-        $this->log->write('QUOTE FALLBACK MAIL ERROR: ' . $e2->getMessage());
-    }
-}
+                    $this->model_catalog_demo_request->addQuoteRequest($this->request->post);
+                } catch (\Throwable $dbError) {
+                    $this->log->write('QUOTE REQUEST DB SAVE ERROR: ' . $dbError->getMessage());
+                }
 
-    // Auto-reply to customer (without heavy attachment to avoid memory issues)
-    try {
-        if (isset($this->request->post['email'])) {
-            $customerMail = new Mail($this->config->get('config_mail_engine'));
-            $customerMail->parameter = $this->config->get('config_mail_parameter');
-            $customerMail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-            $customerMail->smtp_username = $this->config->get('config_mail_smtp_username');
-            $customerMail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-            $customerMail->smtp_port = $this->config->get('config_mail_smtp_port');
-            $customerMail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-            $customerMail->setTo($this->request->post['email']);
-            $customerMail->setFrom('enquiries@mobilitycare.net.au');
-            $customerMail->setReplyTo('enquiries@mobilitycare.net.au');
-            $customerMail->setSender(html_entity_decode('MobilityCare', ENT_QUOTES, 'UTF-8'));
-            $customerMail->setSubject('Thank You for Your Enquiry - MobilityCare');
-            
-            $data['customer_name'] = isset($this->request->post['fullname']) ? htmlspecialchars($this->request->post['fullname']) : 'Valued Customer';
-            $customerMessageHtml = $this->load->view('mail/enquiry_confirmation', $data);
-            
-            $customerMail->setHtml($customerMessageHtml);
-            // PDF brochure removed — 16 MB file causes memory exhaustion on 64 MB hosts
-            $customerMail->send();
-        }
-    } catch (\Throwable $e) {
-        $this->log->write('QUOTE CUSTOMER MAIL ERROR: ' . $e->getMessage());
-    }
+                // Queue emails for async sending (instant — no SMTP wait)
+                $this->load->helper('mail_queue');
+                $replyTo = isset($this->request->post['email']) ? $this->request->post['email'] : 'enquiries@mobilitycare.net.au';
+
+                mail_queue_add($this->db, [
+                    'to'       => $this->config->get('config_email'),
+                    'from'     => 'enquiries@mobilitycare.net.au',
+                    'sender'   => 'MobilityCare',
+                    'reply_to' => $replyTo,
+                    'subject'  => 'New Quote Request Received',
+                    'html'     => $mailMessageHtml,
+                    'priority' => 2,
+                ]);
+
+                if (isset($this->request->post['email']) && filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+                    $data['customer_name'] = isset($this->request->post['fullname']) ? htmlspecialchars($this->request->post['fullname']) : 'Valued Customer';
+                    $customerHtml = $this->load->view('mail/enquiry_confirmation', $data);
+                    mail_queue_add($this->db, [
+                        'to'       => $this->request->post['email'],
+                        'from'     => 'enquiries@mobilitycare.net.au',
+                        'sender'   => 'MobilityCare',
+                        'reply_to' => 'enquiries@mobilitycare.net.au',
+                        'subject'  => 'Thank You for Your Enquiry - MobilityCare',
+                        'html'     => $customerHtml,
+                    ]);
+                }
 
 
                 // redirect
@@ -111,7 +76,7 @@ class ControllerInformationQuoteRequest extends Controller {
             } 
         }
 
-        $data['action'] = '/request-quote/';
+        $data['action'] = '/request-quote';
         $data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $data['error_fullname'] = isset($this->error['fullname']) ? $this->error['fullname'] : '';
         $data['error_email'] = isset($this->error['email']) ? $this->error['email'] : '';

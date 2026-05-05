@@ -15,6 +15,7 @@ error_log
 
 # Cache directories
 image/cache/
+image
 
 # System storage (vendor, cache, sessions)
 system/storage/cache/

@@ -318,9 +318,7 @@ $(function ($) {
             if ($('#line-load').length > 0) {
                 move();
             }
-            setTimeout(function () {
-              $('.so-pre-loader').fadeOut();
-            }, 2000);
+            $('.so-pre-loader').fadeOut(300);
        
     } // has preloader
     //preloader Function
