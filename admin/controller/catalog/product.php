@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class ControllerCatalogProduct extends Controller {
 	private $error = array();
 
@@ -36,11 +36,8 @@ class ControllerCatalogProduct extends Controller {
                 // Ensure upload directory exists
                 if (!is_dir($upload_dir)) {
                     mkdir($upload_dir, 0777, true);
-                    error_log('Created directory: ' . $upload_dir);
                 }
 
-                // Debug file data
-                error_log('Files received: ' . print_r($_FILES, true));
 
                 foreach ($this->request->post['product_features'] as $index => $feature) {
                     $image_path = '';
@@ -55,32 +52,26 @@ class ControllerCatalogProduct extends Controller {
                             'size' => $_FILES['product_features']['size'][$index]['image_file']
                         ];
 
-                        error_log('Processing file for index ' . $index . ': ' . print_r($file, true));
 
                         // Validate file type and size
                         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!in_array($file['type'], $allowed_types)) {
                             $this->error['warning'] = 'Invalid file type for index ' . $index . ': ' . $file['type'];
-                            error_log($this->error['warning']);
                         } elseif ($file['size'] > 10000000) { // 10MB limit
                         echo "Image size is 10 Mb or more,please enter less than 10mb file."; exit;
                             $this->error['warning'] = 'Image too large for index ' . $index . ': ' . $file['size'];
-                            error_log($this->error['warning']);
                         } elseif ($file['size'] > 0 && $file['error'] == UPLOAD_ERR_OK) {
                             // Generate SEO-friendly filename
                             $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
                             $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             $destination = $upload_dir . $filename;
-                            error_log('Attempting to move file to: ' . $destination);
                             if (move_uploaded_file($file['tmp_name'], $destination)) {
                                 // Resize image
                                 $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
                                 $image_path = $resized_image;
-                                error_log('File resized and saved: ' . $image_path);
                             } else {
                                 echo "Image Upload failed, Please recheck all data."; exit;
                                 $this->error['warning'] = 'Failed to move uploaded file: ' . $file['name'];
-                                error_log($this->error['warning']);
                             }
                         }
                     }
@@ -92,7 +83,6 @@ class ControllerCatalogProduct extends Controller {
                         $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
                         $filename = $filename_base . '-' . time() . '-' . $index . '.' . ($extension ? $extension : 'jpg');
                         $destination = $upload_dir . $filename;
-                        error_log('Attempting to fetch URL: ' . $url);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -104,19 +94,15 @@ class ControllerCatalogProduct extends Controller {
                                 // Resize image
                                 $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
                                 $image_path = $resized_image;
-                                error_log('URL image resized and saved: ' . $image_path);
                             } else {
                                 echo "Failed to save URL image,please contact admin."; exit;
                                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
-                                error_log($this->error['warning']);
                             }
                         } else {
                             $this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')';
-                            error_log($this->error['warning']);
                         }
                     } elseif (empty($image_path) && !empty($feature['image'])) {
                         $image_path = $feature['image'];
-                        error_log('Using existing image path: ' . $image_path);
                     }
 
                     $product_features[$index] = array(
@@ -125,13 +111,11 @@ class ControllerCatalogProduct extends Controller {
                         'video' => $feature['video'] ?? '',
                         'text'  => $feature['text'] ?? ''
                     );
-                    error_log('Feature for index ' . $index . ': ' . print_r($product_features[$index], true));
                 }
             }
 
             
             if (empty($this->error)) {
-                error_log('Saving product features for product_id: ' . $productId);
                 $this->model_catalog_product->saveProductFeatures($productId, $product_features);
                 $this->session->data['success'] = $this->language->get('text_success');
                 
@@ -147,7 +131,6 @@ class ControllerCatalogProduct extends Controller {
             } else {
                 
                 $this->session->data['error_warning'] = implode(', ', $this->error);
-                error_log('Errors: ' . implode(', ', $this->error));
             }
 
 
@@ -257,11 +240,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                 // Ensure upload directory exists
                 if (!is_dir($upload_dir)) {
                     mkdir($upload_dir, 0777, true);
-                    error_log('Created directory: ' . $upload_dir);
                 }
 
-                // Debug file data
-                error_log('Files received: ' . print_r($_FILES, true));
 
                 foreach ($this->request->post['product_features'] as $index => $feature) {
                     $image_path = '';
@@ -277,28 +257,23 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                             'size' => $_FILES['product_features']['size'][$index]['image_file']
                         ];
 
-                        error_log('Processing file for index ' . $index . ': ' . print_r($file, true));
 
                         // Validate file  size
                       
                        if ($file['size'] > 10000000) { // 10MB limit
                        echo "Image too large in size , please contact admin";exit;
                             $this->error['warning'] = 'File too large for index ' . $index . ': ' . $file['size'];
-                            error_log($this->error['warning']);
                         } elseif ($file['size'] > 0 && $file['error'] == UPLOAD_ERR_OK) {
                             // Generate SEO-friendly filename
                             $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
                             $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             $destination = $upload_dir . $filename;
-                            error_log('Attempting to move file to: ' . $destination);
                             if (move_uploaded_file($file['tmp_name'], $destination)) {
                                 // Resize image
                                 $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
                                 $image_path = $resized_image;
-                                error_log('File resized and saved: ' . $image_path);
                             } else {
                                 $this->error['warning'] = 'Failed to move uploaded file: ' . $file['name'];
-                                error_log($this->error['warning']);
                             }
                         }
                     }
@@ -310,7 +285,6 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
                         $filename = $filename_base . '-' . time() . '-' . $index . '.' . ($extension ? $extension : 'jpg');
                         $destination = $upload_dir . $filename;
-                        error_log('Attempting to fetch URL: ' . $url);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -322,18 +296,14 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                                 // Resize image
                                 $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
                                 $image_path = $resized_image;
-                                error_log('URL image resized and saved: ' . $image_path);
                             } else {
                                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
-                                error_log($this->error['warning']);
                             }
                         } else {
                             $this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')';
-                            error_log($this->error['warning']);
                         }
                     } elseif (empty($image_path) && !empty($feature['image'])) {
                         $image_path = $feature['image'];
-                        error_log('Using existing image path: ' . $image_path);
                     }
 
                     $product_features[$index] = array(
@@ -342,13 +312,11 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         'video' => $feature['video'] ?? '',
                         'text'  => $feature['text'] ?? ''
                     );
-                    error_log('Feature for index ' . $index . ': ' . print_r($product_features[$index], true));
                 }
             }
 
             
             if (empty($this->error)) {
-                error_log('Saving product features for product_id: ' . $this->request->get['product_id']);
                 $this->model_catalog_product->saveProductFeatures($this->request->get['product_id'], $product_features);
                 $this->session->data['success'] = $this->language->get('text_success');
                 
@@ -363,7 +331,6 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                 }
             } else {
                 $this->session->data['error_warning'] = implode(', ', $this->error);
-                error_log('Errors: ' . implode(', ', $this->error));
             }
 
 
@@ -379,11 +346,8 @@ if (isset($this->request->post['product_specs'])) {
     // Ensure upload directory exists
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0777, true);
-        error_log('Created directory: ' . $upload_dir);
     }
 
-    // Debug file data
-    error_log('Files received: ' . print_r($_FILES, true));
 
     
 foreach ($this->request->post['product_specs'] as $index => $spec) {
@@ -400,25 +364,20 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
             'size' => $_FILES['product_specs']['size'][$index]['image_file']
         ];
 
-        error_log('Processing file for index ' . $index . ': ' . print_r($file, true));
 
         // Validate file size
         if ($file['size'] > 10000000) { // 10MB limit
         echo "Image too large in size , please contact admin";exit;
             $this->error['warning'] = 'File too large for index ' . $index . ': ' . $file['size'];
-            error_log($this->error['warning']);
         } elseif ($file['size'] > 0 && $file['error'] == UPLOAD_ERR_OK) {
             // Generate SEO-friendly filename
             $filename_base = !empty($spec['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $spec['title'])) : 'spec';
             $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
             $destination = $upload_dir . $filename;
-            error_log('Attempting to move file to: ' . $destination);
             if (move_uploaded_file($file['tmp_name'], $destination)) {
                 $image_path = 'catalog/productSpecification/' . $filename;
-                error_log('File saved: ' . $image_path);
             } else {
                 $this->error['warning'] = 'Failed to move uploaded file: ' . $file['name'];
-                error_log($this->error['warning']);
             }
         }
     }
@@ -430,7 +389,6 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
         $filename_base = !empty($spec['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $spec['title'])) : 'spec';
         $filename = $filename_base . '-' . time() . '-' . $index . '.' . ($extension ? $extension : 'jpg');
         $destination = $upload_dir . $filename;
-        error_log('Attempting to fetch URL: ' . $url);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -440,25 +398,20 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
         if ($image_content !== false && $http_code == 200) {
             if (file_put_contents($destination, $image_content)) {
                 $image_path = 'catalog/productSpecification/' . $filename;
-                error_log('URL image saved: ' . $image_path);
             } else {
                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
-                error_log($this->error['warning']);
             }
         } else {
             $this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')';
-            error_log($this->error['warning']);
         }
     } elseif (empty($image_path) && !empty($spec['image'])) {
         $image_path = $spec['image'];
-        error_log('Using existing image path: ' . $image_path);
     }
 
     $product_specs[$index] = array(
         'title' => $spec['title'] ?? '',
         'image' => $image_path
     );
-    error_log('Spec for index ' . $index . ': ' . print_r($product_specs[$index], true));
 }
 
 }
@@ -466,7 +419,6 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
 
 
 if (empty($this->error)) {
-    error_log('Saving product specs for product_id: ' . $this->request->get['product_id']);
     $this->model_catalog_product->saveProductSpecs($this->request->get['product_id'], $product_specs);
     
     
@@ -481,7 +433,6 @@ if (empty($this->error)) {
     }
 } else {
     $this->session->data['error_warning'] = implode(', ', $this->error);
-    error_log('Errors: ' . implode(', ', $this->error));
 }
           
 

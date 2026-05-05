@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class ModelCatalogProduct extends Model {
 	public function addProduct($data) {
 	    
@@ -429,30 +429,19 @@ public function saveProductSpecs($product_id, $data) {
     // Delete existing specs for this product
     $delete_query = "DELETE FROM " . DB_PREFIX . "product_spec WHERE product_id = '" . (int)$product_id . "'";
     $this->db->query($delete_query);
-    error_log('Executed delete query: ' . $delete_query);
 
     // Process specs directly from $data
-    error_log('Received product specs data: ' . print_r($data, true));
 
     $product_specs = array_values(array_filter($data, function($spec) {
         return !empty($spec['title']) || !empty($spec['image']);
     }));
 
     foreach ($product_specs as $spec) {
-        $insert_query = "INSERT INTO " . DB_PREFIX . "product_spec SET 
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_spec SET 
             product_id = '" . (int)$product_id . "', 
             language_id = '" . (int)$this->config->get('config_language_id') . "', 
             title = '" . $this->db->escape($spec['title']) . "', 
-            image = '" . $this->db->escape($spec['image']) . "'";
-        
-        error_log('Executing insert query: ' . $insert_query);
-        $result = $this->db->query($insert_query);
-        
-        if (!$result) {
-            error_log('Failed to insert spec: ' . print_r($spec, true) . ' | Error: ' . ($this->db->error ?? 'Unknown database error'));
-        } else {
-            error_log('Successfully inserted spec: ' . print_r($spec, true));
-        }
+            image = '" . $this->db->escape($spec['image']) . "'");
     }
 }
 
