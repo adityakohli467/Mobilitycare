@@ -481,8 +481,9 @@ if (empty($this->error)) {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->response->redirect($this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true));
-			return;
+			$redirect_url = $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true);
+			echo '<html><head><meta http-equiv="refresh" content="0;url=' . $redirect_url . '"></head><body><script>window.location.href="' . $redirect_url . '";</script></body></html>';
+			exit;
 		}
 
 		$this->getForm();
