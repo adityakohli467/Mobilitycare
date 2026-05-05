@@ -241,16 +241,21 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
             $data['product_features'] = array();
 
             foreach ($product_features as $feature) {
-                // Resize feature image
-                // $image_resized = $feature['image'] ? $this->model_tool_image->resize($feature['image'], 600, 600) : $this->model_tool_image->resize('placeholder.png', 600, 600);
+                // Build proper image URL - handle both full URLs (legacy) and relative paths (new)
+                if (!empty($feature['image']) && strpos($feature['image'], 'http') === 0) {
+                    $feature_image = $feature['image'];
+                } elseif (!empty($feature['image'])) {
+                    $feature_image = $this->model_tool_image->resize($feature['image'], 600, 600);
+                } else {
+                    $feature_image = '';
+                }
 
                 $data['product_features'][] = array(
                     'title' => $feature['title'],
-                    'image' => $feature['image'],
-                    // 'image_resized' => $image_resized,
+                    'image' => $feature_image,
                     'video' => $feature['video'],
                     'text' => html_entity_decode($feature['text'], ENT_QUOTES, 'UTF-8'),
-                    'link' => isset($feature['link']) ? $feature['link'] : '' // Conditional link field
+                    'link' => isset($feature['link']) ? $feature['link'] : ''
                 );
             }
 		$data['product']['right_for_you'] = html_entity_decode($product_info['right_for_you'], ENT_QUOTES, 'UTF-8');
