@@ -66,9 +66,7 @@ class ControllerCatalogProduct extends Controller {
                             $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             $destination = $upload_dir . $filename;
                             if (move_uploaded_file($file['tmp_name'], $destination)) {
-                                // Resize image
-                                $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
-                                $image_path = $resized_image;
+                                $image_path = 'catalog/productFeature/' . $filename;
                             } else {
                                 echo "Image Upload failed, Please recheck all data."; exit;
                                 $this->error['warning'] = 'Failed to move uploaded file: ' . $file['name'];
@@ -76,8 +74,9 @@ class ControllerCatalogProduct extends Controller {
                         }
                     }
 
-                    // Handle image URL
-                    if (empty($image_path) && !empty($feature['image']) && filter_var($feature['image'], FILTER_VALIDATE_URL)) {
+                    // Handle image URL (skip if it's from the same domain - already saved)
+                    $site_url = $this->config->get('config_url') ? $this->config->get('config_url') : HTTP_CATALOG;
+                    if (empty($image_path) && !empty($feature['image']) && filter_var($feature['image'], FILTER_VALIDATE_URL) && strpos($feature['image'], $site_url) === false) {
                         $url = $feature['image'];
                         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
                         $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
@@ -93,9 +92,7 @@ class ControllerCatalogProduct extends Controller {
                         curl_close($ch);
                         if ($image_content !== false && $http_code == 200) {
                             if (file_put_contents($destination, $image_content)) {
-                                // Resize image
-                                $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
-                                $image_path = $resized_image;
+                                $image_path = 'catalog/productFeature/' . $filename;
                             } else {
                                 echo "Failed to save URL image,please contact admin."; exit;
                                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
@@ -271,17 +268,16 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                             $filename = $filename_base . '-' . time() . '-' . $index . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             $destination = $upload_dir . $filename;
                             if (move_uploaded_file($file['tmp_name'], $destination)) {
-                                // Resize image
-                                $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
-                                $image_path = $resized_image;
+                                $image_path = 'catalog/productFeature/' . $filename;
                             } else {
                                 $this->error['warning'] = 'Failed to move uploaded file: ' . $file['name'];
                             }
                         }
                     }
 
-                    // Handle image URL
-                    if (empty($image_path) && !empty($feature['image']) && filter_var($feature['image'], FILTER_VALIDATE_URL)) {
+                    // Handle image URL (skip if it's from the same domain - already saved)
+                    $site_url = $this->config->get('config_url') ? $this->config->get('config_url') : HTTP_CATALOG;
+                    if (empty($image_path) && !empty($feature['image']) && filter_var($feature['image'], FILTER_VALIDATE_URL) && strpos($feature['image'], $site_url) === false) {
                         $url = $feature['image'];
                         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
                         $filename_base = !empty($feature['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $feature['title'])) : 'feature';
@@ -297,9 +293,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         curl_close($ch);
                         if ($image_content !== false && $http_code == 200) {
                             if (file_put_contents($destination, $image_content)) {
-                                // Resize image
-                                $resized_image = $this->model_tool_image->resize('catalog/productFeature/' . $filename, 300, 300);
-                                $image_path = $resized_image;
+                                $image_path = 'catalog/productFeature/' . $filename;
                             } else {
                                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
                             }
@@ -386,8 +380,9 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
         }
     }
 
-    // Handle image URL
-    if (empty($image_path) && !empty($spec['image']) && filter_var($spec['image'], FILTER_VALIDATE_URL)) {
+    // Handle image URL (skip if it's from the same domain - already saved)
+    $site_url = $this->config->get('config_url') ? $this->config->get('config_url') : HTTP_CATALOG;
+    if (empty($image_path) && !empty($spec['image']) && filter_var($spec['image'], FILTER_VALIDATE_URL) && strpos($spec['image'], $site_url) === false) {
         $url = $spec['image'];
         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
         $filename_base = !empty($spec['title']) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $spec['title'])) : 'spec';
