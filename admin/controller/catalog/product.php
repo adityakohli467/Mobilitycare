@@ -480,6 +480,7 @@ if (empty($this->error)) {
 			}
 
 			$this->response->redirect($this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true));
+			return;
 		}
 
 		$this->getForm();
