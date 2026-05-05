@@ -209,10 +209,13 @@ private function uploadImage($file) {
 
 		$this->load->model('catalog/product');
 
+		$tv = microtime(true);
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-		    
+		    error_log('TIMING: validateForm took ' . round(microtime(true) - $tv, 2) . 's');
+		    $t0 = microtime(true);
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
 			$product_id = $this->request->get['product_id'];
+			error_log('TIMING: editProduct took ' . round(microtime(true) - $t0, 2) . 's');
 			
 		
 
@@ -229,7 +232,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
 
 			
     	// Save product features start
-		
+		  $t1 = microtime(true);
 		  $this->load->model('tool/image');	
 		  $product_features = array();
             if (isset($this->request->post['product_features'])) {
@@ -315,6 +318,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
 
             
             if (empty($this->error)) {
+                error_log('TIMING: features processing took ' . round(microtime(true) - $t1, 2) . 's');
                 $this->model_catalog_product->saveProductFeatures($this->request->get['product_id'], $product_features);
                 $this->session->data['success'] = $this->language->get('text_success');
                 
@@ -335,7 +339,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
           // Save product features code ends
             
             // Save product spec start
-            
+            $t2 = microtime(true);
            $product_specs = array();
 if (isset($this->request->post['product_specs'])) {
  
@@ -420,7 +424,9 @@ foreach ($this->request->post['product_specs'] as $index => $spec) {
 
 
 if (empty($this->error)) {
+    error_log('TIMING: specs processing took ' . round(microtime(true) - $t2, 2) . 's');
     $this->model_catalog_product->saveProductSpecs($this->request->get['product_id'], $product_specs);
+    error_log('TIMING: total edit save took ' . round(microtime(true) - $t0, 2) . 's');
     
     
     // Handle AJAX response
