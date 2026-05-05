@@ -3,6 +3,7 @@ class ControllerCatalogProduct extends Controller {
 	private $error = array();
 
 	public function index() {
+	    error_log('TIMING: index() called at ' . date('H:i:s'));
 		$this->load->language('catalog/product');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -595,6 +596,8 @@ if (empty($this->error)) {
 	}
 
 	protected function getList() {
+	    error_log('TIMING: getList() started');
+	    $tList = microtime(true);
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = $this->request->get['filter_name'];
 		} else {
@@ -854,12 +857,13 @@ if (empty($this->error)) {
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
-
+		error_log('TIMING: getList() completed in ' . round(microtime(true) - $tList, 2) . 's');
 		$this->response->setOutput($this->load->view('catalog/product_list', $data));
 	}
 
 	protected function getForm() {
-	    
+	    error_log('TIMING: getForm() started');
+	    $tForm = microtime(true);
 	    $data['base_url'] = HTTP_CATALOG;
 
 		$data['text_form'] = !isset($this->request->get['product_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -1645,7 +1649,7 @@ $data['placeholderFeaturedImage'] = $this->model_tool_image->resize('no_image.pn
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
-
+		error_log('TIMING: getForm() completed in ' . round(microtime(true) - $tForm, 2) . 's');
 		$this->response->setOutput($this->load->view('catalog/product_form', $data));
 	}
 
