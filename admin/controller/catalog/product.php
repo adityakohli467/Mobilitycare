@@ -1,4 +1,5 @@
 <?php
+error_log('TIMING: product.php loaded at ' . date('H:i:s') . ' | METHOD: ' . $_SERVER['REQUEST_METHOD'] . ' | URI: ' . $_SERVER['REQUEST_URI'] . ' | POST size: ' . strlen(file_get_contents('php://input')) . ' bytes');
 class ControllerCatalogProduct extends Controller {
 	private $error = array();
 
