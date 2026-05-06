@@ -478,8 +478,8 @@ body.quote-modal-open .popup-marketing {
                             <div class="tabsslider {{related_position}} {% if tabs_position == 1 %} vertical-tabs col-xs-12 {% else %} horizontal-tabs col-xs-12 {% endif %}">
                                 {% if tabs_position == 2 %}
                                     <ul class="nav nav-tabs font-sn">
-                                        <li><a data-toggle="tab" href="#tab-features">Features</a></li>
-                                        <li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
+                                        <li class="active"><a data-toggle="tab" href="#tab-features">Features</a></li>
+                                        <li><a data-toggle="tab" href="#tab-description">Overview</a></li>
                                         <li><a data-toggle="tab" href="#tab-Specifications">Specs</a></li>
                                         <li><a data-toggle="tab" href="#tab-userguide">Downloads & User Guide</a></li>
                                         <li><a data-toggle="tab" href="#tab-funding">NDIS & Funding</a></li>
@@ -501,8 +501,8 @@ body.quote-modal-open .popup-marketing {
                                     </ul>
                                 {% elseif tabs_position == 1 %}
                                     <ul class="nav nav-tabs col-xs-12 col-sm-4">
-                                        <li><a data-toggle="tab" href="#tab-features">Features</a></li>
-                                        <li class="active"><a data-toggle="tab" href="#tab-description">Overview</a></li>
+                                        <li class="active"><a data-toggle="tab" href="#tab-features">Features</a></li>
+                                        <li><a data-toggle="tab" href="#tab-description">Overview</a></li>
                                         <li><a data-toggle="tab" href="#tab-Specifications">Specs</a></li>
                                         <li><a data-toggle="tab" href="#tab-userguide">Downloads & User Guide</a></li>
                                         <li><a data-toggle="tab" href="#tab-funding">NDIS & Funding</a></li>
@@ -525,7 +525,7 @@ body.quote-modal-open .popup-marketing {
                                 {% endif %}
 
                                 <div class="tab-content {% if tabs_position == 1 %} col-xs-12 col-sm-8 {% else %} col-xs-12 {% endif %}">
-                                    <div class="tab-pane active" id="tab-description">
+                                    <div class="tab-pane" id="tab-description">
                                         <div class="row mt-5">
                                             {% if product.right_for_you %}
                                                 <div class="col-xs-12 col-sm-6">
@@ -596,7 +596,7 @@ body.quote-modal-open .popup-marketing {
                                         </div>
                                     </div>
 
-                                    <div class="tab-pane" id="tab-features">
+                                    <div class="tab-pane active" id="tab-features">
                                         {% if product_features %}
                                             <div class="product-features">
                                                 {% for feature in product_features %}
