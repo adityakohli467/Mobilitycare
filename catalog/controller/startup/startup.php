@@ -198,5 +198,56 @@ class ControllerStartupStartup extends Controller {
 		
 		// Encryption
 		$this->registry->set('encryption', new Encryption($this->config->get('config_encryption')));
+
+		// Mobile device detection - ensure so-mobile theme is used for mobile visitors
+		if (!isset($this->session->data['device']) || !isset($this->request->cookie['device'])) {
+			$ua = isset($this->request->server['HTTP_USER_AGENT']) ? $this->request->server['HTTP_USER_AGENT'] : '';
+			$mobile_agents = array('iPod','iPhone','webOS','BlackBerry','windows phone','symbian','vodafone','opera mini','windows ce','smartphone','palm','midp');
+			$tablet_agents = array('iPad','RIM Tablet','hp-tablet','Kindle Fire');
+			$is_mobile = false;
+			$is_tablet = false;
+
+			foreach ($tablet_agents as $agent) {
+				if (stripos($ua, $agent) !== false) {
+					$is_tablet = true;
+				}
+			}
+			// Android without "Mobile" = tablet
+			if (stripos($ua, 'Android') !== false && stripos($ua, 'Mobile') === false) {
+				$is_tablet = true;
+			}
+
+			if (!$is_tablet) {
+				foreach ($mobile_agents as $agent) {
+					if (stripos($ua, $agent) !== false) {
+						$is_mobile = true;
+					}
+				}
+				if (stripos($ua, 'Android') !== false && stripos($ua, 'Mobile') !== false) {
+					$is_mobile = true;
+				}
+				if (stripos($ua, 'Mobile') !== false && stripos($ua, 'iPad') === false && stripos($ua, 'Tablet') === false) {
+					$is_mobile = true;
+				}
+				if (preg_match('/\bMobi\b/i', $ua)) {
+					$is_mobile = true;
+				}
+			}
+
+			if ($is_mobile) {
+				$this->session->data['device'] = 'mobile';
+			} elseif ($is_tablet) {
+				$this->session->data['device'] = 'tablet';
+			} else {
+				$this->session->data['device'] = 'desktop';
+			}
+		}
+
+		// Apply mobile theme if device is mobile and so-mobile platform is enabled
+		if (isset($this->session->data['device']) && $this->session->data['device'] == 'mobile') {
+			if (is_dir(DIR_TEMPLATE . 'so-mobile')) {
+				$this->config->set('theme_default_directory', 'so-mobile');
+			}
+		}
 	}
 }

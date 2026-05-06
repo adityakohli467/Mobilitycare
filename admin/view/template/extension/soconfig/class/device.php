@@ -78,18 +78,26 @@ final class Device {
 		$mobile = false;
 		
 		if(isset($_SERVER['HTTP_USER_AGENT'])) {
-							
+			$ua = $_SERVER['HTTP_USER_AGENT'];
+			
 			foreach($this->mobile_agents as $mobile_agent){
-				if(stripos($_SERVER['HTTP_USER_AGENT'],$mobile_agent)){
+				if(stripos($ua, $mobile_agent) !== false){
 					$mobile = true;
 				}
 			}
-			if(stripos($_SERVER['HTTP_USER_AGENT'],"Android") && stripos($_SERVER['HTTP_USER_AGENT'],"mobile")){
+			if(stripos($ua, "Android") !== false && stripos($ua, "Mobile") !== false){
+				$mobile = true;
+			}
+			// Modern mobile detection: check for "Mobile" keyword (used by Chrome, Firefox, Safari on phones)
+			if(stripos($ua, "Mobile") !== false && stripos($ua, "iPad") === false && stripos($ua, "Tablet") === false){
+				$mobile = true;
+			}
+			// Detect mobile via viewport hints in newer Chrome reduced UA
+			if(preg_match('/\bMobi\b/i', $ua)){
 				$mobile = true;
 			}
 			foreach($this->exclude_mobile_agents as $exclude_mobile_agent){
-				if(stripos($_SERVER['HTTP_USER_AGENT'],$exclude_mobile_agent)){
-					echo 'exclude';
+				if(stripos($ua, $exclude_mobile_agent) !== false){
 					$mobile = false;
 				}
 			}
@@ -101,19 +109,20 @@ final class Device {
 		$tablet = false;
 		
 		if(isset($_SERVER['HTTP_USER_AGENT'])) {
-					
+			$ua = $_SERVER['HTTP_USER_AGENT'];
+			
 			foreach($this->tablet_agents as $tablet_agent){
-				if(stripos($_SERVER['HTTP_USER_AGENT'],$tablet_agent)){
+				if(stripos($ua, $tablet_agent) !== false){
 					$tablet = true;
 				}
 			}
 			
-			if(stripos($_SERVER['HTTP_USER_AGENT'],"Android") && stripos($_SERVER['HTTP_USER_AGENT'],"mobile")){
+			if(stripos($ua, "Android") !== false && stripos($ua, "Mobile") !== false){
 				$tablet = false;
 			}
 			
 			foreach($this->exclude_tablet_agents as $exclude_tablet_agent){
-				if(stripos($_SERVER['HTTP_USER_AGENT'],$exclude_tablet_agent)){
+				if(stripos($ua, $exclude_tablet_agent) !== false){
 					$tablet = false;
 				}
 			}
