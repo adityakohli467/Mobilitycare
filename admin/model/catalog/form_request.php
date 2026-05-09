@@ -157,6 +157,12 @@ public function contactUsFormRequests() {
         $query = $this->db->query($sql);
         return $query->rows;
     }
+
+     public function getRaymexLiftInquiry() {
+        $sql = "SELECT *  FROM " . DB_PREFIX . "raymex_lift_enquiry ORDER BY date_added DESC";
+        $query = $this->db->query($sql);
+        return $query->rows;
+    }
     
      public function autochairInquiry() {
         

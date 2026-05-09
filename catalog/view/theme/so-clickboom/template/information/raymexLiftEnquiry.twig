@@ -1,0 +1,208 @@
+{{ header }}
+<link href="catalog/view/theme/so-clickboom/css/customerForms.css" rel="stylesheet" type="text/css" />
+
+<style>
+  .raymex-hero { padding: 40px 0 20px; }
+  .raymex-hero h1 { font-size: 34px; font-weight: 800; color: #0a1f44; line-height: 1.2; margin-bottom: 20px; }
+  .raymex-hero h1 span { display: block; }
+  .raymex-intro p { color: #333; font-size: 15px; line-height: 1.7; margin-bottom: 14px; }
+  .raymex-intro .highlight { color: #d9232e; font-weight: 700; font-size: 15px; line-height: 1.6; }
+  .raymex-trust-points { list-style: none; padding: 0; margin: 20px 0 0; }
+  .raymex-trust-points li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #222;
+    line-height: 1.5;
+  }
+  .raymex-trust-points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 20px;
+    height: 20px;
+    background: #0a4d8a;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .raymex-product-img { max-width: 100%; height: auto; margin: 20px 0; }
+
+  .raymex-form-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 30px;
+  }
+  .raymex-form-card h2 { font-size: 22px; font-weight: 700; color: #0a1f44; margin-bottom: 4px; }
+  .raymex-form-card .form-subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+  .raymex-form-card label.field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .raymex-form-card .form-control {
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 0;
+  }
+  .raymex-form-card .form-control:focus {
+    border-color: #0a4d8a !important;
+    box-shadow: 0 0 0 2px rgba(10,77,138,0.1);
+  }
+  .raymex-form-card .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+  .raymex-form-card .form-row .form-col { flex: 1; }
+  .raymex-form-card .form-group { margin-bottom: 15px; }
+  .raymex-form-card textarea.form-control { min-height: 90px; resize: vertical; }
+  .raymex-form-card .btn-submit {
+    width: 100%;
+    background: #d9232e;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .raymex-form-card .btn-submit:hover { background: #b91c25; }
+  .raymex-form-card .form-privacy {
+    font-size: 12px;
+    color: #888;
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  @media (max-width: 991px) {
+    .raymex-form-card .form-row { flex-direction: column; gap: 0; }
+  }
+</style>
+
+<div class="row">{{ column_left }}
+  {% if column_left and column_right %}
+  {% set class = 'col-sm-6' %}
+  {% elseif column_left or column_right %}
+  {% set class = 'col-sm-9' %}
+  {% else %}
+  {% set class = 'col-sm-12' %}
+  {% endif %}
+
+  <div id="content" class="{{ class }}">{{ content_top }}
+    <div class="container">
+      <div class="row raymex-hero">
+
+        {# ── LEFT COLUMN: Image + Intro + Trust Points ── #}
+        <div class="col-md-6 col-sm-12">
+          <div class="raymex-intro">
+            <h1><span>Need More Than</span><span>a Standard Walker?</span></h1>
+
+            <p>The <strong>RAYMEX&reg; Lift</strong> combines walking support with a powered <strong>elevating seat</strong> to help suitable users with standing, transfers and recovery from low positions.</p>
+
+            <p>For people who remain mobile but need more support with daily movement, RAYMEX&reg; helps bridge the gap between a walker and a full hoist.</p>
+
+            {# Dummy image src — replace with actual product image #}
+            <img src="image/catalog/demo/raymex-lift-placeholder.png" alt="RAYMEX® Lift - Portable Personal Lift and Mobility Walker" class="raymex-product-img">
+
+            <p class="highlight">Enquire now to request product information, pricing or a demonstration.</p>
+
+            <ul class="raymex-trust-points">
+              <li>Portable personal lift and mobility walker</li>
+              <li>Powered elevating seat lowers to floor level and raises to 61 cm</li>
+              <li>Supports standing, transfers, toileting and low-position recovery</li>
+              <li>Suitable for home, aged care, rehab and supported living settings</li>
+              <li>Australian enquiries supported by MobilityCare</li>
+            </ul>
+          </div>
+        </div>
+
+        {# ── RIGHT COLUMN: Enquiry Form ── #}
+        <div class="col-md-6 col-sm-12">
+          <div class="raymex-form-card">
+            <h2>Enquire About RAYMEX&reg; Lift</h2>
+            <p class="form-subtitle">Complete the form and our team will contact you with more information.</p>
+
+            <form action="{{ action }}" method="post" id="raymexEnquiryForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/raymexLiftEnquiry/validateAjax">
+
+              {# Full Name & Email #}
+              <div class="form-row">
+                <div class="form-col">
+                  <label class="field-label">Full Name *</label>
+                  <input type="text" name="fullname" placeholder="Full Name *" class="form-control" required>
+                  {% if error_fullname %}<div class="text-red">{{ error_fullname }}</div>{% endif %}
+                </div>
+                <div class="form-col">
+                  <label class="field-label">Email *</label>
+                  <input type="text" name="email" placeholder="Email *" class="form-control" required>
+                  {% if error_email %}<div class="text-red">{{ error_email }}</div>{% endif %}
+                </div>
+              </div>
+
+              {# Phone & Postcode #}
+              <div class="form-row">
+                <div class="form-col">
+                  <label class="field-label">Phone Number *</label>
+                  <input type="text" name="phone" class="form-control phoneValidate" placeholder="Phone Number *" maxlength="10" required>
+                  {% if error_phone %}<div class="text-red">{{ error_phone }}</div>{% endif %}
+                </div>
+                <div class="form-col">
+                  <label class="field-label">Postcode *</label>
+                  <input type="text" name="postcode" placeholder="Postcode *" maxlength="4" title="Please enter up to 4 digits only" class="form-control postcodeValidate" required>
+                  {% if error_postcode %}<div class="text-red">{{ error_postcode }}</div>{% endif %}
+                </div>
+              </div>
+
+              {# Contact Type #}
+              <div class="form-group">
+                <label class="field-label">Are you contacting us as? *</label>
+                <select name="contact_type" id="contact_type" class="form-control" required>
+                  <option value="" disabled selected>Are you contacting us as?</option>
+                  <option value="End user">End user</option>
+                  <option value="Family member or carer">Family member or carer</option>
+                  <option value="Occupational therapist">Occupational therapist</option>
+                  <option value="Aged care or home care provider">Aged care or home care provider</option>
+                  <option value="Dealer or clinic">Dealer or clinic</option>
+                  <option value="Other">Other</option>
+                </select>
+                {% if error_contact_type %}<div class="text-red">{{ error_contact_type }}</div>{% endif %}
+              </div>
+
+              {# Additional Information #}
+              <div class="form-group">
+                <label class="field-label">Additional Information</label>
+                <textarea name="additional_info" class="form-control" placeholder="Tell us a little about what you need help with."></textarea>
+              </div>
+
+              <button type="submit" class="btn-submit"><i class="fa fa-paper-plane"></i>&nbsp; SUBMIT YOUR REQUEST</button>
+
+              <p class="form-privacy">MobilityCare will use your details to respond to your enquiry about the RAYMEX&reg; Lift.</p>
+            </form>
+
+            <div id="toastMessage" class="toast"></div>
+            <div id="loaderOverlay" class="loader-overlay">
+              <div class="loader"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}
+
+<script>
+  $('#loaderOverlay').hide();
+</script>
+<script src="/catalog/view/javascript/form-ajax-validate.js"></script>

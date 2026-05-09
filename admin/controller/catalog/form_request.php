@@ -145,6 +145,16 @@ error_reporting(E_ALL);
 		$data['footer'] = $this->load->controller('common/footer');
         $this->response->setOutput($this->load->view('forms/lightDriveInquiry', $data));
     }
+
+      public function RaymexLiftEnq() {
+        $this->load->model('catalog/form_request');
+        $this->document->setTitle('RAYMEX Lift Enquiries');
+        $data['requests'] = $this->model_catalog_form_request->getRaymexLiftInquiry();
+        $data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+        $this->response->setOutput($this->load->view('forms/raymexLiftInquiry', $data));
+    }
     
       public function AutochairEnq() {
        

@@ -818,6 +818,15 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()
 				);
 			}
+
+			if ($this->user->hasPermission('access', 'catalog/form_request')) {
+				$demorequests[] = array(
+					'name'	   => 'RAYMEX Lift Enquiry',
+					'icon'	   => 'fa-pencil',
+					'href'     => $this->url->link('catalog/form_request/RaymexLiftEnq', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()
+				);
+			}
 			
 			if ($this->user->hasPermission('access', 'catalog/form_request')) {
 				$demorequests[] = array(

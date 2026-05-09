@@ -285,6 +285,24 @@ $this->db->query("INSERT INTO " . DB_PREFIX . "findDealer_requests SET
         date_added = NOW()");
 }
 
+  public function addRaymexLiftEnquiry($data) {
+    $fullname = isset($data['fullname']) ? $this->db->escape($data['fullname']) : '';
+    $email = isset($data['email']) ? $this->db->escape($data['email']) : '';
+    $phone = isset($data['phone']) ? $this->db->escape($data['phone']) : '';
+    $postcode = isset($data['postcode']) ? $this->db->escape($data['postcode']) : '';
+    $contact_type = isset($data['contact_type']) ? $this->db->escape($data['contact_type']) : '';
+    $additional_info = isset($data['additional_info']) ? $this->db->escape($data['additional_info']) : '';
+
+    $this->db->query("INSERT INTO " . DB_PREFIX . "raymex_lift_enquiry SET 
+        fullname = '{$fullname}', 
+        email = '{$email}', 
+        phone = '{$phone}', 
+        postcode = '{$postcode}',
+        contact_type = '{$contact_type}', 
+        additional_info = '{$additional_info}', 
+        date_added = NOW()");
+}
+
 
     public function getProductsByCategory($category_id) {
        $query = $this->db->query("

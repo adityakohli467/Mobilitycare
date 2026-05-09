@@ -54,6 +54,7 @@ RewriteRule ^customer-service/?$ index.php?route=information/support [L,QSA]
 RewriteRule ^returns-warranty-policy/?$ index.php?route=information/information&information_id=8 [L,QSA]
 RewriteRule ^light-drive-2-enquiry/?$ index.php?route=information/lightDriveEnquiry [L,QSA]
 RewriteRule ^autochair-smart-lifter-enquiry/?$ index.php?route=information/autochairEnquiry [L,QSA]
+RewriteRule ^raymex-lift-enquiry/?$ index.php?route=information/raymexLiftEnquiry [L,QSA]
 RewriteRule ^request-local-dealer/?$ index.php?route=information/find_dealer_form [L,QSA]
 
 RewriteRule ^home/?$ index.php?route=extension/mobile/home [L,QSA]
@@ -104,6 +105,10 @@ RewriteRule ^index\.php$ /light-drive-2-enquiry/? [R=301,L,QSD]
 # Autochair Enquiry
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/autochairEnquiry[\s&] [NC]
 RewriteRule ^index\.php$ /autochair-smart-lifter-enquiry/? [R=301,L,QSD]
+
+# RAYMEX Lift Enquiry
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/raymexLiftEnquiry[\s&] [NC]
+RewriteRule ^index\.php$ /raymex-lift-enquiry/? [R=301,L,QSD]
 
 # Find Dealer Form
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/find_dealer_form[\s&] [NC]
@@ -399,6 +404,13 @@ RewriteRule ^thank-you-lightdrive/?$ index.php?route=information/form_success/li
 # Canonical redirect (THIS LINE FIXES YOUR ISSUE)
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/form_success/lightdrive[\s&] [NC]
 RewriteRule ^index\.php$ /thank-you-lightdrive [R=301,L,QSD]
+
+# RAYMEX Lift form success
+RewriteRule ^thank-you-raymex/?$ index.php?route=information/form_success/raymex [L,QSA]
+
+# Canonical redirect
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/form_success/raymex[\s&] [NC]
+RewriteRule ^index\.php$ /thank-you-raymex [R=301,L,QSD]
 
 
 # placeorder form success

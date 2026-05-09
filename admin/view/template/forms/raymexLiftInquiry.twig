@@ -1,0 +1,185 @@
+{{ header }}{{ column_left }}
+
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>RAYMEX&reg; Lift Enquiries</h1>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-envelope"></i> RAYMEX Lift Enquiries List</h3>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover" id="raymex-enquiries-table">
+            <!-- Filter Row -->
+            <thead>
+              <tr>
+                <th><input type="text" class="form-control input-sm filter" data-column="0" placeholder="Name..."></th>
+                <th><input type="text" class="form-control input-sm filter" data-column="1" placeholder="Email..."></th>
+                <th><input type="text" class="form-control input-sm filter" data-column="2" placeholder="Phone..."></th>
+                <th><input type="text" class="form-control input-sm filter" data-column="3" placeholder="Postcode..."></th>
+                <th>
+                  <select class="form-control input-sm filter" data-column="4">
+                    <option value="">All Contact Types</option>
+                    <option value="End user">End user</option>
+                    <option value="Family member or carer">Family member or carer</option>
+                    <option value="Occupational therapist">Occupational therapist</option>
+                    <option value="Aged care or home care provider">Aged care or home care provider</option>
+                    <option value="Dealer or clinic">Dealer or clinic</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </th>
+                <th><input type="text" class="form-control input-sm filter" data-column="5" placeholder="Message..."></th>
+                <th><input type="text" class="form-control input-sm filter" data-column="6" placeholder="Date (dd Mmm yyyy)..."></th>
+              </tr>
+
+              <!-- Header Row -->
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Postcode</th>
+                <th>Contact Type</th>
+                <th>Additional Info</th>
+                <th>Date Added</th>
+              </tr>
+            </thead>
+
+            <tbody id="raymex-table-body">
+              {% for request in requests %}
+              <tr>
+                <td>{{ request.fullname }}</td>
+                <td>{{ request.email }}</td>
+                <td>{{ request.phone }}</td>
+                <td>{{ request.postcode }}</td>
+                <td>{{ request.contact_type }}</td>
+                <td>
+                  {% if request.additional_info %}
+                    {{ request.additional_info|slice(0, 50) }}{% if request.additional_info|length > 50 %}...
+                    <a href="javascript:void(0);"
+                       class="text-danger"
+                       data-toggle="modal"
+                       data-target="#messageModal{{ loop.index }}">
+                       View More
+                    </a>
+
+                    <!-- Modal for full message -->
+                    <div class="modal fade" id="messageModal{{ loop.index }}" tabindex="-1" role="dialog">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Full Message — {{ request.fullname }}</h4>
+                          </div>
+                          <div class="modal-body">
+                            <p>{{ request.additional_info|nl2br }}</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                  {% else %}
+                    <span class="text-muted">None</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if request.date_added and request.date_added != '0000-00-00 00:00:00' %}
+                    {{ request.date_added|date("d M Y") }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="7" class="text-center">No RAYMEX Lift enquiries found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ footer }}
+
+<style>
+  .filter {
+    width: 100%;
+    margin-bottom: 4px;
+    font-size: 12px;
+    padding: 4px;
+  }
+  .table th, .table td {
+    vertical-align: middle;
+  }
+  .modal-lg {
+    max-width: 800px;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const table = document.getElementById('raymex-enquiries-table');
+  if (!table) return;
+
+  const tbody = document.getElementById('raymex-table-body');
+  const filters = document.querySelectorAll('#raymex-enquiries-table .filter');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  function applyFilters() {
+    let anyVisible = false;
+
+    rows.forEach(row => {
+      let show = true;
+
+      filters.forEach(filter => {
+        const columnIndex = parseInt(filter.dataset.column);
+        const filterValue = filter.value.trim().toLowerCase();
+        const cell = row.cells[columnIndex];
+
+        if (!cell) return;
+
+        const cellText = cell.textContent.trim().toLowerCase();
+
+        if (filterValue && !cellText.includes(filterValue)) {
+          show = false;
+        }
+      });
+
+      row.style.display = show ? '' : 'none';
+      if (show) anyVisible = true;
+    });
+
+    const noResultsRow = document.querySelector('#no-results-raymex');
+    if (!anyVisible && rows.length > 0) {
+      if (!noResultsRow) {
+        const tr = document.createElement('tr');
+        tr.id = 'no-results-raymex';
+        tr.innerHTML = '<td colspan="7" class="text-center">No matching RAYMEX Lift enquiries found</td>';
+        tbody.appendChild(tr);
+      }
+    } else if (noResultsRow) {
+      noResultsRow.remove();
+    }
+  }
+
+  filters.forEach(filter => {
+    filter.addEventListener('input', applyFilters);
+    filter.addEventListener('change', applyFilters);
+  });
+
+  applyFilters();
+});
+</script>
