@@ -56,8 +56,7 @@
     margin-bottom: 0;
   }
   .raymex-form-card select.form-control { color: #333; }
-  .raymex-form-card select.form-control option[disabled] { color: #999; }
-  .raymex-form-card select.form-control:invalid { color: #999; }
+  .raymex-form-card select.form-control.placeholder { color: #999 !important; }
   .raymex-form-card .form-group { margin-bottom: 14px; }
   .raymex-form-card textarea.form-control { min-height: 80px; resize: vertical; }
   .raymex-form-card .btn-submit {
@@ -140,7 +139,7 @@
 
             <div class="form-group">
               <label class="field-label">Are you contacting us as? *</label>
-              <select name="contact_type" id="contact_type" class="form-control" required>
+              <select name="contact_type" id="contact_type" class="form-control placeholder" required>
                 <option value="" disabled selected>Are you contacting us as?</option>
                 <option value="End user">End user</option>
                 <option value="Family member or carer">Family member or carer</option>
@@ -189,5 +188,12 @@
 
 <script>
   $('#loaderOverlay').hide();
+  var sel = document.getElementById('contact_type');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      if (this.value) { this.classList.remove('placeholder'); }
+      else { this.classList.add('placeholder'); }
+    });
+  }
 </script>
 <script src="/catalog/view/javascript/form-ajax-validate.js"></script>
