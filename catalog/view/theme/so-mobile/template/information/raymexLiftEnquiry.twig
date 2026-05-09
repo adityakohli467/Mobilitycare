@@ -55,6 +55,9 @@
     width: 100%;
     margin-bottom: 0;
   }
+  .raymex-form-card select.form-control { color: #333; }
+  .raymex-form-card select.form-control option[disabled] { color: #999; }
+  .raymex-form-card select.form-control:invalid { color: #999; }
   .raymex-form-card .form-group { margin-bottom: 14px; }
   .raymex-form-card textarea.form-control { min-height: 80px; resize: vertical; }
   .raymex-form-card .btn-submit {
@@ -100,9 +103,6 @@
           <p>The <strong>RAYMEX&reg; Lift</strong> combines walking support with a powered <strong>elevating seat</strong> to help suitable users with standing, transfers and recovery from low positions.</p>
 
           <p>For people who remain mobile but need more support with daily movement, RAYMEX&reg; helps bridge the gap between a walker and a full hoist.</p>
-
-          {# Dummy image src — replace with actual product image #}
-          <img src="image/catalog/demo/raymex-lift.png" alt="RAYMEX® Lift - Portable Personal Lift and Mobility Walker" class="raymex-product-img">
 
           <p class="highlight">Enquire now to request product information, pricing or a demonstration.</p>
         </div>
@@ -168,7 +168,10 @@
           </div>
         </div>
 
-        {# 3) Trust points #}
+        {# 3) Product image #}
+        <img src="image/catalog/demo/raymex-lift.png" alt="RAYMEX® Lift - Portable Personal Lift and Mobility Walker" class="raymex-product-img" style="margin-top: 20px;">
+
+        {# 4) Trust points #}
         <ul class="raymex-trust-points" style="margin-top: 25px;">
           <li>Portable personal lift and mobility walker</li>
           <li>Powered elevating seat lowers to floor level and raises to 61 cm</li>
