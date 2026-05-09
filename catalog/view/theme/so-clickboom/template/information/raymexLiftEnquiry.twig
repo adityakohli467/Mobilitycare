@@ -30,7 +30,18 @@
     background-repeat: no-repeat;
     background-position: center;
   }
-  .raymex-product-img { max-width: 100%; height: auto; margin: 20px 0; }
+  .raymex-product-img {
+    float: right;
+    max-width: 48%;
+    height: auto;
+    margin: 0 0 15px 20px;
+    shape-outside: margin-box;
+  }
+  .raymex-intro::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
 
   .raymex-form-card {
     background: #fff;
@@ -107,12 +118,11 @@
           <div class="raymex-intro">
             <h1><span>Need More Than</span><span>a Standard Walker?</span></h1>
 
+            <img src="image/catalog/demo/raymex-lift.png" alt="RAYMEX® Lift - Portable Personal Lift and Mobility Walker" class="raymex-product-img">
+
             <p>The <strong>RAYMEX&reg; Lift</strong> combines walking support with a powered <strong>elevating seat</strong> to help suitable users with standing, transfers and recovery from low positions.</p>
 
             <p>For people who remain mobile but need more support with daily movement, RAYMEX&reg; helps bridge the gap between a walker and a full hoist.</p>
-
-            {# Dummy image src — replace with actual product image #}
-            <img src="image/catalog/demo/raymex-lift.png" alt="RAYMEX® Lift - Portable Personal Lift and Mobility Walker" class="raymex-product-img">
 
             <p class="highlight">Enquire now to request product information, pricing or a demonstration.</p>
 
