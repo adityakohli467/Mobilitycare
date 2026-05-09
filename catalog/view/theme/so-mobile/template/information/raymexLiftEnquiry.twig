@@ -51,13 +51,15 @@
     border-radius: 6px;
     padding: 10px 12px;
     font-size: 14px;
-    color: #333;
+    color: #333 !important;
+    -webkit-text-fill-color: #333 !important;
     width: 100%;
     margin-bottom: 0;
   }
-  .raymex-form-card select.form-control { color: #333 !important; }
-  .raymex-form-card select.form-control.placeholder,
-  form select.form-control.placeholder { color: #999 !important; -webkit-text-fill-color: #999 !important; }
+  .raymex-form-card .form-control.placeholder {
+    color: #999 !important;
+    -webkit-text-fill-color: #999 !important;
+  }
   .raymex-form-card .form-group { margin-bottom: 14px; }
   .raymex-form-card textarea.form-control { min-height: 80px; resize: vertical; }
   .raymex-form-card .btn-submit {
