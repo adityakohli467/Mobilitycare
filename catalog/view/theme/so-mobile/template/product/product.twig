@@ -345,7 +345,7 @@ body.quote-modal-open .popup-marketing {
                                         
                                     </div>
 
-                                    {% if price %}
+                                    {% if price and show_price and show_price == 1 %}
                                         <div class="product_page_price price mt-5 mb-5" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
                                             {% if not special %}
                                                 <span class="price-new">

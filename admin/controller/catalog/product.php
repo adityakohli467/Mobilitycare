@@ -1041,6 +1041,14 @@ $data['placeholderFeaturedImage'] = $this->model_tool_image->resize('no_image.pn
           } else {
             $data['display_custom_quote'] = 0; // Default value
           }
+
+          if (isset($this->request->post['show_price'])) {
+           $data['show_price'] = $this->request->post['show_price'];
+          } elseif (!empty($product_info)) {
+           $data['show_price'] = $product_info['show_price'];
+          } else {
+            $data['show_price'] = 1; // Default ON
+          }
           
         if (isset($this->request->get['product_id']) && $this->request->server['REQUEST_METHOD'] != 'POST') {
          $product_features = $this->model_catalog_product->getProductFeatures($this->request->get['product_id']);

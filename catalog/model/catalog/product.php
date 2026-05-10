@@ -61,6 +61,7 @@ class ModelCatalogProduct extends Model {
 				'featured_image'       => $query->row['featured_image'],
 				'display_add_to_cart'  => $query->row['display_add_to_cart'],
 				'display_custom_quote' => $query->row['display_custom_quote'],
+				'show_price' => $query->row['show_price'],
 				'display_custom_quote_for_vehicle_mod' => $query->row['display_custom_quote_for_vehicle_mod'],
 				 
 				 'right_for_you' => $query->row['right_for_you'],

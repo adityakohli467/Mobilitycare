@@ -190,7 +190,7 @@
 							<div class="order-num">{{product.orders}}</div>
 							{% endif %}
 						</div>
-						{% if product.price %} 
+						{% if product.price and product.show_price and product.show_price == 1 %} 
 						<div class="price    {{ product.display_custom_quote }}">
 							{% if not product.special %} 
 								<span class="price">{{ product.price }} </span>

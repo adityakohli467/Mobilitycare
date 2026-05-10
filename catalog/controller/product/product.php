@@ -365,6 +365,7 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 			$data['short_description'] = $product_info['short_description'];
 			$data['display_add_to_cart'] = $product_info['display_add_to_cart'];
 			$data['display_custom_quote'] = $product_info['display_custom_quote'];
+			$data['show_price'] = $product_info['show_price'];
 			$data['display_custom_quote_for_vehicle_modification'] = $product_info['display_custom_quote_for_vehicle_mod'];
 
 			$data['text_minimum'] = sprintf($this->language->get('text_minimum'), $product_info['minimum']);

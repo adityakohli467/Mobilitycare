@@ -187,7 +187,7 @@
 
 					<h4><a href="{{ product.href }}" title="{{ product.name }}">{{ product.name }}</a></h4>
 
-					{% if product.price %} 
+					{% if product.price and product.show_price and product.show_price == 1 %} 
 					<div class="price hidden">
 						{% if not product.special %} 
 							<span class="price-new">{{ product.price }} </span>

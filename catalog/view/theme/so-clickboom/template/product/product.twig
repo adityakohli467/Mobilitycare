@@ -477,7 +477,7 @@
 								<div id="btn-addquestion"></div>
 							
  
-                    {% if price %}
+                    {% if price and show_price and show_price == 1 %}
 				{#========= Product - Price ========= #}
 				<div class="product_page_price price mt-5" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
 					{% if not special %}
