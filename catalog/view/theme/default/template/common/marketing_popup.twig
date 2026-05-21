@@ -94,9 +94,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           &times;
         </button>
-        <h4 class="modal-title">
-          Are you an Occupational Therapist<br>or Health Professional?
-        </h4>
+        <h4 class="modal-title" id="healthProModalTitle"></h4>
       </div>
 
     <div class="modal-body text-center">
@@ -172,6 +170,8 @@ $(document).ready(function () {
       return;
     }
     modalAlreadyShown = true;
+    // Inject heading text at show-time so crawlers/CallRail don't see it in static DOM
+    $('#healthProModalTitle').html('Are you an Occupational Therapist<br>or Health Professional?');
     $('#healthProModal').modal({
       backdrop: 'static',
       keyboard: false
