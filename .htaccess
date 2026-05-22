@@ -11,7 +11,7 @@ RewriteBase /
 
 ############################################################
 # Force www + HTTPS (canonical domain)
-# Redirect non-www Ã¢"�â€™ www and HTTP Ã¢"�â€™ HTTPS in one hop
+# Redirect non-www -> www and HTTP -> HTTPS in one hop
 ############################################################
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} !^www\. [NC]
@@ -19,7 +19,7 @@ RewriteRule ^(.*)$ https://www.mobilitycare.net.au/$1 [R=301,L]
 
 ############################################################
 # Remove trailing slash (canonical: no trailing slash)
-# IMPORTANT: Skip POST requests Ã¢â‚¬"� a 301 converts POSTÃ¢"�â€™GET, losing form data
+# IMPORTANT: Skip POST requests -- a 301 converts POST->GET, losing form data
 ############################################################
 RewriteCond %{REQUEST_METHOD} !POST
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -27,7 +27,7 @@ RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R=301,L]
 
 ############################################################
-# WordPress â†’ OpenCart Migration Redirects
+# WordPress -> OpenCart Migration Redirects
 # Generated from SEMRush + Google Search Console 404 data
 # Total: 470 x 301 redirects, 15 x 410 gone
 ############################################################
@@ -71,9 +71,9 @@ RewriteRule ^(.+)/1000$ /$1 [R=301,L]
 # --- Pattern: Strip /feed/ suffix (WordPress RSS remnant) ---
 RewriteRule ^(.+)/feed/?$ /$1 [R=301,L]
 
-# --- 301 Redirects: Old WordPress/document/image paths â†’ New OpenCart URLs ---
+# --- 301 Redirects: Old WordPress/document/image paths -> New OpenCart URLs ---
 
-# â†’ / (27 URLs)
+# -> / (27 URLs)
 RewriteRule ^documents/autochair-product-catalogue\.pdf/?$ / [R=301,L]
 RewriteRule ^product-tag/glaucoma/?$ / [R=301,L]
 RewriteRule ^top-9-independent-living-aids-for-people-with-limited-mobility-in-australia/?$ / [R=301,L]
@@ -102,7 +102,7 @@ RewriteRule ^web-support/?$ / [R=301,L]
 RewriteRule ^wp-content/uploads/australia-wide-distribution\.png/?$ / [R=301,L]
 RewriteRule ^wp-content/uploads/stairlifts-straight-curved\.jpg/?$ / [R=301,L]
 RewriteRule ^buy/ashley-hartz/?$ /buy/ashley-hartz-electric-recliner [R=301,L]
-# â†’ /buy/ashley-recliner-lift-chair (19 URLs)
+# -> /buy/ashley-recliner-lift-chair (19 URLs)
 RewriteRule ^_documents/ashely-electric-recliner-sizes-MobilityCare\.pdf/?$ /buy/ashley-recliner-lift-chair [R=301,L]
 RewriteRule ^_images/mobility_products/ashley-recliner-electric-chair\.jpg/?$ /buy/ashley-recliner-lift-chair [R=301,L]
 RewriteRule ^_images/mobility_products/ashley-recliner-l\.jpg/?$ /buy/ashley-recliner-lift-chair [R=301,L]
@@ -122,13 +122,13 @@ RewriteRule ^wp-content/uploads/garstone-durham-recliner\.jpg/?$ /buy/ashley-rec
 RewriteRule ^wp-content/uploads/meuris-recliner-chair\.jpg/?$ /buy/ashley-recliner-lift-chair [R=301,L]
 RewriteRule ^wp-content/uploads/queensbury-power-lift-recliner-chair-300x300\.jpg/?$ /buy/ashley-recliner-lift-chair [R=301,L]
 RewriteRule ^wp-content/uploads/standing-lifting-chair\.jpg/?$ /buy/ashley-recliner-lift-chair [R=301,L]
-# â†’ /buy/autochair-smart-lifter-lc (3 URLs)
+# -> /buy/autochair-smart-lifter-lc (3 URLs)
 RewriteRule ^documents/autochair-smart-lifter-lc-product-sheet\.pdf/?$ /buy/autochair-smart-lifter-lc [R=301,L]
 RewriteRule ^wp-content/uploads/autochair-smart-lifter-lc-product-sheet\.pdf/?$ /buy/autochair-smart-lifter-lc [R=301,L]
 RewriteRule ^wp-content/uploads/smartlifter-lc-hoist\.jpg/?$ /buy/autochair-smart-lifter-lc [R=301,L]
 RewriteRule ^wp-content/uploads/vehicle-hoist-for-light-scooters\.jpg/?$ /buy/autochair-smart-lifter-lm [R=301,L]
 RewriteRule ^wp-content/uploads/autochair-smart-lifter-lp\.jpg/?$ /buy/autochair-smart-lifter-lp [R=301,L]
-# â†’ /buy/autochair-smart-transfer (9 URLs)
+# -> /buy/autochair-smart-transfer (9 URLs)
 RewriteRule ^documents/toyota-rav4-milford-fitting-instructions\.pdf/?$ /buy/autochair-smart-transfer [R=301,L]
 RewriteRule ^wp-content/uploads/autochair-smart-transfer-vehicle\.jpg/?$ /buy/autochair-smart-transfer [R=301,L]
 RewriteRule ^wp-content/uploads/milford-smartbase-lift\.jpg/?$ /buy/autochair-smart-transfer [R=301,L]
@@ -138,15 +138,15 @@ RewriteRule ^wp-content/uploads/smart-transfer-person-lift\.jpg/?$ /buy/autochai
 RewriteRule ^wp-content/uploads/stairlifts-straight-curved-300x300\.jpg/?$ /buy/autochair-smart-transfer [R=301,L]
 RewriteRule ^wp-content/uploads/vehicle-independence-milford\.jpg/?$ /buy/autochair-smart-transfer [R=301,L]
 RewriteRule ^wp-content/uploads/vehicle-lift-for-passenger\.jpg/?$ /buy/autochair-smart-transfer [R=301,L]
-# â†’ /buy/instep-laser-cane (2 URLs)
+# -> /buy/instep-laser-cane (2 URLs)
 RewriteRule ^wp-content/uploads/laser-and-sound-cue-module-for-ustep\.jpg/?$ /buy/instep-laser-cane [R=301,L]
 RewriteRule ^wp-content/uploads/module-projecting-laser\.jpg/?$ /buy/instep-laser-cane [R=301,L]
-# â†’ /buy/lift-seat-home (3 URLs)
+# -> /buy/lift-seat-home (3 URLs)
 RewriteRule ^wp-content/uploads/battery-lifting-toilet-seat\.jpg/?$ /buy/lift-seat-home [R=301,L]
 RewriteRule ^wp-content/uploads/commode-chair-merits-c324\.jpg/?$ /buy/lift-seat-home [R=301,L]
 RewriteRule ^wp-content/uploads/mobile-power-toilet-aid\.jpg/?$ /buy/lift-seat-home [R=301,L]
 RewriteRule ^buy/benoit-systemes-light-drive/buy/light-assist/?$ /buy/light-assist-wheelchair-power-assist [R=301,L]
-# â†’ /buy/light-drive-wheelchair-power-assist (15 URLs)
+# -> /buy/light-drive-wheelchair-power-assist (15 URLs)
 RewriteRule ^buy/light-drive/?$ /buy/light-drive-wheelchair-power-assist [R=301,L]
 RewriteRule ^documents/lightdrive-2\.1-flyer\.pdf/?$ /buy/light-drive-wheelchair-power-assist [R=301,L]
 RewriteRule ^documents/lightdrive-brochure\.pdf/?$ /buy/light-drive-wheelchair-power-assist [R=301,L]
@@ -162,13 +162,13 @@ RewriteRule ^wp-content/uploads/light-drive-unit-attached-to-wheelchair\.jpg/?$ 
 RewriteRule ^wp-content/uploads/lightdrive-leaflet\.pdf/?$ /buy/light-drive-wheelchair-power-assist [R=301,L]
 RewriteRule ^wp-content/uploads/lightdrive-power-addon-600x600\.jpg/?$ /buy/light-drive-wheelchair-power-assist [R=301,L]
 RewriteRule ^wp-content/uploads/lightdrive-technical-mobilitycare\.pdf/?$ /buy/light-drive-wheelchair-power-assist [R=301,L]
-# â†’ /buy/mangar-camel (5 URLs)
+# -> /buy/mangar-camel (5 URLs)
 RewriteRule ^wp-content/uploads/lifting-cushion-mangar-camel-300x300\.jpg/?$ /buy/mangar-camel [R=301,L]
 RewriteRule ^wp-content/uploads/mangar-airflo24\.jpg/?$ /buy/mangar-camel [R=301,L]
 RewriteRule ^wp-content/uploads/mangar-camel-lift-fallen-person\.jpg/?$ /buy/mangar-camel [R=301,L]
 RewriteRule ^wp-content/uploads/mangar-camel-roll-person-onto-deflated-cushion\.jpg/?$ /buy/mangar-camel [R=301,L]
 RewriteRule ^wp-content/uploads/mangar-camel-rolls-up-for-compact-storage\.jpg/?$ /buy/mangar-camel [R=301,L]
-# â†’ /buy/mangar-elk-lifting-cushion (8 URLs)
+# -> /buy/mangar-elk-lifting-cushion (8 URLs)
 RewriteRule ^mangar-elk-camel-comparison/?$ /buy/mangar-elk-lifting-cushion [R=301,L]
 RewriteRule ^wp-content/uploads/Elk-lifestyle-carer-inflated2-grey-image\.jpg/?$ /buy/mangar-elk-lifting-cushion [R=301,L]
 RewriteRule ^wp-content/uploads/airflo-24-white\.jpg/?$ /buy/mangar-elk-lifting-cushion [R=301,L]
@@ -180,10 +180,10 @@ RewriteRule ^wp-content/uploads/mangar-elk\.jpg/?$ /buy/mangar-elk-lifting-cushi
 RewriteRule ^wp-content/uploads/pvi-multifold-ramp\.jpg/?$ /buy/pvi-multifold-ramp [R=301,L]
 RewriteRule ^wp-content/uploads/ontrac-solid-ramp-handrails\.jpg/?$ /buy/pvi-ontrac-solid-ramp [R=301,L]
 RewriteRule ^wp-content/uploads/threshold-ramp\.jpg/?$ /buy/pvi-threshold-ramp [R=301,L]
-# â†’ /buy/topro-neuro-for-parkinsons (2 URLs)
+# -> /buy/topro-neuro-for-parkinsons (2 URLs)
 RewriteRule ^buy/topro-neuro-walker/?$ /buy/topro-neuro-for-parkinsons [R=301,L]
 RewriteRule ^documents/topro-neuro-manual\.pdf/?$ /buy/topro-neuro-for-parkinsons [R=301,L]
-# â†’ /buy/topro-troja-5g-rollator (7 URLs)
+# -> /buy/topro-troja-5g-rollator (7 URLs)
 RewriteRule ^wp-content/uploads/drive-r8-rollator\.jpg/?$ /buy/topro-troja-5g-rollator [R=301,L]
 RewriteRule ^wp-content/uploads/gel-grip-handle-walking-stick\.jpg/?$ /buy/topro-troja-5g-rollator [R=301,L]
 RewriteRule ^wp-content/uploads/one-handed-brake-814026-1024x768\.jpg/?$ /buy/topro-troja-5g-rollator [R=301,L]
@@ -192,46 +192,46 @@ RewriteRule ^wp-content/uploads/topro-olympos-with-back-support-right-side\.jpg/
 RewriteRule ^wp-content/uploads/topro-troja-walker\.jpg/?$ /buy/topro-troja-5g-rollator [R=301,L]
 RewriteRule ^wp-content/uploads/topro-weather-test\.jpg/?$ /buy/topro-troja-5g-rollator [R=301,L]
 RewriteRule ^wp-content/uploads/topro-troja-forearm-gutter-walker-1\.jpg/?$ /buy/topro-troja-frame-walker [R=301,L]
-# â†’ /buy/trekinetic-gte-all-terrain-power-wheelchair (6 URLs)
+# -> /buy/trekinetic-gte-all-terrain-power-wheelchair (6 URLs)
 RewriteRule ^buy/trekinetic-gte-/?$ /buy/trekinetic-gte-all-terrain-power-wheelchair [R=301,L]
 RewriteRule ^buy/trekinetic-gte-power-wheelchair/?$ /buy/trekinetic-gte-all-terrain-power-wheelchair [R=301,L]
 RewriteRule ^documents/trekinetic-gte-land-rover-discovery-info-sheet\.pdf/?$ /buy/trekinetic-gte-all-terrain-power-wheelchair [R=301,L]
 RewriteRule ^documents/trekinetic-gte-user-manual\.pdf/?$ /buy/trekinetic-gte-all-terrain-power-wheelchair [R=301,L]
 RewriteRule ^wp-content/uploads/trekinetic-gte-brochure\.pdf/?$ /buy/trekinetic-gte-all-terrain-power-wheelchair [R=301,L]
 RewriteRule ^wp-content/uploads/trekinetic-gte-on-beach-sand-terrain\.jpg/?$ /buy/trekinetic-gte-all-terrain-power-wheelchair [R=301,L]
-# â†’ /buy/trekinetic-k2-all-terrain-manual-wheelchair (5 URLs)
+# -> /buy/trekinetic-k2-all-terrain-manual-wheelchair (5 URLs)
 RewriteRule ^documents/trekinetic-k2-user-manual\.pdf/?$ /buy/trekinetic-k2-all-terrain-manual-wheelchair [R=301,L]
 RewriteRule ^wp-content/uploads/Trekinetic-K2-Brochure-2022\.pdf/?$ /buy/trekinetic-k2-all-terrain-manual-wheelchair [R=301,L]
 RewriteRule ^wp-content/uploads/k2-kids-768x1024\.jpg/?$ /buy/trekinetic-k2-all-terrain-manual-wheelchair [R=301,L]
 RewriteRule ^wp-content/uploads/k2-wheelchair-downhill-gradients\.jpg/?$ /buy/trekinetic-k2-all-terrain-manual-wheelchair [R=301,L]
 RewriteRule ^wp-content/uploads/trekinetic-k2-outdoor-wheelchair\.jpg/?$ /buy/trekinetic-k2-all-terrain-manual-wheelchair [R=301,L]
-# â†’ /buy/u-step-walker-2 (6 URLs)
+# -> /buy/u-step-walker-2 (6 URLs)
 RewriteRule ^documents/u-step-walker2-mobilitycare\.pdf/?$ /buy/u-step-walker-2 [R=301,L]
 RewriteRule ^wp-content/uploads/2022-U-Step-August-RRP-Price-List\.pdf/?$ /buy/u-step-walker-2 [R=301,L]
 RewriteRule ^wp-content/uploads/2024-U-Step-RRP-Price-List-for-Website\.pdf/?$ /buy/u-step-walker-2 [R=301,L]
 RewriteRule ^wp-content/uploads/U-Step-Retail-Price-and-Price-List\.pdf/?$ /buy/u-step-walker-2 [R=301,L]
 RewriteRule ^wp-content/uploads/standard-ustep-walker-2-features\.jpg/?$ /buy/u-step-walker-2 [R=301,L]
 RewriteRule ^wp-content/uploads/u-step-walker-2-neurological\.jpg/?$ /buy/u-step-walker-2 [R=301,L]
-# â†’ /funding-support (4 URLs)
+# -> /funding-support (4 URLs)
 RewriteRule ^are-you-eligible-for-home-care-package/?$ /funding-support [R=301,L]
 RewriteRule ^dva-funding/?$ /funding-support [R=301,L]
 RewriteRule ^payment-options/?$ /funding-support [R=301,L]
 RewriteRule ^topro-rollator-advantage/?$ /funding-support [R=301,L]
-# â†’ /shop/boot-hoists-for-scooters-wheelchairs (3 URLs)
+# -> /shop/boot-hoists-for-scooters-wheelchairs (3 URLs)
 RewriteRule ^product-tag/smart-lifter-series/?$ /shop/boot-hoists-for-scooters-wheelchairs [R=301,L]
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/scooter-wheelchair-hoist-lift/?$ /shop/boot-hoists-for-scooters-wheelchairs [R=301,L]
 RewriteRule ^wp-content/uploads/mini-hoist-wheelchair\.jpg/?$ /shop/boot-hoists-for-scooters-wheelchairs [R=301,L]
-# â†’ /shop/chronic-conditions (3 URLs)
+# -> /shop/chronic-conditions (3 URLs)
 RewriteRule ^product-tag/epilepsy/?$ /shop/chronic-conditions [R=301,L]
 RewriteRule ^product-tag/multiple-sclerosis/?$ /shop/chronic-conditions [R=301,L]
 RewriteRule ^product-tag/stroke-rehab-products/?$ /shop/chronic-conditions [R=301,L]
-# â†’ /shop/electric-toilet-commode-lift-seats (5 URLs)
+# -> /shop/electric-toilet-commode-lift-seats (5 URLs)
 RewriteRule ^shop/toileting/?$ /shop/electric-toilet-commode-lift-seats [R=301,L]
 RewriteRule ^buy/mobile-power-toilet-aid/?$ /shop/electric-toilet-commode-lift-seats [R=301,L]
 RewriteRule ^documents/lift-seat-brochure_\.pdf/?$ /shop/electric-toilet-commode-lift-seats [R=301,L]
 RewriteRule ^documents/stand-aid-of-iowa-pricelist-mobilitycare\.pdf/?$ /shop/electric-toilet-commode-lift-seats [R=301,L]
 RewriteRule ^wp-content/uploads/lift-seat-brochure_\.pdf/?$ /shop/electric-toilet-commode-lift-seats [R=301,L]
-# â†’ /shop/emergency-aids (20 URLs)
+# -> /shop/emergency-aids (20 URLs)
 RewriteRule ^shop/disabled-emergency-aids/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^shop/mobility-aids/lifting-transfer-aids/disabled-emergency-aids/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^wp-content/uploads/evacusafe\.jpg/?$ /shop/emergency-aids [R=301,L]
@@ -253,13 +253,13 @@ RewriteRule ^wp-content/uploads/excel-chair-evacuation-child\.jpg/?$ /shop/emerg
 RewriteRule ^wp-content/uploads/excel-evacusafe-chair\.jpg/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^wp-content/uploads/falls-management-prevention-brochure-mobilitycare\.pdf/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^shop/mobility-aids/mobility-aids-specials/?$ /shop/featured-products [R=301,L]
-# â†’ /shop/inclusion-body-myositis (2 URLs)
+# -> /shop/inclusion-body-myositis (2 URLs)
 RewriteRule ^product-tag/myositis/?$ /shop/inclusion-body-myositis [R=301,L]
 RewriteRule ^product-tag/myositis/feed/?$ /shop/inclusion-body-myositis [R=301,L]
-# â†’ /shop/lift-chairs-recliners (2 URLs)
+# -> /shop/lift-chairs-recliners (2 URLs)
 RewriteRule ^documents/topform-luxor-brochure\.pdf/?$ /shop/lift-chairs-recliners [R=301,L]
 RewriteRule ^wp-content/uploads/2024-Topform-Price-List-MobilityCare\.pdf/?$ /shop/lift-chairs-recliners [R=301,L]
-# â†’ /shop/lifting-transfer-aids (7 URLs)
+# -> /shop/lifting-transfer-aids (7 URLs)
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/transfer-lifting-hoists/?$ /shop/lifting-transfer-aids [R=301,L]
 RewriteRule ^shop/transfer-lifting-hoists/?$ /shop/lifting-transfer-aids [R=301,L]
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/disabled-emergency-aids/?$ /shop/lifting-transfer-aids [R=301,L]
@@ -267,7 +267,7 @@ RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/patient-lift-hoist-sling
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/patient-lifts-hoists/?$ /shop/lifting-transfer-aids [R=301,L]
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/ramps/?$ /shop/lifting-transfer-aids [R=301,L]
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/wheelchair-occupant-restraints/?$ /shop/lifting-transfer-aids [R=301,L]
-# â†’ /shop/mobility-aids (131 URLs)
+# -> /shop/mobility-aids (131 URLs)
 RewriteRule ^_images/mobility_products/merits-bath-lift-seat-foldup\.jpg/?$ /shop/mobility-aids [R=301,L]
 RewriteRule ^buy/drive-bellavita/?$ /shop/mobility-aids [R=301,L]
 RewriteRule ^shop/mobility-aids/bedroom-aids/?$ /shop/mobility-aids [R=301,L]
@@ -399,19 +399,19 @@ RewriteRule ^wp-content/uploads/woos_search_engine_cache/?$ /shop/mobility-aids 
 RewriteRule ^wp-content/uploads/wp-less/?$ /shop/mobility-aids [R=301,L]
 RewriteRule ^wp-content/uploads/wp-less/healthflex/assets/?$ /shop/mobility-aids [R=301,L]
 RewriteRule ^wp-content/uploads/wp-less/healthflex/assets/less/?$ /shop/mobility-aids [R=301,L]
-# â†’ /shop/patient-lifts-hoists (5 URLs)
+# -> /shop/patient-lifts-hoists (5 URLs)
 RewriteRule ^shop/mobility-aids/lifts-hoists/patient-lift-hoist-sling/?$ /shop/patient-lifts-hoists [R=301,L]
 RewriteRule ^shop/mobility-aids/patient-lift-hoist-sling/?$ /shop/patient-lifts-hoists [R=301,L]
 RewriteRule ^product-tag/invacare/?$ /shop/patient-lifts-hoists [R=301,L]
 RewriteRule ^wp-content/uploads/birdie-compact-150kg-hoist\.jpg/?$ /shop/patient-lifts-hoists [R=301,L]
 RewriteRule ^wp-content/uploads/invacare-birdie-evo-hoist\.jpg/?$ /shop/patient-lifts-hoists [R=301,L]
-# â†’ /shop/portable-ramps (5 URLs)
+# -> /shop/portable-ramps (5 URLs)
 RewriteRule ^buy/invacare-senior-ramp/?$ /shop/portable-ramps [R=301,L]
 RewriteRule ^mobility_products/excellent-system-ramp-modules\.html/?$ /shop/portable-ramps [R=301,L]
 RewriteRule ^wp-content/uploads/2022-PVI-Ramp-RRP-Price-List-Effective-SEPT-2022-1\.pdf/?$ /shop/portable-ramps [R=301,L]
 RewriteRule ^wp-content/uploads/2022-PVI-Ramp-RRP-Price-List-Effective-SEPT-2022\.pdf/?$ /shop/portable-ramps [R=301,L]
 RewriteRule ^wp-content/uploads/2022-PVI-Ramp-RRP-Price-List_MAY-1\.pdf/?$ /shop/portable-ramps [R=301,L]
-# â†’ /shop/power-assist-wheelchairs (21 URLs)
+# -> /shop/power-assist-wheelchairs (21 URLs)
 RewriteRule ^buy/alber-twion-m24/?$ /shop/power-assist-wheelchairs [R=301,L]
 RewriteRule ^documents/alber-pricelist-mobilitycare\.pdf/?$ /shop/power-assist-wheelchairs [R=301,L]
 RewriteRule ^wp-content/uploads/alber-efix-e35-e36-power-assistance\.jpg/?$ /shop/power-assist-wheelchairs [R=301,L]
@@ -433,7 +433,7 @@ RewriteRule ^wp-content/uploads/smartdrive-mx2\.jpg/?$ /shop/power-assist-wheelc
 RewriteRule ^wp-content/uploads/smartdrive-power-assist-unit\.jpg/?$ /shop/power-assist-wheelchairs [R=301,L]
 RewriteRule ^wp-content/uploads/smartdrive-power-assist\.jpg/?$ /shop/power-assist-wheelchairs [R=301,L]
 RewriteRule ^wp-content/uploads/smartdrive-power-assistance-for-wheelchairs\.jpg/?$ /shop/power-assist-wheelchairs [R=301,L]
-# â†’ /shop/rollators-walking-frames (20 URLs)
+# -> /shop/rollators-walking-frames (20 URLs)
 RewriteRule ^shop/mobility-aids/rollators-walkers-walking-aids/rollators-walking-frames/?$ /shop/rollators-walking-frames [R=301,L]
 RewriteRule ^shop/mobility-aids/walking-aids/rollators-walking-frames/?$ /shop/rollators-walking-frames [R=301,L]
 RewriteRule ^shop/rollators-walkers-walking-aids/?$ /shop/rollators-walking-frames [R=301,L]
@@ -455,7 +455,7 @@ RewriteRule ^u-step-walker-2-enquiry/?$ /shop/rollators-walking-frames [R=301,L]
 RewriteRule ^wp-content/uploads/2022-TOPRO-Price-List-RRP-Effective-1st-October-2022\.pdf/?$ /shop/rollators-walking-frames [R=301,L]
 RewriteRule ^wp-content/uploads/2024-Topro-RRP-Price-List-For-Website\.pdf/?$ /shop/rollators-walking-frames [R=301,L]
 RewriteRule ^shop/mobility-aids/transfer-lifting-hoists/scooter-wheelchair-hoist-lift/feed/?$ /shop/scooter-wheelchair-hoist-lift [R=301,L]
-# â†’ /shop/vehicle-access-and-modifications (35 URLs)
+# -> /shop/vehicle-access-and-modifications (35 URLs)
 RewriteRule ^shop/mobility-aids/vehicle-access-and-modifications/feed/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^amf/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^amf-/?$ /shop/vehicle-access-and-modifications [R=301,L]
@@ -492,7 +492,7 @@ RewriteRule ^wp-content/uploads/futuresafe-head-backrest-for-vehicle-300x300\.jp
 RewriteRule ^wp-content/uploads/protektor-silver-series-1024x576\.jpg/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^wp-content/uploads/vehicle-access-modification\.pdf/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^shop/mobility-aids/walking-aids/?$ /shop/walking-aids [R=301,L]
-# â†’ /shop/wheelchairs (13 URLs)
+# -> /shop/wheelchairs (13 URLs)
 RewriteRule ^_documents/kuschall-wheelchair-MobilityCare\.pdf/?$ /shop/wheelchairs [R=301,L]
 RewriteRule ^_documents/standing-wheelchair-frames-solutions-MobilityCare\.pdf/?$ /shop/wheelchairs [R=301,L]
 RewriteRule ^_images/mobility_products/roho-quadtro-mid-profile\.jpg/?$ /shop/wheelchairs [R=301,L]
@@ -626,7 +626,7 @@ RewriteRule ^index\.php$ /customer-service/? [R=301,L,QSD]
 
 RewriteRule ^sitemap\.xml$ index.php?route=extension/feed/google_sitemap [L,QSA]
 
-# 404 fix: /mangar-lifting-cushion Ã¢"�â€™ correct manufacturer URL
+# 404 fix: /mangar-lifting-cushion -> correct manufacturer URL
 RewriteRule ^mangar-lifting-cushion/?$ /shop/mangar-lifting-cushion [R=301,L]
 
 # Redirect old topro product tag URLs
@@ -662,28 +662,28 @@ RewriteCond %{REQUEST_URI} ^/buy/topro-olympos-offroad-rollator/?$ [NC]
 RewriteRule ^.*$ /buy/topro-olympos-all-terrain-offroader-rollator? [R=301,L]
 
 
-# Topro Olympos Offroad Rollator Ã¢"�â€™ All Terrain Offroader
+# Topro Olympos Offroad Rollator -> All Terrain Offroader
 RewriteCond %{REQUEST_URI} ^/buy/topro-olympos-offroad-rollator/?$ [NC]
 RewriteRule ^.*$ /buy/topro-olympos-all-terrain-offroader-rollator? [R=301,L]
 
-# Topro Troja Forearm Gutter Frame Walker Ã¢"�â€™ New URL
+# Topro Troja Forearm Gutter Frame Walker -> New URL
 RewriteCond %{REQUEST_URI} ^/buy/topro-troja-forearm-gutter-frame-walker/?$ [NC]
 RewriteRule ^.*$ /buy/topro-troja-frame-walker? [R=301,L]
 
-# OnTrac Solid Ramp Ã¢"�â€™ PVI OnTrac Solid Ramp
+# OnTrac Solid Ramp -> PVI OnTrac Solid Ramp
 RewriteCond %{REQUEST_URI} ^/buy/ontrac-solid-ramp/?$ [NC]
 RewriteRule ^.*$ /buy/pvi-ontrac-solid-ramp? [R=301,L]
 
-# AL1 Panorama Linearlift Ã¢"�â€™ AMF Bruns AL1 Panorama Linearlift
+# AL1 Panorama Linearlift -> AMF Bruns AL1 Panorama Linearlift
 RewriteCond %{REQUEST_URI} ^/buy/al1-panorama-linearlift/?$ [NC]
 RewriteRule ^.*$ /buy/amf-bruns-al1-panorama-linearlift? [R=301,L]
 
-# Light Assist Ã¢"�â€™ Light Assist Wheelchair Power Assist
+# Light Assist -> Light Assist Wheelchair Power Assist
 RewriteCond %{REQUEST_URI} ^/buy/light-assist/?$ [NC]
 RewriteRule ^.*$ /buy/light-assist-wheelchair-power-assist? [R=301,L]
  
 
-# Redirect old Topro manufacturer URL (ID=12) Ã¢"�â€™ new SEO URL
+# Redirect old Topro manufacturer URL (ID=12) -> new SEO URL
 
 
 
@@ -703,7 +703,7 @@ RewriteRule ^index\.php$ /shop/u-step-parkinsons-walker? [R=301,L]
 RewriteCond %{QUERY_STRING} ^route=product/manufacturer/info(&|&amp;)manufacturer_id=14$ [NC]
 RewriteRule ^index\.php$ /shop/benoit-systemes-light-drive? [R=301,L]
 
-# Redirect old Trekinetic manufacturer URL (ID=15) Ã¢"�â€™ new SEO URL
+# Redirect old Trekinetic manufacturer URL (ID=15) -> new SEO URL
 RewriteCond %{QUERY_STRING} ^route=product/manufacturer/info(&|&amp;)manufacturer_id=15$ [NC]
 RewriteRule ^index\.php$ /shop/trekinetic-gte-all-terrain-power-wheelchair? [R=301,L]
 
@@ -731,14 +731,14 @@ RewriteRule ^featured-products/?$ index.php?route=product/category&path=101 [L,Q
 # Document / PDF Viewer (SEO-friendly download URLs)
 RewriteRule ^documents/([a-zA-Z0-9_-]+)-([0-9]+)/?$ index.php?route=product/product/viewDocument&download_id=$2 [L,QSA]
 
-# Canonical redirect: old download URLs Ã¢"�â€™ SEO-friendly /documents/ URLs
-# (handled by the controller Ã¢â‚¬"� old URLs still work as raw PDF stream)
+# Canonical redirect: old download URLs -> SEO-friendly /documents/ URLs
+# (handled by the controller -> old URLs still work as raw PDF stream)
 
 RewriteRule ^brands/?$ index.php?route=product/manufacturer&path=101 [L,QSA]
 
 
 ############################################################
-# 301 Redirects: Old Category URLs Ã¢"�â€™ New URLs (SEO migration)
+# 301 Redirects: Old Category URLs -> New URLs (SEO migration)
 ############################################################
 # Lift Chairs & Recliners (was 1,085 clicks/quarter)
 RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/lift-chairs-recliners/?$ [NC]
@@ -748,7 +748,7 @@ RewriteRule ^.*$ /shop/lift-chairs-recliners? [R=301,L]
 RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/wheelchairs/?$ [NC]
 RewriteRule ^.*$ /shop/wheelchairs? [R=301,L]
 
-# Duplicate content fix: /wheelchairs Ã¢"�â€™ /shop/wheelchairs
+# Duplicate content fix: /wheelchairs -> /shop/wheelchairs
 RewriteCond %{REQUEST_URI} ^/wheelchairs/?$ [NC]
 RewriteRule ^.*$ /shop/wheelchairs? [R=301,L]
 
@@ -773,7 +773,7 @@ RewriteCond %{REQUEST_URI} ^/shop/mobility-aids/pressure-care/?$ [NC]
 RewriteRule ^.*$ /shop/pressure-care? [R=301,L]
 
 ############################################################
-# Correct Old Ã¢"�â€™ New Redirects for Static Pages (301)
+# Correct Old -> New Redirects for Static Pages (301)
 ############################################################
 
 # about-us
@@ -796,7 +796,7 @@ RewriteRule ^index\.php$ /delivery-information? [R=301,L]
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/information&information_id=7[\s?] [NC]
 RewriteRule ^index\.php$ /demo-videos? [R=301,L]
 
-# faq Ã¢"�â€™ customer-service (duplicate eliminated)
+# faq -> customer-service (duplicate eliminated)
 # (redirect already handled above in rewrite rules)
 
 # blog
@@ -814,7 +814,7 @@ RewriteRule ^index\.php$ /blog/%1? [R=301,L]
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=product/category&path=101[\s?] [NC]
 RewriteRule ^index\.php$ /featured-products? [R=301,L]
 
-# Mobility Aids category (path=63) Ã¢"�â€™ SEO URL
+# Mobility Aids category (path=63) -> SEO URL
 RewriteCond %{QUERY_STRING} ^route=product/category&path=63$ [NC]
 RewriteRule ^index\.php$ /shop/mobility-aids? [R=301,L]
 
@@ -846,7 +846,7 @@ RewriteRule ^index\.php$ /checkout [R=301,L,QSD]
 
 
 
-# Canonical redirect: place order success Ã¢"�â€™ /thankyou
+# Canonical redirect: place order success -> /thankyou
 # Serve thankyou page
 RewriteRule ^thank-you-order/?$ index.php?route=checkout/success [L,QSA]
 
@@ -854,7 +854,7 @@ RewriteCond %{THE_REQUEST} \s/index\.php\?route=checkout/success[\s&] [NC]
 RewriteRule ^index\.php$ /thank-you-order [R=301,L,QSD]
 
 
-# Canonical redirect: contact_success Ã¢"�â€™ /thankyou
+# Canonical redirect: contact_success -> /thankyou
 # Serve thankyou page
 RewriteRule ^thank-you-contact/?$ index.php?route=information/contact_success [L,QSA]
 
