@@ -12,6 +12,7 @@ admin/config.php
 # Log files
 *.log
 error_log
+admin/error_log
 
 # Cache directories
 image/cache/
