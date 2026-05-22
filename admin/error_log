@@ -4538,3 +4538,8 @@ For suitable users, it can reduce reliance on hands on lifting assistance from f
     [image] => catalog/productSpecification/spec-1754217994.jpeg
 )
 
+[22-May-2026 10:56:40 UTC] ENTRY: admin/index.php hit at 10:56:40 | METHOD: GET | URI: /admin/ | Content-Length: 0
+[22-May-2026 10:56:42 UTC] ENTRY: admin/index.php hit at 10:56:42 | METHOD: POST | URI: /admin/index.php?route=common/login | Content-Length: 252
+[22-May-2026 10:56:43 UTC] ENTRY: admin/index.php hit at 10:56:43 | METHOD: GET | URI: /admin/index.php?route=common/dashboard&user_token=9k1SPDJtD5KRcggkHBZjnis7NGLJaMbm | Content-Length: 0
+[22-May-2026 10:56:43 UTC] ENTRY: admin/index.php hit at 10:56:43 | METHOD: GET | URI: /admin/index.php?route=extension/dashboard/chart/chart&user_token=9k1SPDJtD5KRcggkHBZjnis7NGLJaMbm&range=month | Content-Length: 0
+[22-May-2026 10:56:43 UTC] ENTRY: admin/index.php hit at 10:56:43 | METHOD: GET | URI: /admin/index.php?route=extension/dashboard/map/map&user_token=9k1SPDJtD5KRcggkHBZjnis7NGLJaMbm | Content-Length: 0
