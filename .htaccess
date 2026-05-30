@@ -245,7 +245,7 @@ RewriteRule ^documents/mangar-safe-patient-lifting-brochure\.pdf/?$ /shop/emerge
 RewriteRule ^emergency-evacuation/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^falls-management-prevention/feed/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^mangar-health-wins-award/?$ /shop/emergency-aids [R=301,L]
-RewriteRule ^mangar-lifting-cushion/?$ /shop/emergency-aids [R=301,L]
+RewriteRule ^mangar-lifting-cushion/?$ /shop/mangar-lifting-cushion [R=301,L]
 RewriteRule ^product-tag/mangar/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^product-tag/mangar/feed/?$ /shop/emergency-aids [R=301,L]
 RewriteRule ^wp-content/uploads/Mangar-Lifting-Cushion-Brochure-2022_OCT22-\.pdf/?$ /shop/emergency-aids [R=301,L]
@@ -495,6 +495,10 @@ RewriteRule ^wp-content/uploads/futuresafe-head-backrest-for-vehicle-300x300\.jp
 RewriteRule ^wp-content/uploads/protektor-silver-series-1024x576\.jpg/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^wp-content/uploads/vehicle-access-modification\.pdf/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^shop/mobility-aids/walking-aids/?$ /shop/walking-aids [R=301,L]
+# Duplicate content fix: /walking-aids -> /shop/walking-aids
+RewriteRule ^walking-aids/?$ /shop/walking-aids [R=301,L]
+# Duplicate content fix: /vehicle-access-and-modifications -> /shop/vehicle-access-and-modifications
+RewriteRule ^vehicle-access-and-modifications/?$ /shop/vehicle-access-and-modifications [R=301,L]
 # -> /shop/wheelchairs (13 URLs)
 RewriteRule ^_documents/kuschall-wheelchair-MobilityCare\.pdf/?$ /shop/wheelchairs [R=301,L]
 RewriteRule ^_documents/standing-wheelchair-frames-solutions-MobilityCare\.pdf/?$ /shop/wheelchairs [R=301,L]
@@ -558,11 +562,8 @@ RewriteRule ^autochair-smart-lifter-enquiry/?$ index.php?route=information/autoc
 RewriteRule ^raymex-lift-enquiry/?$ index.php?route=information/raymexLiftEnquiry [L,QSA]
 RewriteRule ^request-local-dealer/?$ index.php?route=information/find_dealer_form [L,QSA]
 
-RewriteRule ^home/?$ index.php?route=extension/mobile/home [L,QSA]
-
-# Canonical redirect: mobile home URL
-RewriteCond %{THE_REQUEST} \s/index\.php\?route=extension/mobile/home[\s&] [NC]
-RewriteRule ^index\.php$ /home? [R=301,L,QSD]
+# Duplicate content fix: /home -> / (canonical homepage)
+RewriteRule ^home/?$ / [R=301,L]
 
 ############################################################
 # Canonical Redirects: Force SEO URLs for Information Pages
