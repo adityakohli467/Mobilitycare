@@ -15,8 +15,8 @@ $registry->set('log', $log);
 date_default_timezone_set($config->get('date_timezone'));
 
 set_error_handler(function($code, $message, $file, $line) use($log, $config) {
-	// error suppressed with @
-	if (error_reporting() === 0) {
+	// error suppressed with @ (PHP 8.0+ returns non-zero bitmask instead of 0)
+	if (!(error_reporting() & $code)) {
 		return false;
 	}
 
