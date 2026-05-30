@@ -1,6 +1,6 @@
 <?php
-// Error Reporting
-error_reporting(E_ALL);
+// Error Reporting (exclude deprecation notices from Twig 2.x on PHP 8.1)
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 // Check Version
 if (version_compare(phpversion(), '7.3.0', '<') == true) {
