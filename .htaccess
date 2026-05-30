@@ -562,8 +562,12 @@ RewriteRule ^autochair-smart-lifter-enquiry/?$ index.php?route=information/autoc
 RewriteRule ^raymex-lift-enquiry/?$ index.php?route=information/raymexLiftEnquiry [L,QSA]
 RewriteRule ^request-local-dealer/?$ index.php?route=information/find_dealer_form [L,QSA]
 
-# Duplicate content fix: /home -> / (canonical homepage)
-RewriteRule ^home/?$ / [R=301,L]
+# Mobile home page (serves different content layout for mobile devices)
+RewriteRule ^home/?$ index.php?route=extension/mobile/home [L,QSA]
+
+# Canonical redirect: direct access to ugly URL -> /home
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=extension/mobile/home[\s&] [NC]
+RewriteRule ^index\.php$ /home? [R=301,L,QSD]
 
 ############################################################
 # Canonical Redirects: Force SEO URLs for Information Pages
