@@ -98,6 +98,25 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
 
 		parse_str($url_info['query'], $data);
 
+		// Handle common/home -> root URL
+		if (isset($data['route']) && $data['route'] == 'common/home') {
+			unset($data['route']);
+
+			$query = '';
+
+			if ($data) {
+				foreach ($data as $key => $value) {
+					$query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((is_array($value) ? http_build_query($value) : (string)$value));
+				}
+
+				if ($query) {
+					$query = '?' . str_replace('&', '&amp;', trim($query, '&'));
+				}
+			}
+
+			return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . '/' . $query;
+		}
+
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
 				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {
