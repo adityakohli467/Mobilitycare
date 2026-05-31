@@ -100,6 +100,13 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			$output .= '</urlset>';
 
+			// Fix incorrect sitemap URLs
+			$output = str_replace(
+				'https://www.mobilitycare.net.au/mangar-lifting-cushion',
+				'https://www.mobilitycare.net.au/shop/mangar-lifting-cushion',
+				$output
+			);
+
 			$this->response->addHeader('Content-Type: application/xml');
 			$this->response->setOutput($output);
 		}
