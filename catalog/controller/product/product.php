@@ -33,9 +33,15 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
     if ($product_info) {
         // Build category breadcrumbs by walking up the parent chain
         $category_id = 0;
-        $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-        if ($categories) {
-            $category_id = end($categories)['category_id'];
+        if (isset($this->request->get['cpath'])) {
+            // Use the category the user navigated from
+            $category_id = (int)$this->request->get['cpath'];
+        } else {
+            // Fallback: use last assigned category
+            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
+            if ($categories) {
+                $category_id = end($categories)['category_id'];
+            }
         }
 
         if ($category_id) {
