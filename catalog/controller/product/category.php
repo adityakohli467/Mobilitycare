@@ -63,12 +63,20 @@ class ControllerProductCategory extends Controller {
                 if ($temp_info) {
                     array_unshift($parent_chain, array(
                         'category_id' => (int)$temp_id,
-                        'name' => $temp_info['name']
+                        'name' => $temp_info['name'],
+                        'parent_id' => (int)$temp_info['parent_id']
                     ));
                     $temp_id = $temp_info['parent_id'];
                 } else {
                     break;
                 }
+            }
+
+            // Skip root-level wrapper categories (parent_id=0) from breadcrumbs
+            // These are grouping categories like "Mobility Aids" whose children
+            // are primary top-level navigation items shown in the menu
+            if (!empty($parent_chain) && $parent_chain[0]['parent_id'] == 0) {
+                array_shift($parent_chain);
             }
 
             // Add parent categories as breadcrumbs
