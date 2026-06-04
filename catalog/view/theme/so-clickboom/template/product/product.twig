@@ -1533,26 +1533,6 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="form-group required">
-                <label for="demo_type">Choose Your Demo Type *</label>
-                <select name="demo_type" id="demo_type" class="form-control" required>
-                  <option value="" disabled selected>Choose Your Demo Type *</option>
-                  <option value="In-Store">In-Store Demo</option>
-                  <option value="Virtual">Virtual Demo</option>
-                  <option value="Dealer">Dealer Network Demo</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-sm-6" id="dealer_details" style="display: none;">
-              <div class="form-group">
-                <label for="dealer_name">Dealer Name (if applicable)</label>
-                <input type="text" name="dealer_name" id="dealer_name" class="form-control" placeholder="Dealer Name (if applicable)">
-              </div>
-            </div>
-          </div>
           {#.. show only for autochair products#}
          {% set car_products = [79, 67, 115, 116, 117] %}
 
@@ -2153,14 +2133,6 @@ $(document).ready(function () {
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#demo_type').on('change', function() {
-        if ($(this).val() === 'Dealer') {
-            $('#dealer_details').show();
-        } else {
-            $('#dealer_details').hide();
-        }
-    });
-    
     // review modal Js code :
     
      $('.star-label').on('click', function() {
