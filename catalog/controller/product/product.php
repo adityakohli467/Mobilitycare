@@ -64,20 +64,24 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
                 $category_info = $this->model_catalog_category->getCategory($category_id);
             }
 
-            // Build category hierarchy from parent chain, skipping root wrapper category
+            // Build category hierarchy from parent chain
             if ($category_info) {
                 $full_path = $this->getFullCategoryPath($category_id);
 
                 if ($full_path) {
                     $parts = explode('_', $full_path);
 
-                    // Skip root parent category if path has 3+ levels
-                    // (root categories like "Mobility Aids" are wrapper categories
-                    // whose children are primary top-level navigation items)
+                    // Skip root parent category if path has 3+ levels,
+                    // UNLESS user navigated through that root category page
                     if (count($parts) >= 3) {
                         $first_cat = $this->model_catalog_category->getCategory((int)$parts[0]);
                         if ($first_cat && !$first_cat['parent_id']) {
-                            array_shift($parts);
+                            // Only keep root if user explicitly visited it (tracked in session)
+                            $came_from_root = isset($this->session->data['breadcrumb_root_category']) 
+                                && (int)$this->session->data['breadcrumb_root_category'] == (int)$parts[0];
+                            if (!$came_from_root) {
+                                array_shift($parts);
+                            }
                         }
                     }
 

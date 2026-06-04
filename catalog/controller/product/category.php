@@ -83,6 +83,23 @@ class ControllerProductCategory extends Controller {
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
+            // Track navigation context for product breadcrumbs
+            if (!$category_info['parent_id']) {
+                // User explicitly visited a root category page (e.g., "Mobility Aids")
+                $this->session->data['breadcrumb_root_category'] = $category_id;
+            } else {
+                // If this is a direct child of root and user didn't come from root page, clear the flag
+                $parent_info = $this->model_catalog_category->getCategory($category_info['parent_id']);
+                if ($parent_info && !$parent_info['parent_id']) {
+                    // This is a second-level category (e.g., "Wheelchairs" under "Mobility Aids")
+                    // Only keep root flag if it matches the actual parent
+                    if (!isset($this->session->data['breadcrumb_root_category']) 
+                        || (int)$this->session->data['breadcrumb_root_category'] != (int)$category_info['parent_id']) {
+                        unset($this->session->data['breadcrumb_root_category']);
+                    }
+                }
+            }
+
             $this->document->setTitle($category_info['meta_title']);
             // Fallback meta description: use category name if meta_description is empty
             if (!empty($category_info['meta_description'])) {
