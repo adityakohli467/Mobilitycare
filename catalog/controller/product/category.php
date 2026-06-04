@@ -46,17 +46,6 @@ class ControllerProductCategory extends Controller {
         );
 
         if (isset($this->request->get['path'])) {
-            $url = '';
-            if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
-            }
-            if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
-            }
-            if (isset($this->request->get['limit'])) {
-                $url .= '&limit=' . $this->request->get['limit'];
-            }
-
             $parts = explode('_', (string)$this->request->get['path']);
             $category_id = (int)array_pop($parts);
         } else {
@@ -66,38 +55,28 @@ class ControllerProductCategory extends Controller {
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
-            // Track navigation trail in session
-            if (!$category_info['parent_id']) {
-                // User visited a root category (e.g., "Mobility Aids") - start new trail
-                $this->session->data['breadcrumb_trail'] = array((int)$category_id);
-            } else {
-                // Check if this category's parent is the last item in the trail
-                $trail = isset($this->session->data['breadcrumb_trail']) ? $this->session->data['breadcrumb_trail'] : array();
-                if (!empty($trail) && (int)end($trail) == (int)$category_info['parent_id']) {
-                    // Continuing navigation from parent - append to trail
-                    $this->session->data['breadcrumb_trail'][] = (int)$category_id;
+            // Build breadcrumbs by walking up the parent chain
+            $parent_chain = array();
+            $temp_id = $category_info['parent_id'];
+            while ($temp_id) {
+                $temp_info = $this->model_catalog_category->getCategory((int)$temp_id);
+                if ($temp_info) {
+                    array_unshift($parent_chain, array(
+                        'category_id' => (int)$temp_id,
+                        'name' => $temp_info['name']
+                    ));
+                    $temp_id = $temp_info['parent_id'];
                 } else {
-                    // New navigation flow (e.g., clicked menu directly) - start fresh
-                    $this->session->data['breadcrumb_trail'] = array((int)$category_id);
+                    break;
                 }
             }
 
-            // Build breadcrumbs from the trail (all items except last, which is current page)
-            $trail = $this->session->data['breadcrumb_trail'];
-            $cumulative_path = '';
-            for ($i = 0; $i < count($trail) - 1; $i++) {
-                if (!$cumulative_path) {
-                    $cumulative_path = (string)$trail[$i];
-                } else {
-                    $cumulative_path .= '_' . $trail[$i];
-                }
-                $parent_cat = $this->model_catalog_category->getCategory((int)$trail[$i]);
-                if ($parent_cat) {
-                    $data['breadcrumbs'][] = array(
-                        'text' => $parent_cat['name'],
-                        'href' => $this->url->link('product/category', 'path=' . $trail[$i])
-                    );
-                }
+            // Add parent categories as breadcrumbs
+            foreach ($parent_chain as $parent) {
+                $data['breadcrumbs'][] = array(
+                    'text' => $parent['name'],
+                    'href' => $this->url->link('product/category', 'path=' . $parent['category_id'])
+                );
             }
 
             // Add current category as last breadcrumb

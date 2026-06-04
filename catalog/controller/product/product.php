@@ -31,75 +31,36 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 
 
     if ($product_info) {
-        // Build category breadcrumbs from session navigation trail
-        $trail = isset($this->session->data['breadcrumb_trail']) ? $this->session->data['breadcrumb_trail'] : array();
-
-        // Check if the trail is relevant to this product
-        // (the product's category should match or be a child of the last trail item)
-        $trail_valid = false;
-        if (!empty($trail)) {
-            $last_trail_id = (int)end($trail);
-            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-            if ($categories) {
-                foreach ($categories as $cat_row) {
-                    if ((int)$cat_row['category_id'] == $last_trail_id) {
-                        $trail_valid = true;
-                        break;
-                    }
-                    // Also check if product's category is a child of last trail item
-                    $cat_info_check = $this->model_catalog_category->getCategory((int)$cat_row['category_id']);
-                    if ($cat_info_check && (int)$cat_info_check['parent_id'] == $last_trail_id) {
-                        $trail_valid = true;
-                        // Append this category to the trail for breadcrumb display
-                        $trail[] = (int)$cat_row['category_id'];
-                        break;
-                    }
-                }
-            }
+        // Build category breadcrumbs by walking up the parent chain
+        $category_id = 0;
+        $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
+        if ($categories) {
+            $category_id = end($categories)['category_id'];
         }
 
-        if ($trail_valid && !empty($trail)) {
-            // Use the session trail for breadcrumbs
-            foreach ($trail as $trail_id) {
-                $cat = $this->model_catalog_category->getCategory((int)$trail_id);
-                if ($cat) {
-                    $data['breadcrumbs'][] = array(
-                        'text' => $cat['name'],
-                        'href' => $this->url->link('product/category', 'path=' . $trail_id)
-                    );
+        if ($category_id) {
+            // Walk up parent chain to build full hierarchy
+            $parent_chain = array();
+            $temp_id = $category_id;
+            while ($temp_id) {
+                $temp_info = $this->model_catalog_category->getCategory((int)$temp_id);
+                if ($temp_info) {
+                    array_unshift($parent_chain, array(
+                        'category_id' => (int)$temp_id,
+                        'name' => $temp_info['name']
+                    ));
+                    $temp_id = $temp_info['parent_id'];
+                } else {
+                    break;
                 }
             }
-        } else {
-            // Fallback: build from parent chain (skip root wrapper category)
-            $category_id = 0;
-            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-            if ($categories) {
-                $category_id = end($categories)['category_id'];
-            }
 
-            if ($category_id) {
-                $full_path = $this->getFullCategoryPath($category_id);
-                if ($full_path) {
-                    $parts = explode('_', $full_path);
-
-                    // Skip root parent category if path has 3+ levels
-                    if (count($parts) >= 3) {
-                        $first_cat = $this->model_catalog_category->getCategory((int)$parts[0]);
-                        if ($first_cat && !$first_cat['parent_id']) {
-                            array_shift($parts);
-                        }
-                    }
-
-                    foreach ($parts as $path_id) {
-                        $cat = $this->model_catalog_category->getCategory($path_id);
-                        if ($cat) {
-                            $data['breadcrumbs'][] = array(
-                                'text' => $cat['name'],
-                                'href' => $this->url->link('product/category', 'path=' . $path_id)
-                            );
-                        }
-                    }
-                }
+            // Add all categories in the chain as breadcrumbs
+            foreach ($parent_chain as $cat_item) {
+                $data['breadcrumbs'][] = array(
+                    'text' => $cat_item['name'],
+                    'href' => $this->url->link('product/category', 'path=' . $cat_item['category_id'])
+                );
             }
         }
 
