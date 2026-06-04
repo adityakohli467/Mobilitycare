@@ -31,72 +31,71 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 
 
     if ($product_info) {
-        // Build category breadcrumbs based on navigation path
-        if (isset($this->request->get['path'])) {
-            // Use the path from the URL (reflects actual user navigation)
-            $path = '';
-            $parts = explode('_', (string)$this->request->get['path']);
+        // Build category breadcrumbs from session navigation trail
+        $trail = isset($this->session->data['breadcrumb_trail']) ? $this->session->data['breadcrumb_trail'] : array();
 
-            foreach ($parts as $path_id) {
-                if (!$path) {
-                    $path = (int)$path_id;
-                } else {
-                    $path .= '_' . (int)$path_id;
+        // Check if the trail is relevant to this product
+        // (the product's category should match or be a child of the last trail item)
+        $trail_valid = false;
+        if (!empty($trail)) {
+            $last_trail_id = (int)end($trail);
+            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
+            if ($categories) {
+                foreach ($categories as $cat_row) {
+                    if ((int)$cat_row['category_id'] == $last_trail_id) {
+                        $trail_valid = true;
+                        break;
+                    }
+                    // Also check if product's category is a child of last trail item
+                    $cat_info_check = $this->model_catalog_category->getCategory((int)$cat_row['category_id']);
+                    if ($cat_info_check && (int)$cat_info_check['parent_id'] == $last_trail_id) {
+                        $trail_valid = true;
+                        // Append this category to the trail for breadcrumb display
+                        $trail[] = (int)$cat_row['category_id'];
+                        break;
+                    }
                 }
+            }
+        }
 
-                $cat = $this->model_catalog_category->getCategory((int)$path_id);
+        if ($trail_valid && !empty($trail)) {
+            // Use the session trail for breadcrumbs
+            foreach ($trail as $trail_id) {
+                $cat = $this->model_catalog_category->getCategory((int)$trail_id);
                 if ($cat) {
                     $data['breadcrumbs'][] = array(
                         'text' => $cat['name'],
-                        'href' => $this->url->link('product/category', 'path=' . $path)
+                        'href' => $this->url->link('product/category', 'path=' . $trail_id)
                     );
                 }
             }
         } else {
-            // Fallback: find primary category for this product
+            // Fallback: build from parent chain (skip root wrapper category)
             $category_id = 0;
-            $category_info = [];
-
             $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-
             if ($categories) {
                 $category_id = end($categories)['category_id'];
-                $category_info = $this->model_catalog_category->getCategory($category_id);
             }
 
-            // Build category hierarchy from parent chain
-            if ($category_info) {
+            if ($category_id) {
                 $full_path = $this->getFullCategoryPath($category_id);
-
                 if ($full_path) {
                     $parts = explode('_', $full_path);
 
-                    // Skip root parent category if path has 3+ levels,
-                    // UNLESS user navigated through that root category page
+                    // Skip root parent category if path has 3+ levels
                     if (count($parts) >= 3) {
                         $first_cat = $this->model_catalog_category->getCategory((int)$parts[0]);
                         if ($first_cat && !$first_cat['parent_id']) {
-                            // Only keep root if user explicitly visited it (tracked in session)
-                            $came_from_root = isset($this->session->data['breadcrumb_root_category']) 
-                                && (int)$this->session->data['breadcrumb_root_category'] == (int)$parts[0];
-                            if (!$came_from_root) {
-                                array_shift($parts);
-                            }
+                            array_shift($parts);
                         }
                     }
 
-                    $cumulative_path = '';
                     foreach ($parts as $path_id) {
-                        if (!$cumulative_path) {
-                            $cumulative_path = $path_id;
-                        } else {
-                            $cumulative_path .= '_' . $path_id;
-                        }
                         $cat = $this->model_catalog_category->getCategory($path_id);
                         if ($cat) {
                             $data['breadcrumbs'][] = array(
                                 'text' => $cat['name'],
-                                'href' => $this->url->link('product/category', 'path=' . $cumulative_path)
+                                'href' => $this->url->link('product/category', 'path=' . $path_id)
                             );
                         }
                     }
