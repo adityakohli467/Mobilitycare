@@ -55,17 +55,16 @@ class ControllerProductCategory extends Controller {
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
-            // Track navigation context in session
+            // Track navigation context: detect if user navigated through a root category
             if (!$category_info['parent_id']) {
-                // User explicitly visited a root category page (e.g., "Mobility Aids")
+                // User is ON a root category page - set session flag
                 $this->session->data['breadcrumb_include_root'] = (int)$category_id;
+            } elseif (isset($this->request->get['rcid'])) {
+                // User clicked a subcategory link from a root category page
+                $this->session->data['breadcrumb_include_root'] = (int)$this->request->get['rcid'];
             } else {
-                // Non-root category: only keep root flag if user navigated here
-                // through the hierarchy (via subCategoryList links on category pages)
-                if (!isset($this->session->data['breadcrumb_from_hierarchy'])) {
-                    unset($this->session->data['breadcrumb_include_root']);
-                }
-                unset($this->session->data['breadcrumb_from_hierarchy']);
+                // User navigated directly (e.g., from top menu) - clear root flag
+                unset($this->session->data['breadcrumb_include_root']);
             }
 
             // Build breadcrumbs by walking up the parent chain
@@ -175,10 +174,18 @@ class ControllerProductCategory extends Controller {
                 );
                 $product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
+                // If current page is a root category, pass rcid so child pages know the navigation context
+                $sub_url = $url;
+                if (!$category_info['parent_id']) {
+                    $sub_url .= '&rcid=' . (int)$category_id;
+                } elseif (isset($this->request->get['rcid'])) {
+                    $sub_url .= '&rcid=' . (int)$this->request->get['rcid'];
+                }
+
                 $data['categories'][] = array(
                     'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
                     'thumb' => $image,
-                    'href' => $this->url->link('product/category/subCategoryList', 'path=' . $result['category_id'] . $url,true)
+                    'href' => $this->url->link('product/category', 'path=' . $result['category_id'] . $sub_url, true)
                 );
             }    
             }
@@ -442,9 +449,10 @@ class ControllerProductCategory extends Controller {
         
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
-        // Mark that user is navigating through category hierarchy
-        // (subCategoryList is only reached via links on category pages, not from top menu)
-        $this->session->data['breadcrumb_from_hierarchy'] = true;
+        // Pass rcid through if present
+        if (isset($this->request->get['rcid'])) {
+            $this->session->data['breadcrumb_include_root'] = (int)$this->request->get['rcid'];
+        }
 
         if ($category_info) {
             $this->document->setTitle($category_info['meta_title']);
@@ -464,6 +472,10 @@ class ControllerProductCategory extends Controller {
         
         // if category has no further subcat than check for products
         if(isset($allSubcats) && !empty($allSubcats)){
+          $rcid_param = '';
+          if (isset($this->request->get['rcid'])) {
+              $rcid_param = '&rcid=' . (int)$this->request->get['rcid'];
+          }
           foreach ($allSubcats as $result) {
 				$filter_data = array(
 					'filter_category_id'  => $result['category_id'],
@@ -472,7 +484,7 @@ class ControllerProductCategory extends Controller {
 
 				$data['categories'][] = array(
 					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
-					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url,true)
+					'href' => $this->url->link('product/category', 'path=' . $result['category_id'] . $rcid_param . $url, true)
 				);
 			}  
         }else{
