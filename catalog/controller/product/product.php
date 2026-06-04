@@ -56,9 +56,13 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
                 }
             }
 
-            // Skip root-level wrapper categories (parent_id=0) from breadcrumbs
+            // Skip root-level wrapper category UNLESS user navigated through it
             if (!empty($parent_chain) && $parent_chain[0]['parent_id'] == 0) {
-                array_shift($parent_chain);
+                $show_root = isset($this->session->data['breadcrumb_include_root'])
+                    && (int)$this->session->data['breadcrumb_include_root'] == (int)$parent_chain[0]['category_id'];
+                if (!$show_root) {
+                    array_shift($parent_chain);
+                }
             }
 
             // Add all categories in the chain as breadcrumbs

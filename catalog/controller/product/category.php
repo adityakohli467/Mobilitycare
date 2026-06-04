@@ -55,6 +55,19 @@ class ControllerProductCategory extends Controller {
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
+            // Track navigation context in session
+            if (!$category_info['parent_id']) {
+                // User explicitly visited a root category page (e.g., "Mobility Aids")
+                $this->session->data['breadcrumb_include_root'] = (int)$category_id;
+            } else {
+                // Non-root category: only keep root flag if user navigated here
+                // through the hierarchy (via subCategoryList links on category pages)
+                if (!isset($this->session->data['breadcrumb_from_hierarchy'])) {
+                    unset($this->session->data['breadcrumb_include_root']);
+                }
+                unset($this->session->data['breadcrumb_from_hierarchy']);
+            }
+
             // Build breadcrumbs by walking up the parent chain
             $parent_chain = array();
             $temp_id = $category_info['parent_id'];
@@ -72,11 +85,13 @@ class ControllerProductCategory extends Controller {
                 }
             }
 
-            // Skip root-level wrapper categories (parent_id=0) from breadcrumbs
-            // These are grouping categories like "Mobility Aids" whose children
-            // are primary top-level navigation items shown in the menu
+            // Skip root-level wrapper category UNLESS user navigated through it
             if (!empty($parent_chain) && $parent_chain[0]['parent_id'] == 0) {
-                array_shift($parent_chain);
+                $show_root = isset($this->session->data['breadcrumb_include_root'])
+                    && (int)$this->session->data['breadcrumb_include_root'] == (int)$parent_chain[0]['category_id'];
+                if (!$show_root) {
+                    array_shift($parent_chain);
+                }
             }
 
             // Add parent categories as breadcrumbs
@@ -426,7 +441,10 @@ class ControllerProductCategory extends Controller {
         $category_id = $this->request->get['path'];
         
         $category_info = $this->model_catalog_category->getCategory($category_id);
-        
+
+        // Mark that user is navigating through category hierarchy
+        // (subCategoryList is only reached via links on category pages, not from top menu)
+        $this->session->data['breadcrumb_from_hierarchy'] = true;
 
         if ($category_info) {
             $this->document->setTitle($category_info['meta_title']);
