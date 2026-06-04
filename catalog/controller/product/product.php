@@ -31,30 +31,70 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 
 
     if ($product_info) {
-        // Find category path for this product (primary category)
-        $category_id = 0;
-        $category_info = [];
+        // Build category breadcrumbs based on navigation path
+        if (isset($this->request->get['path'])) {
+            // Use the path from the URL (reflects actual user navigation)
+            $path = '';
+            $parts = explode('_', (string)$this->request->get['path']);
 
-        $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-       
-        if ($categories) {
-            $category_id = end($categories)['category_id']; // use last assigned category
-            $category_info = $this->model_catalog_category->getCategory($category_id);
-        }
+            foreach ($parts as $path_id) {
+                if (!$path) {
+                    $path = (int)$path_id;
+                } else {
+                    $path .= '_' . (int)$path_id;
+                }
 
-        // Build category hierarchy
-        if ($category_info) {
-            $path = $this->getFullCategoryPath($category_id);
-            
-            if ($path) {
-                $parts = explode('_', $path);
-                foreach ($parts as $path_id) {
-                    $cat = $this->model_catalog_category->getCategory($path_id);
-                    if ($cat) {
-                        $data['breadcrumbs'][] = array(
-                            'text' => $cat['name'],
-                            'href' => $this->url->link('product/category', 'path=' . $path_id)
-                        );
+                $cat = $this->model_catalog_category->getCategory((int)$path_id);
+                if ($cat) {
+                    $data['breadcrumbs'][] = array(
+                        'text' => $cat['name'],
+                        'href' => $this->url->link('product/category', 'path=' . $path)
+                    );
+                }
+            }
+        } else {
+            // Fallback: find primary category for this product
+            $category_id = 0;
+            $category_info = [];
+
+            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
+
+            if ($categories) {
+                $category_id = end($categories)['category_id'];
+                $category_info = $this->model_catalog_category->getCategory($category_id);
+            }
+
+            // Build category hierarchy from parent chain, skipping root wrapper category
+            if ($category_info) {
+                $full_path = $this->getFullCategoryPath($category_id);
+
+                if ($full_path) {
+                    $parts = explode('_', $full_path);
+
+                    // Skip root parent category if path has 3+ levels
+                    // (root categories like "Mobility Aids" are wrapper categories
+                    // whose children are primary top-level navigation items)
+                    if (count($parts) >= 3) {
+                        $first_cat = $this->model_catalog_category->getCategory((int)$parts[0]);
+                        if ($first_cat && !$first_cat['parent_id']) {
+                            array_shift($parts);
+                        }
+                    }
+
+                    $cumulative_path = '';
+                    foreach ($parts as $path_id) {
+                        if (!$cumulative_path) {
+                            $cumulative_path = $path_id;
+                        } else {
+                            $cumulative_path .= '_' . $path_id;
+                        }
+                        $cat = $this->model_catalog_category->getCategory($path_id);
+                        if ($cat) {
+                            $data['breadcrumbs'][] = array(
+                                'text' => $cat['name'],
+                                'href' => $this->url->link('product/category', 'path=' . $cumulative_path)
+                            );
+                        }
                     }
                 }
             }
