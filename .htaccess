@@ -30,6 +30,12 @@ RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R=301,L]
 
 ############################################################
+# Strip ?cpath= parameter (no longer used, prevents duplicate URLs)
+############################################################
+RewriteCond %{QUERY_STRING} ^cpath=[^&]*$ [NC]
+RewriteRule ^(.*)$ /$1? [R=301,L]
+
+############################################################
 # WordPress -> OpenCart Migration Redirects
 # Generated from SEMRush + Google Search Console 404 data
 # Total: 470 x 301 redirects, 15 x 410 gone
