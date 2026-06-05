@@ -8,6 +8,6 @@
 #}
  <ul class="breadcrumb">
                 {% for breadcrumb in breadcrumbs %}
-                <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                <li>{% if breadcrumb.href %}<a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>{% else %}{{ breadcrumb.text }}{% endif %}</li>
                 {% endfor %}
            </ul> 

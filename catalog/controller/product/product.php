@@ -33,14 +33,36 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
     if ($product_info) {
         // Build category breadcrumbs by walking up the parent chain
         $category_id = 0;
-        if (isset($this->request->get['cpath'])) {
-            // Use the category the user navigated from
-            $category_id = (int)$this->request->get['cpath'];
-        } else {
-            // Fallback: use last assigned category
+
+        // Detect category from HTTP Referer (user navigated from a category page)
+        if (isset($this->request->server['HTTP_REFERER'])) {
+            $referer = $this->request->server['HTTP_REFERER'];
+            $referer_path = parse_url($referer, PHP_URL_PATH);
+            if ($referer_path && preg_match('#^/shop/([^/]+)#', $referer_path, $matches)) {
+                $ref_keyword = $this->db->escape($matches[1]);
+                $ref_query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $ref_keyword . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+                if ($ref_query->num_rows) {
+                    $ref_parts = explode('=', $ref_query->row['query']);
+                    if ($ref_parts[0] == 'category_id') {
+                        // Verify this product actually belongs to that category
+                        $ref_cat_id = (int)$ref_parts[1];
+                        $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
+                        foreach ($categories as $cat) {
+                            if ((int)$cat['category_id'] == $ref_cat_id) {
+                                $category_id = $ref_cat_id;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$category_id) {
+            // Fallback: use first assigned category (primary)
             $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
             if ($categories) {
-                $category_id = end($categories)['category_id'];
+                $category_id = (int)$categories[0]['category_id'];
             }
         }
 
@@ -80,10 +102,10 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
             }
         }
 
-        // Finally, add product name
+        // Finally, add product name (no link - user is already on this page)
         $data['breadcrumbs'][] = array(
             'text' => $product_info['name'],
-            'href' => $this->url->link('product/product', 'product_id=' . $product_id)
+            'href' => ''
         );
     }
 }
