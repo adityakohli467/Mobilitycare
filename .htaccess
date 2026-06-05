@@ -35,6 +35,9 @@ RewriteRule ^ %1 [R=301,L]
 # Total: 470 x 301 redirects, 15 x 410 gone
 ############################################################
 
+# --- Product URL redirects ---
+RewriteRule ^buy/in-step-laser-cane$ /buy/instep-laser-cane [R=301,L]
+
 # --- 301 Redirects: /1000 URLs with specific destinations (BEFORE patterns) ---
 RewriteRule ^amf-bruns-world-innovators-in-wheelchair-occupant-restraints-for-vehicles//1000/?$ /shop/vehicle-access-and-modifications [R=301,L]
 RewriteRule ^amf-bruns-world-innovators-in-wheelchair-occupant-restraints-for-vehicles/1000/?$ /shop/vehicle-access-and-modifications [R=301,L]
