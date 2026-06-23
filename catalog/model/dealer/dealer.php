@@ -14,8 +14,18 @@ class ModelDealerDealer extends Model {
         $preferred_category_names = implode(', ', $category_names);
     }
     
+    // Automatically geocode the address so the dealer appears on the frontend map/search
+    $coords = $this->geocodeDealerAddress(
+        isset($data['business_address']) ? $data['business_address'] : '',
+        isset($data['suburb']) ? $data['suburb'] : '',
+        isset($data['state']) ? $data['state'] : '',
+        isset($data['postcode']) ? $data['postcode'] : ''
+    );
+    $latitude  = $coords ? "'" . (float)$coords['lat'] . "'" : "NULL";
+    $longitude = $coords ? "'" . (float)$coords['lng'] . "'" : "NULL";
+
     $this->db->query("INSERT INTO `" . DB_PREFIX . "dealers` 
-        (`status`,`is_approved`,`is_new`,`full_name`,`postcode`, `business_name`, `email`, `phone`, `business_address`, `abn`, `website`, `description`, `heard_about`, `preferred_categories`) 
+        (`status`,`is_approved`,`is_new`,`full_name`,`postcode`, `business_name`, `email`, `phone`, `business_address`, `abn`, `website`, `description`, `heard_about`, `preferred_categories`, `latitude`, `longitude`) 
         VALUES (
             '1', 
              '0', 
@@ -30,7 +40,9 @@ class ModelDealerDealer extends Model {
             '" . $this->db->escape($data['website']) . "', 
             '" . $this->db->escape($data['description']) . "', 
             '" . $this->db->escape($data['heard_about']) . "', 
-            '" . $this->db->escape($preferred_category_names) . "'
+            '" . $this->db->escape($preferred_category_names) . "',
+            " . $latitude . ",
+            " . $longitude . "
         )");
         
     $dealerId = $this->db->getLastId();
@@ -44,6 +56,55 @@ class ModelDealerDealer extends Model {
 
     return $dealerId;     
 }
+
+    /**
+     * Geocode a dealer address into latitude/longitude using the Google Maps Geocoding API.
+     * Returns array('lat' => float, 'lng' => float) on success, or null on failure.
+     * Never throws so that saving a dealer is not blocked if geocoding fails.
+     */
+    private function geocodeDealerAddress($business_address, $suburb, $state, $postcode) {
+        $parts = array_filter(array_map('trim', array(
+            (string)$business_address,
+            (string)$suburb,
+            (string)$state,
+            (string)$postcode,
+            'Australia'
+        )));
+
+        if (empty($parts) || !function_exists('curl_init')) {
+            return null;
+        }
+
+        $apiKey = 'AIzaSyCdIW7xk3UQDxMkhznl2gEyabtnGXHN2ww';
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode(implode(', ', $parts)) . '&key=' . $apiKey;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $response = curl_exec($ch);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+
+        if ($response === false || $curl_error) {
+            error_log('Dealer geocode cURL error: ' . $curl_error);
+            return null;
+        }
+
+        $result = json_decode($response, true);
+
+        if (isset($result['status']) && $result['status'] === 'OK' && !empty($result['results'][0]['geometry']['location'])) {
+            return array(
+                'lat' => (float)$result['results'][0]['geometry']['location']['lat'],
+                'lng' => (float)$result['results'][0]['geometry']['location']['lng']
+            );
+        }
+
+        error_log('Dealer geocode failed: ' . (isset($result['status']) ? $result['status'] : 'UNKNOWN') . (isset($result['error_message']) ? ' - ' . $result['error_message'] : ''));
+        return null;
+    }
 
     
   public function getDealersByManufacturer($manufacturer_id, $selectedState = 'all', $postcodes = []) {
