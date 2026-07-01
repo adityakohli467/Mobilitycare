@@ -84,14 +84,8 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
                 }
             }
 
-            // Skip root-level wrapper category UNLESS user navigated through it
-            if (!empty($parent_chain) && $parent_chain[0]['parent_id'] == 0) {
-                $show_root = isset($this->session->data['breadcrumb_include_root'])
-                    && (int)$this->session->data['breadcrumb_include_root'] == (int)$parent_chain[0]['category_id'];
-                if (!$show_root) {
-                    array_shift($parent_chain);
-                }
-            }
+            // Show the full category chain (including the root wrapper, e.g. Mobility Aids)
+            // so the breadcrumb is deterministic regardless of how the user navigated.
 
             // Add all categories in the chain as breadcrumbs
             foreach ($parent_chain as $cat_item) {

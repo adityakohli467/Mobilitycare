@@ -55,19 +55,10 @@ class ControllerProductCategory extends Controller {
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
-            // Track navigation context: detect if user navigated through a root category
-            if (!$category_info['parent_id']) {
-                // User is ON a root category page - set session flag
-                $this->session->data['breadcrumb_include_root'] = (int)$category_id;
-            } elseif (isset($this->request->get['rcid'])) {
-                // User clicked a subcategory link from a root category page
-                $this->session->data['breadcrumb_include_root'] = (int)$this->request->get['rcid'];
-            } else {
-                // User navigated directly (e.g., from top menu) - clear root flag
-                unset($this->session->data['breadcrumb_include_root']);
-            }
-
-            // Build breadcrumbs by walking up the parent chain
+            // Build breadcrumbs by walking up the full parent chain.
+            // The breadcrumb is derived purely from the category tree so it is
+            // deterministic (identical no matter how the user navigated here),
+            // e.g. always: Home > Mobility Aids > Wheelchairs > Electric Wheelchairs.
             $parent_chain = array();
             $temp_id = $category_info['parent_id'];
             while ($temp_id) {
@@ -81,20 +72,6 @@ class ControllerProductCategory extends Controller {
                     $temp_id = $temp_info['parent_id'];
                 } else {
                     break;
-                }
-            }
-
-            // Skip root-level wrapper category UNLESS:
-            //  - the current category sits directly under it (e.g. Mobility Aids > Wheelchairs), or
-            //  - the user navigated through it (session flag set).
-            // Deeper pages (e.g. Wheelchairs > Electric Wheelchairs) still omit the root wrapper.
-            if (!empty($parent_chain) && $parent_chain[0]['parent_id'] == 0) {
-                $root_is_direct_parent = ((int)$category_info['parent_id'] == (int)$parent_chain[0]['category_id']);
-                $show_root = $root_is_direct_parent
-                    || (isset($this->session->data['breadcrumb_include_root'])
-                        && (int)$this->session->data['breadcrumb_include_root'] == (int)$parent_chain[0]['category_id']);
-                if (!$show_root) {
-                    array_shift($parent_chain);
                 }
             }
 
@@ -179,18 +156,10 @@ class ControllerProductCategory extends Controller {
                 );
                 $product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
-                // If current page is a root category, pass rcid so child pages know the navigation context
-                $sub_url = $url;
-                if (!$category_info['parent_id']) {
-                    $sub_url .= '&rcid=' . (int)$category_id;
-                } elseif (isset($this->request->get['rcid'])) {
-                    $sub_url .= '&rcid=' . (int)$this->request->get['rcid'];
-                }
-
                 $data['categories'][] = array(
                     'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
                     'thumb' => $image,
-                    'href' => $this->url->link('product/category', 'path=' . $result['category_id'] . $sub_url, true)
+                    'href' => $this->url->link('product/category', 'path=' . $result['category_id'] . $url, true)
                 );
             }    
             }
