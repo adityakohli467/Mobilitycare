@@ -84,10 +84,15 @@ class ControllerProductCategory extends Controller {
                 }
             }
 
-            // Skip root-level wrapper category UNLESS user navigated through it
+            // Skip root-level wrapper category UNLESS:
+            //  - the current category sits directly under it (e.g. Mobility Aids > Wheelchairs), or
+            //  - the user navigated through it (session flag set).
+            // Deeper pages (e.g. Wheelchairs > Electric Wheelchairs) still omit the root wrapper.
             if (!empty($parent_chain) && $parent_chain[0]['parent_id'] == 0) {
-                $show_root = isset($this->session->data['breadcrumb_include_root'])
-                    && (int)$this->session->data['breadcrumb_include_root'] == (int)$parent_chain[0]['category_id'];
+                $root_is_direct_parent = ((int)$category_info['parent_id'] == (int)$parent_chain[0]['category_id']);
+                $show_root = $root_is_direct_parent
+                    || (isset($this->session->data['breadcrumb_include_root'])
+                        && (int)$this->session->data['breadcrumb_include_root'] == (int)$parent_chain[0]['category_id']);
                 if (!$show_root) {
                     array_shift($parent_chain);
                 }
