@@ -147,7 +147,11 @@ if (isset($parts[0]) && $parts[0] == 'brands') {
         $kq = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE `query` = 'category_id=" . (int)$current . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
         if ($kq->num_rows && $kq->row['keyword']) {
-            array_unshift($chain, $kq->row['keyword']);
+            // Skip duplicate consecutive slugs (e.g. a merged child sharing its
+            // parent's keyword) so we don't emit .../lifting-transfer-aids/lifting-transfer-aids/
+            if (!isset($chain[0]) || $chain[0] !== $kq->row['keyword']) {
+                array_unshift($chain, $kq->row['keyword']);
+            }
         }
 
         $cq = $this->db->query("SELECT parent_id FROM " . DB_PREFIX . "category WHERE category_id = '" . (int)$current . "'");
