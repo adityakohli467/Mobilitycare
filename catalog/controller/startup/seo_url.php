@@ -71,12 +71,8 @@ if (isset($parts[0]) && $parts[0] == 'brands') {
 				}
 			}
 
-			// 301 redirect nested category URLs to canonical short URL
-			if ($had_shop_prefix && $category_count > 1 && !isset($this->request->get['product_id'])) {
-				header('HTTP/1.1 301 Moved Permanently');
-				header('Location: /shop/' . $last_category_keyword);
-				exit;
-			}
+			// (Nested category URLs like /shop/mobility-aids/walking-aids/ are kept as-is;
+			//  canonical full-path URLs are produced by the rewrite() method below.)
 
 			if (!isset($this->request->get['route'])) {
 				if (isset($this->request->get['product_id'])) {
@@ -127,25 +123,46 @@ if (isset($parts[0]) && $parts[0] == 'brands') {
 
     if ($query->num_rows && $query->row['keyword']) {
         if ($data['route'] == 'product/product') {
-            $url .= '/buy/' . $query->row['keyword'];
+            $url .= '/buy/' . $query->row['keyword'] . '/';
         } elseif ($data['route'] == 'product/manufacturer/info') {
-            $url .= '/brands/' . $query->row['keyword'];
+            $url .= '/brands/' . $query->row['keyword'] . '/';
         } elseif ($data['route'] == 'information/information') {
-            $url .= '/' . $query->row['keyword'];
+            $url .= '/' . $query->row['keyword'] . '/';
         }
 
         unset($data[$key]);
     }
 } elseif ($key == 'path') {
     $categories = explode('_', $value);
+    $leaf = (int)end($categories);
 
-    // Use only the leaf (last) category for clean canonical URLs
-    $last_category = end($categories);
+    // Build the FULL category path by walking up the parent chain (parent_id).
+    // Produces e.g. /shop/mobility-aids/wheelchairs/manual-wheelchairs/
+    // Specialty Solutions stays separate from Mobility Aids (root-level, no /shop/ prefix).
+    $chain = array();
+    $current = $leaf;
+    $guard = 0;
 
-    $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = 'category_id=" . (int)$last_category . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+    while ($current > 0 && $guard < 10) {
+        $kq = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE `query` = 'category_id=" . (int)$current . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
-    if ($query->num_rows && $query->row['keyword']) {
-        $url .= '/shop/' . $query->row['keyword'];
+        if ($kq->num_rows && $kq->row['keyword']) {
+            array_unshift($chain, $kq->row['keyword']);
+        }
+
+        $cq = $this->db->query("SELECT parent_id FROM " . DB_PREFIX . "category WHERE category_id = '" . (int)$current . "'");
+        $current = $cq->num_rows ? (int)$cq->row['parent_id'] : 0;
+        $guard++;
+    }
+
+    if ($chain) {
+        $full_path = implode('/', $chain);
+
+        if ($chain[0] === 'specialty-solutions') {
+            $url .= '/' . $full_path . '/';
+        } else {
+            $url .= '/shop/' . $full_path . '/';
+        }
     } else {
         $url = '';
     }
