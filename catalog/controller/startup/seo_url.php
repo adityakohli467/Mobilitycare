@@ -19,6 +19,9 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
     array_shift($parts); // remove 'shop' prefix for categories
     $had_shop_prefix = true;
 }
+if (isset($parts[0]) && $parts[0] == 'brands') {
+    array_shift($parts); // remove 'brands' prefix for manufacturers
+}
 
 
 			// remove any empty arrays from trailing
@@ -126,7 +129,7 @@ if (isset($parts[0]) && $parts[0] == 'shop') {
         if ($data['route'] == 'product/product') {
             $url .= '/buy/' . $query->row['keyword'];
         } elseif ($data['route'] == 'product/manufacturer/info') {
-            $url .= '/' . $query->row['keyword'];
+            $url .= '/brands/' . $query->row['keyword'];
         } elseif ($data['route'] == 'information/information') {
             $url .= '/' . $query->row['keyword'];
         }
