@@ -160,11 +160,17 @@ if (isset($parts[0]) && $parts[0] == 'brands') {
     }
 
     if ($chain) {
-        $full_path = implode('/', $chain);
+        // Specialty Solutions is its own root-level tree (no /shop/ prefix and
+        // no mobility-aids ancestor in the URL), even though it lives under
+        // Mobility Aids in the admin category hierarchy. If 'specialty-solutions'
+        // appears anywhere in the chain, start the URL from it.
+        $sk = array_search('specialty-solutions', $chain, true);
 
-        if ($chain[0] === 'specialty-solutions') {
+        if ($sk !== false) {
+            $full_path = implode('/', array_slice($chain, $sk));
             $url .= '/' . $full_path . '/';
         } else {
+            $full_path = implode('/', $chain);
             $url .= '/shop/' . $full_path . '/';
         }
     } else {
