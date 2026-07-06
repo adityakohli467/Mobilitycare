@@ -368,6 +368,18 @@ if ($invoice_file && file_exists($invoice_file)) {
 		$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
 		$mail->setSubject(html_entity_decode(sprintf($language->get('text_subject'), $order_info['store_name'], $order_info['order_id']), ENT_QUOTES, 'UTF-8'));
 		$mail->setText($this->load->view('mail/order_edit', $data));
+
+		// Regenerate the confirmation PDF from the current order totals and attach it so any
+		// re-notify reflects the latest values (e.g. Freight Charge finalised after placement).
+		// generateInvoice() overwrites the stored Confirmation_{order_id}.pdf, keeping the file
+		// the admin serves in sync with the live order totals.
+		$this->load->model('extension/module/pdf_invoice');
+		$invoice_file = $this->model_extension_module_pdf_invoice->generateInvoice($order_info['order_id'], $order_status_id);
+
+		if ($invoice_file && file_exists($invoice_file)) {
+			$mail->addAttachment($invoice_file);
+		}
+
 		$mail->send();
 	}
 	

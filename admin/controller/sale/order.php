@@ -1316,6 +1316,36 @@ class ControllerSaleOrder extends Controller {
 
 		$file = DIR_UPLOAD . 'Confirmation_' . $order_id . '.pdf';
 
+		// Regenerate the PDF from the CURRENT order totals so the manager always sees the same
+		// figures as the admin order view (e.g. a Freight Charge finalised after placement).
+		// This reuses the exact catalog generator so the output is identical to the customer's
+		// copy and overwrites the stored file. Any failure falls back to the stored file below.
+		if ($order_id) {
+			try {
+				$this->load->model('checkout/order');
+				$this->load->model('tool/upload');
+
+				$catalog_pdf_model = DIR_APPLICATION . '../catalog/model/extension/module/pdf_invoice.php';
+
+				$loaded_catalog_pdf = false;
+
+				if (!class_exists('ModelExtensionModulePdfInvoice', false) && is_file($catalog_pdf_model)) {
+					require_once($catalog_pdf_model);
+					$loaded_catalog_pdf = class_exists('ModelExtensionModulePdfInvoice', false);
+				}
+
+				if ($loaded_catalog_pdf) {
+					$order_info = $this->model_checkout_order->getOrder($order_id);
+					$order_status_id = $order_info ? (int)$order_info['order_status_id'] : 0;
+
+					$pdf_invoice_model = new ModelExtensionModulePdfInvoice($this->registry);
+					$pdf_invoice_model->generateInvoice($order_id, $order_status_id);
+				}
+			} catch (\Throwable $e) {
+				$this->log->write('CONFIRMATION PDF REGEN ERROR (order ' . $order_id . '): ' . $e->getMessage());
+			}
+		}
+
 		if ($order_id && is_file($file) && !headers_sent()) {
 			if (ob_get_level()) {
 				ob_end_clean();
