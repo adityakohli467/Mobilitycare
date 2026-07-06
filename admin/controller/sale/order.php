@@ -816,6 +816,10 @@ class ControllerSaleOrder extends Controller {
 			$data['edit'] = $this->url->link('sale/order/edit', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$this->request->get['order_id'], true);
 			$data['cancel'] = $this->url->link('sale/order', 'user_token=' . $this->session->data['user_token'] . $url, true);
 
+			// Confirmation PDF (the exact file emailed to the customer, stored at DIR_UPLOAD)
+			$data['confirmation_pdf'] = $this->url->link('sale/order/confirmationPdf', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$this->request->get['order_id'], true);
+			$data['confirmation_pdf_exists'] = is_file(DIR_UPLOAD . 'Confirmation_' . (int)$this->request->get['order_id'] . '.pdf');
+
 			$data['user_token'] = $this->session->data['user_token'];
 
 			$data['order_id'] = (int)$this->request->get['order_id'];
@@ -1297,7 +1301,45 @@ class ControllerSaleOrder extends Controller {
 			return new Action('error/not_found');
 		}
 	}
-	
+
+	// Streams the exact order confirmation PDF that was emailed to the customer.
+	// The file is generated at checkout by catalog/model/extension/module/pdf_invoice.php
+	// and stored as DIR_UPLOAD . 'Confirmation_{order_id}.pdf'.
+	public function confirmationPdf() {
+		if (!$this->user->hasPermission('access', 'sale/order')) {
+			$this->response->addHeader('HTTP/1.1 403 Forbidden');
+			$this->response->setOutput('You do not have permission to access this file.');
+			return;
+		}
+
+		$order_id = isset($this->request->get['order_id']) ? (int)$this->request->get['order_id'] : 0;
+
+		$file = DIR_UPLOAD . 'Confirmation_' . $order_id . '.pdf';
+
+		if ($order_id && is_file($file) && !headers_sent()) {
+			if (ob_get_level()) {
+				ob_end_clean();
+			}
+
+			// download=1 forces a file download; otherwise view inline in the browser.
+			$disposition = (isset($this->request->get['download']) && $this->request->get['download']) ? 'attachment' : 'inline';
+
+			header('Content-Type: application/pdf');
+			header('Content-Disposition: ' . $disposition . '; filename="Confirmation_' . $order_id . '.pdf"');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Pragma: public');
+			header('Content-Length: ' . filesize($file));
+
+			readfile($file);
+
+			exit();
+		}
+
+		$this->response->addHeader('HTTP/1.1 404 Not Found');
+		$this->response->setOutput('Confirmation PDF is not available for order #' . $order_id . '. It may not have been generated yet (no confirmation email was sent for this order).');
+	}
+
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'sale/order')) {
 			$this->error['warning'] = $this->language->get('error_permission');
