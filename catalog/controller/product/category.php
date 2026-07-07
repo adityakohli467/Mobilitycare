@@ -164,12 +164,13 @@ class ControllerProductCategory extends Controller {
             }    
             }
             
-            // Only fetch products if the category has no subcategories
-            
-            if (empty($results)) {
+            // Always fetch products directly assigned to this category, even when
+            // the category has subcategories. This ensures a main category that has
+            // both subcategories AND its own assigned products shows both.
+            {
                 $filter_data = array(
                     'filter_category_id' => $category_id,
-                    'filter_sub_category' => false, // Include sub-subcategory products
+                    'filter_sub_category' => false, // Only products directly assigned to this category
                     'filter_filter' => $filter,
                     'sort' => $sort,
                     'order' => $order,
