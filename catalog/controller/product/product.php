@@ -2,6 +2,61 @@
 class ControllerProductProduct extends Controller {
 	private $error = array();
 
+	/**
+	 * Build the category breadcrumb trail for a category, matching the SEO URL
+	 * structure exactly. Walks up the parent chain and, because
+	 * "specialty-solutions" is a root-level URL tree (its URL excludes the
+	 * Mobility Aids ancestor), the trail is truncated to start at
+	 * specialty-solutions when present.
+	 *
+	 * @param int $category_id
+	 * @return array list of ['category_id' => int, 'name' => string] from root to leaf
+	 */
+	private function buildCategoryTrail($category_id) {
+		$this->load->model('catalog/category');
+
+		$chain = array();
+		$temp_id = (int)$category_id;
+		$guard = 0;
+
+		while ($temp_id && $guard < 20) {
+			$info = $this->model_catalog_category->getCategory($temp_id);
+			if (!$info) {
+				break;
+			}
+
+			array_unshift($chain, array(
+				'category_id' => $temp_id,
+				'name'        => $info['name']
+			));
+
+			$temp_id = (int)$info['parent_id'];
+			$guard++;
+		}
+
+		// Mirror the SEO URL: specialty-solutions is a root-level tree, so its
+		// breadcrumb must not include the Mobility Aids ancestor.
+		$specialty_id = 0;
+		$sq = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = 'specialty-solutions' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+		if ($sq->num_rows) {
+			$sp = explode('=', $sq->row['query']);
+			if ($sp[0] == 'category_id') {
+				$specialty_id = (int)$sp[1];
+			}
+		}
+
+		if ($specialty_id) {
+			foreach ($chain as $i => $c) {
+				if ($c['category_id'] == $specialty_id) {
+					$chain = array_slice($chain, $i);
+					break;
+				}
+			}
+		}
+
+		return $chain;
+	}
+
 	public function index() {
 		$this->load->language('product/product');
         $this->load->model('tool/image');
@@ -31,67 +86,41 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 
 
     if ($product_info) {
-        // Build category breadcrumbs by walking up the parent chain
+        // Determine the product's category deterministically: use the most
+        // specific (deepest) assigned category so the breadcrumb matches the
+        // site's category structure regardless of how the user arrived.
         $category_id = 0;
+        $best_depth = -1;
 
-        // Detect category from HTTP Referer (user navigated from a category page)
-        if (isset($this->request->server['HTTP_REFERER'])) {
-            $referer = $this->request->server['HTTP_REFERER'];
-            $referer_path = parse_url($referer, PHP_URL_PATH);
-            if ($referer_path && preg_match('#^/shop/([^/]+)#', $referer_path, $matches)) {
-                $ref_keyword = $this->db->escape($matches[1]);
-                $ref_query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $ref_keyword . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
-                if ($ref_query->num_rows) {
-                    $ref_parts = explode('=', $ref_query->row['query']);
-                    if ($ref_parts[0] == 'category_id') {
-                        // Verify this product actually belongs to that category
-                        $ref_cat_id = (int)$ref_parts[1];
-                        $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-                        foreach ($categories as $cat) {
-                            if ((int)$cat['category_id'] == $ref_cat_id) {
-                                $category_id = $ref_cat_id;
-                                break;
-                            }
-                        }
-                    }
+        foreach ($this->model_catalog_product->getCategories($product_id) as $row) {
+            $cid = (int)$row['category_id'];
+
+            $depth = 0;
+            $temp_id = $cid;
+            $guard = 0;
+            while ($temp_id && $guard < 20) {
+                $ci = $this->model_catalog_category->getCategory($temp_id);
+                if (!$ci) {
+                    break;
                 }
+                $temp_id = (int)$ci['parent_id'];
+                $depth++;
+                $guard++;
             }
-        }
 
-        if (!$category_id) {
-            // Fallback: use first assigned category (primary)
-            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-            if ($categories) {
-                $category_id = (int)$categories[0]['category_id'];
+            if ($depth > $best_depth) {
+                $best_depth = $depth;
+                $category_id = $cid;
             }
         }
 
         if ($category_id) {
-            // Walk up parent chain to build full hierarchy
-            $parent_chain = array();
-            $temp_id = $category_id;
-            while ($temp_id) {
-                $temp_info = $this->model_catalog_category->getCategory((int)$temp_id);
-                if ($temp_info) {
-                    array_unshift($parent_chain, array(
-                        'category_id' => (int)$temp_id,
-                        'name' => $temp_info['name'],
-                        'parent_id' => (int)$temp_info['parent_id']
-                    ));
-                    $temp_id = $temp_info['parent_id'];
-                } else {
-                    break;
-                }
-            }
-
-            // Show the full category chain (including the root wrapper, e.g. Mobility Aids)
-            // so the breadcrumb is deterministic regardless of how the user navigated.
-
-            // Add all categories in the chain as breadcrumbs
-            foreach ($parent_chain as $cat_item) {
+            // Build the trail so it mirrors the SEO URL structure exactly.
+            $trail = $this->buildCategoryTrail($category_id);
+            foreach ($trail as $crumb) {
                 $data['breadcrumbs'][] = array(
-                    'text' => $cat_item['name'],
-                    'href' => $this->url->link('product/category', 'path=' . $cat_item['category_id'])
+                    'text' => $crumb['name'],
+                    'href' => $this->url->link('product/category', 'path=' . $crumb['category_id'])
                 );
             }
         }

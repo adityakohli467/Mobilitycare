@@ -1,5 +1,60 @@
 <?php
 class ControllerProductCategory extends Controller {
+    /**
+     * Build the category breadcrumb trail for a category, matching the SEO URL
+     * structure exactly. Walks up the parent chain and, because
+     * "specialty-solutions" is a root-level URL tree (its URL excludes the
+     * Mobility Aids ancestor, e.g. /specialty-solutions/arthritis-care/), the
+     * trail is truncated to start at specialty-solutions when present.
+     *
+     * @param int $category_id
+     * @return array list of ['category_id' => int, 'name' => string] from root to leaf
+     */
+    private function buildCategoryTrail($category_id) {
+        $this->load->model('catalog/category');
+
+        $chain = array();
+        $temp_id = (int)$category_id;
+        $guard = 0;
+
+        while ($temp_id && $guard < 20) {
+            $info = $this->model_catalog_category->getCategory($temp_id);
+            if (!$info) {
+                break;
+            }
+
+            array_unshift($chain, array(
+                'category_id' => $temp_id,
+                'name'        => $info['name']
+            ));
+
+            $temp_id = (int)$info['parent_id'];
+            $guard++;
+        }
+
+        // Mirror the SEO URL: specialty-solutions is a root-level tree, so its
+        // breadcrumb must not include the Mobility Aids ancestor.
+        $specialty_id = 0;
+        $sq = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = 'specialty-solutions' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+        if ($sq->num_rows) {
+            $sp = explode('=', $sq->row['query']);
+            if ($sp[0] == 'category_id') {
+                $specialty_id = (int)$sp[1];
+            }
+        }
+
+        if ($specialty_id) {
+            foreach ($chain as $i => $c) {
+                if ($c['category_id'] == $specialty_id) {
+                    $chain = array_slice($chain, $i);
+                    break;
+                }
+            }
+        }
+
+        return $chain;
+    }
+
     public function index() {
         $this->load->language('product/category');
 
@@ -55,39 +110,16 @@ class ControllerProductCategory extends Controller {
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
-            // Build breadcrumbs by walking up the full parent chain.
-            // The breadcrumb is derived purely from the category tree so it is
-            // deterministic (identical no matter how the user navigated here),
-            // e.g. always: Home > Mobility Aids > Wheelchairs > Electric Wheelchairs.
-            $parent_chain = array();
-            $temp_id = $category_info['parent_id'];
-            while ($temp_id) {
-                $temp_info = $this->model_catalog_category->getCategory((int)$temp_id);
-                if ($temp_info) {
-                    array_unshift($parent_chain, array(
-                        'category_id' => (int)$temp_id,
-                        'name' => $temp_info['name'],
-                        'parent_id' => (int)$temp_info['parent_id']
-                    ));
-                    $temp_id = $temp_info['parent_id'];
-                } else {
-                    break;
-                }
-            }
-
-            // Add parent categories as breadcrumbs
-            foreach ($parent_chain as $parent) {
+            // Build breadcrumbs from the category trail so they mirror the SEO
+            // URL exactly (e.g. Home > Mobility Aids > Lifting & Transfer Aids,
+            // and Home > Specialty Solutions > Arthritis Care).
+            $trail = $this->buildCategoryTrail($category_id);
+            foreach ($trail as $crumb) {
                 $data['breadcrumbs'][] = array(
-                    'text' => $parent['name'],
-                    'href' => $this->url->link('product/category', 'path=' . $parent['category_id'])
+                    'text' => $crumb['name'],
+                    'href' => $this->url->link('product/category', 'path=' . $crumb['category_id'])
                 );
             }
-
-            // Add current category as last breadcrumb
-            $data['breadcrumbs'][] = array(
-                'text' => $category_info['name'],
-                'href' => $this->url->link('product/category', 'path=' . $category_id)
-            );
 
             $this->document->setTitle($category_info['meta_title']);
             // Fallback meta description: use category name if meta_description is empty
