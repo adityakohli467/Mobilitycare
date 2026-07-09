@@ -196,10 +196,10 @@ class ControllerProductCategory extends Controller {
             }    
             }
             
-            // Always fetch products directly assigned to this category, even when
-            // the category has subcategories. This ensures a main category that has
-            // both subcategories AND its own assigned products shows both.
-            {
+            // NOTE: Showing products alongside subcategories is disabled for now,
+            // so main categories display ONLY their subcategories. Products are
+            // fetched only for leaf categories (those with no subcategories).
+            if (empty($results)) {
                 $filter_data = array(
                     'filter_category_id' => $category_id,
                     'filter_sub_category' => false, // Only products directly assigned to this category

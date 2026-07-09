@@ -18,6 +18,12 @@
     padding: 12px;
 }
 
+.category-name a {
+    color: inherit !important;
+    text-decoration: none;
+    display: block;
+}
+
 </style>
 
 {#====  Variables url parameter ==== #}
@@ -83,7 +89,7 @@
           </a>
         </div>
         <div class="card-body text-center">
-          <h5 class="card-title category-name">{{ category.name }}</h5>
+          <h5 class="card-title category-name"><a href="{{ category.href }}">{{ category.name }}</a></h5>
         </div>
       </div>
     </div>
