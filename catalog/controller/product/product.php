@@ -57,6 +57,74 @@ class ControllerProductProduct extends Controller {
 		return $chain;
 	}
 
+	/**
+	 * Work out which category the visitor navigated through to reach this page
+	 * by inspecting the referring URL. Supports both SEO URLs
+	 * (e.g. /shop/mobility-aids/wheelchairs/electric-wheelchairs/) and legacy
+	 * query-string URLs (index.php?route=product/category&path=101_105).
+	 *
+	 * Only same-site referers are trusted.
+	 *
+	 * @param string $referer
+	 * @return int category_id, or 0 when it can't be resolved
+	 */
+	private function getCategoryFromReferer($referer) {
+		$parts = parse_url((string)$referer);
+
+		if ($parts === false) {
+			return 0;
+		}
+
+		// Only trust referers from this same site.
+		if (!empty($parts['host']) && !empty($this->request->server['HTTP_HOST']) && strcasecmp($parts['host'], $this->request->server['HTTP_HOST']) !== 0) {
+			return 0;
+		}
+
+		// Legacy query-string URL: ...&path=101_105
+		if (!empty($parts['query'])) {
+			parse_str($parts['query'], $q);
+
+			if (!empty($q['path'])) {
+				$p = explode('_', (string)$q['path']);
+				return (int)array_pop($p);
+			}
+		}
+
+		if (empty($parts['path'])) {
+			return 0;
+		}
+
+		$segments = array_values(array_filter(explode('/', $parts['path']), 'strlen'));
+
+		// Drop known route prefixes so we're left with the category slugs.
+		$skip = array('shop', 'buy', 'brands', 'index.php');
+		while ($segments && in_array($segments[0], $skip, true)) {
+			array_shift($segments);
+		}
+
+		if (!$segments) {
+			return 0;
+		}
+
+		$keyword = end($segments);
+
+		if ($keyword === '') {
+			return 0;
+		}
+
+		$query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($keyword) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+
+		if ($query->num_rows) {
+			$qp = explode('=', $query->row['query']);
+
+			if ($qp[0] == 'category_id') {
+				return (int)$qp[1];
+			}
+		}
+
+		return 0;
+	}
+
 	public function index() {
 		$this->load->language('product/product');
         $this->load->model('tool/image');
@@ -86,31 +154,60 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 
 
     if ($product_info) {
-        // Determine the product's category deterministically: use the most
-        // specific (deepest) assigned category so the breadcrumb matches the
-        // site's category structure regardless of how the user arrived.
-        $category_id = 0;
-        $best_depth = -1;
-
+        // Choose the breadcrumb category based on the path the visitor actually
+        // navigated through, so a product assigned to several categories shows
+        // the trail that matches how the user reached this page. Falls back to
+        // the deepest assigned category for direct visits (no referer/path).
+        $product_categories = array();
         foreach ($this->model_catalog_product->getCategories($product_id) as $row) {
-            $cid = (int)$row['category_id'];
+            $product_categories[(int)$row['category_id']] = true;
+        }
 
-            $depth = 0;
-            $temp_id = $cid;
-            $guard = 0;
-            while ($temp_id && $guard < 20) {
-                $ci = $this->model_catalog_category->getCategory($temp_id);
-                if (!$ci) {
-                    break;
-                }
-                $temp_id = (int)$ci['parent_id'];
-                $depth++;
-                $guard++;
+        $category_id = 0;
+
+        // 1) Explicit referring category on the URL (?path=...), if it is one of
+        //    the product's assigned categories.
+        if (isset($this->request->get['path'])) {
+            $parts = explode('_', (string)$this->request->get['path']);
+            $leaf = (int)array_pop($parts);
+
+            if ($leaf && isset($product_categories[$leaf])) {
+                $category_id = $leaf;
             }
+        }
 
-            if ($depth > $best_depth) {
-                $best_depth = $depth;
-                $category_id = $cid;
+        // 2) Infer from the referring page (the category the user came from),
+        //    validated against the product's assigned categories.
+        if (!$category_id && !empty($this->request->server['HTTP_REFERER'])) {
+            $ref_category_id = $this->getCategoryFromReferer($this->request->server['HTTP_REFERER']);
+
+            if ($ref_category_id && isset($product_categories[$ref_category_id])) {
+                $category_id = $ref_category_id;
+            }
+        }
+
+        // 3) Fallback: most specific (deepest) assigned category.
+        if (!$category_id) {
+            $best_depth = -1;
+
+            foreach (array_keys($product_categories) as $cid) {
+                $depth = 0;
+                $temp_id = $cid;
+                $guard = 0;
+                while ($temp_id && $guard < 20) {
+                    $ci = $this->model_catalog_category->getCategory($temp_id);
+                    if (!$ci) {
+                        break;
+                    }
+                    $temp_id = (int)$ci['parent_id'];
+                    $depth++;
+                    $guard++;
+                }
+
+                if ($depth > $best_depth) {
+                    $best_depth = $depth;
+                    $category_id = $cid;
+                }
             }
         }
 
