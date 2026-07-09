@@ -47,6 +47,10 @@ RewriteRule ^(.*)$ /$1? [R=301,L]
 # --- Product URL redirects ---
 RewriteRule ^buy/in-step-laser-cane$ /buy/instep-lasercue/ [R=301,L]
 
+# --- Category URL redirects ---
+# Ramps moved out from under Lifting & Transfer Aids to directly under Mobility Aids
+RewriteRule ^shop/mobility-aids/lifting-transfer-aids/ramps/?$ /shop/mobility-aids/ramps/ [R=301,L]
+
 # --- 301 Redirects: /1000 URLs with specific destinations (BEFORE patterns) ---
 RewriteRule ^amf-bruns-world-innovators-in-wheelchair-occupant-restraints-for-vehicles//1000/?$ /shop/mobility-aids/vehicle-modifications/ [R=301,L]
 RewriteRule ^amf-bruns-world-innovators-in-wheelchair-occupant-restraints-for-vehicles/1000/?$ /shop/mobility-aids/vehicle-modifications/ [R=301,L]
