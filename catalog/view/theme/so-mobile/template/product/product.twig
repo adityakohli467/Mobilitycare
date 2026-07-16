@@ -141,9 +141,6 @@ body.quote-modal-open .popup-marketing {
 
                         <div class="product-box-desc">
                             <div class="inner-box-desc">
-                                {% if manufacturer %}
-                                    <div class="brand hidden"><span>{{ text_manufacturer }} </span><a href="{{ manufacturers }}">{{ manufacturer }}</a></div>
-                                {% endif %}
                                 {% if model %}
                                     <div class="model hidden"><span>{{ text_model }} </span> {{ model }}</div>
                                 {% endif %}
@@ -317,6 +314,9 @@ body.quote-modal-open .popup-marketing {
                                 {% endif %}
 
                                 <div class="form-group box-info-product">
+                                    {% if manufacturer %}
+                                        <div class="brand product-brand"><span>{{ text_manufacturer }} </span><a href="{{ manufacturers }}">{{ manufacturer }}</a></div>
+                                    {% endif %}
                                     {% if display_add_to_cart and display_add_to_cart == 1 %}
                                         <div class="option quantity">
                                             <label class="control-label" for="input-quantity">{{ entry_qty }}</label>

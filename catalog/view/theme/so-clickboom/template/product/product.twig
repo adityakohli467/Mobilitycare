@@ -242,10 +242,6 @@
 
 				<div class="product-box-desc">
 					<div class="inner-box-desc">
-						{% if manufacturer %}
-							<div class="brand hidden"><span>{{ text_manufacturer }} </span><a href="{{ manufacturers }}">{{ manufacturer }}</a></div>
-						{% endif %}
-						
 						{% if model %}
 					<!--	<div class="model"><span>{{ text_model }} </span> {{ model }}</div> -->
 						{% endif %}
@@ -442,6 +438,10 @@
 						{% endif %}
 					  
 						<div class="form-group box-info-product">
+						    
+						    {% if manufacturer %}
+							<div class="brand product-brand"><span>{{ text_manufacturer }} </span><a href="{{ manufacturers }}">{{ manufacturer }}</a></div>
+						    {% endif %}
 						    
 						    {% if display_add_to_cart and display_add_to_cart == 1  %}
 							<div class="option quantity">
