@@ -439,10 +439,6 @@
 					  
 						<div class="form-group box-info-product">
 						    
-						    {% if manufacturer %}
-							<div class="brand product-brand"><span>{{ text_manufacturer }} </span><a href="{{ manufacturers }}">{{ manufacturer }}</a></div>
-						    {% endif %}
-						    
 						    {% if display_add_to_cart and display_add_to_cart == 1  %}
 							<div class="option quantity">
 								<label class="control-label" for="input-quantity">{{ entry_qty }}</label>
@@ -541,6 +537,12 @@
       </p>
     </div>
   </div>
+
+{% if manufacturer %}
+<div class="brand product-brand" style="margin:15px 0; font-size:16px;">
+    <span style="color:#0a59ac; font-weight:bold;">{{ text_manufacturer }} </span><a href="{{ manufacturers }}" style="color:#0a59ac; font-weight:bold; text-decoration:none;">{{ manufacturer }}</a>
+</div>
+{% endif %}
 
 <!-- CSS for Custom Badges -->
 <style>
