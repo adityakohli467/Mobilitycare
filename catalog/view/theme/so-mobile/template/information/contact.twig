@@ -183,7 +183,28 @@ iframe, #map-canvas {
                         region: "ap1",
                         portalId: "443388967",
                         formId: "e6c3896d-2d93-4f73-b831-cb94ffcf1b47",
-                        target: "#hubspotForm-contact"
+                        target: "#hubspotForm-contact",
+                        onFormReady: function ($form) {
+                          var formEl = ($form && $form.length) ? $form[0] : $form;
+                          if (!formEl) { return; }
+                          // Show loader when the user clicks the submit button
+                          formEl.addEventListener('click', function (e) {
+                            var t = e.target;
+                            if (t && (t.type === 'submit' || (t.className && String(t.className).indexOf('hs-button') !== -1))) {
+                              $('#loaderOverlay').show();
+                            }
+                          });
+                          // Hide loader and show the button again when a validation error appears
+                          var observer = new MutationObserver(function () {
+                            if (formEl.querySelector('.hs-error-msgs li')) {
+                              $('#loaderOverlay').hide();
+                            }
+                          });
+                          observer.observe(formEl, { childList: true, subtree: true });
+                        },
+                        onFormSubmitted: function () {
+                          $('#loaderOverlay').hide();
+                        }
                       });
                     </script>
                 </div>
