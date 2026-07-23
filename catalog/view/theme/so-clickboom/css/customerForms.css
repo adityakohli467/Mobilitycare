@@ -155,4 +155,59 @@
         }
             
         }
+
+/* ===================================================================
+   HubSpot Form Embeds — match existing MobilityCare form styling
+   =================================================================== */
+.hubspot-form-embed { width: 100%; }
+.hubspot-form-embed .hs-form { display: flex; flex-direction: column; }
+.hubspot-form-embed .hs-form-field { margin-bottom: 6px; }
+.hubspot-form-embed .hs-form-field > label {
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+.hubspot-form-embed .hs-form-required { color: #a94442; }
+.hubspot-form-embed .hs-input:not([type="checkbox"]):not([type="radio"]) {
+    width: 100% !important;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid #ccc !important;
+    border-radius: 5px;
+    color: #000;
+    background: #fff;
+}
+.hubspot-form-embed textarea.hs-input { min-height: 100px; }
+.hubspot-form-embed ul.inputs-list { list-style: none; margin: 6px 0; padding: 0; }
+.hubspot-form-embed .hs-error-msgs,
+.hubspot-form-embed .hs-error-msg,
+.hubspot-form-embed label.hs-error-msg {
+    color: #a94442;
+    font-size: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px;
+}
+.hubspot-form-embed .hs-button,
+.hubspot-form-embed input[type="submit"].hs-button {
+    background: #0066FF;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+.hubspot-form-embed .hs-button:hover { background: #0055DD; }
+.hubspot-form-embed .hs-richtext,
+.hubspot-form-embed .hs-richtext p { color: #000; }
+.hubspot-form-embed .submitted-message {
+    color: #000;
+    font-size: 16px;
+    padding: 20px;
+    text-align: center;
+}
   
