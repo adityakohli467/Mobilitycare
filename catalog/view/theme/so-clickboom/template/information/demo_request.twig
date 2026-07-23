@@ -26,69 +26,17 @@
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/demo_request/validateAjax">
-            
-            <div class="">
-               <input type="text" name="fullname"  placeholder="Full Name *" required>
-               {% if error_name %} 
-             <div class="text-red">{{ error_name }}</div>
-             {% endif %} 
-             </div>
-
-            <div class="">
-              <input type="email" name="email"  placeholder="Email *" required>
-              {% if error_email %} 
-              <div class="text-red">{{ error_email }}</div>
-              {% endif %} 
-            </div>
-
-            <div class="">
-            <input type="text" name="phone"  placeholder="Phone Number *" class="phoneValidate" maxlength="10" required>
-            {% if error_phone %} 
-             <div class="text-red">{{ error_phone }}</div>
-             {% endif %} 
-            </div>
-
-            <div class="">
-          
-<input type="text" name="postcode" placeholder="Postcode *" maxlength="4"  class="postcodeValidate" title="Please enter up to 4 digits only" required>
-
-
-             </div>
-
-            <div class="">
-                <select name="demo_type" class="form-control" required>
-                    <option value="" disabled selected>Choose Your Demo Type *</option>
-                    <option value="In-Store">In-Store Demo</option>
-                    <option value="Virtual">Virtual Demo</option>
-                    <option value="Dealer">Dealer Network Demo</option>
-                </select>
-            </div>
-
-            <div class="">
-                 <select name="manufacturer_id" id="manufacturer_id" class="form-control" required>
-    <option value="" disabled {% if not manufacturer_id %}selected{% endif %}>Product of interest *</option>
-    {% for manufacturer in manufacturers %}
-            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer_id == manufacturer.manufacturer_id %}selected{% endif %}>
-                {{ manufacturer.name }}
-            </option>
-    {% endfor %}
-</select>
-
-    {% if error_manufacturer_id %}
-        <div class="text-red">{{ error_manufacturer_id }}</div>
-    {% endif %}
-             
-            </div>
-            
-            <div class="">
-                <textarea name="additional_info" class="form-control" placeholder="Additional Information"></textarea>
-            </div>
-              <div class="">
-             {# {{ captcha }} #}
-              </div>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Request</button>
-        </form>
+        <!-- HubSpot Form: Product Demonstration -->
+        <div id="hubspotForm-demo-request" class="hubspot-form-embed"></div>
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            region: "ap1",
+            portalId: "443388967",
+            formId: "473caa95-a5bf-4afa-82e9-c50dbdb7b45a",
+            target: "#hubspotForm-demo-request"
+          });
+        </script>
         <div id="toastMessage" class="toast"></div>
         <div id="loaderOverlay" class="loader-overlay"><div class="loader"></div> </div>
     </div>

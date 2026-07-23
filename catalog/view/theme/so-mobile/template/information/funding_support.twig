@@ -32,59 +32,17 @@ To see if you're eligible to receive Government funding for the mobility aids yo
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/funding_support/validateAjax">
-            
-            <div class="">
-               <input type="text" name="fullname"  placeholder="Full Name *" required>
-               {% if error_name %} 
-             <div class="text-red">{{ error_name }}</div>
-             {% endif %} 
-             </div>
-
-            <div class="">
-              <input type="email" name="email"  placeholder="Email *" required>
-              {% if error_email %} 
-              <div class="text-red">{{ error_email }}</div>
-              {% endif %} 
-            </div>
-
-            <div class="">
-            <input type="number" name="phone"  placeholder="Phone Number *" maxlength="10" required>
-            {% if error_phone %} 
-             <div class="text-red">{{ error_phone }}</div>
-             {% endif %} 
-            </div>
-
-            <div class="">
-<input type="text" name="postcode" placeholder="Postcode *" maxlength="4" pattern="^[0-9]{1,4}$" title="Please enter up to 4 digits only" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);" required>
-             </div>
-
-           
-
-            <div class="">
-                 <select name="manufacturer_id" id="manufacturer_id" class="form-control" required>
-    <option value="" disabled {% if not manufacturer_id %}selected{% endif %}>Product of interest *</option>
-    {% for manufacturer in manufacturers %}
-            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer_id == manufacturer.manufacturer_id %}selected{% endif %}>
-                {{ manufacturer.name }}
-            </option>
-    {% endfor %}
-</select>
-
-    {% if error_manufacturer_id %}
-        <div class="text-red">{{ error_manufacturer_id }}</div>
-    {% endif %}
-             
-            </div>
-            
-            <div class="">
-                <textarea name="message" class="form-control" placeholder="Message"></textarea>
-            </div>
-              <div class="">
-             {# {{ captcha }} #}
-              </div>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Request</button>
-        </form>
+        <!-- HubSpot form embed (replaces old custom form) -->
+        <div id="hubspotForm-funding-support" class="hubspot-form-embed"></div>
+        <script src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            region: "ap1",
+            portalId: "443388967",
+            formId: "5af5bde5-22ec-45a8-ac0e-b602f1047d6c",
+            target: "#hubspotForm-funding-support"
+          });
+        </script>
         <div id="toastMessage" class="toast"></div>
         <div id="loaderOverlay" class="loader-overlay">
         <div class="loader"></div>

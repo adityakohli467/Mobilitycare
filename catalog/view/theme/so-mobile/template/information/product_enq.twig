@@ -28,104 +28,17 @@
 
     
     <div class="demo-request-right col-md-12 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm" class="quoteForm ajax-validate-form" data-validate-url="/index.php?route=information/product_enq/validateAjax">
-            
-            <div class="">
-               <input type="text" name="fullname"  placeholder="Full Name *" required>
-               {% if error_fullname %} 
-             <div class="text-red">{{ error_fullname }}</div>
-             {% endif %} 
-             </div>
-
-            <div class="">
-              <input type="email" name="email"  placeholder="Email *" required>
-              {% if error_email %} 
-              <div class="text-red">{{ error_email }}</div>
-              {% endif %} 
-            </div>
-
-            <div class="">
-            <input type="text" name="phone"  placeholder="Phone Number *" required>
-            {% if error_phone %} 
-             <div class="text-red">{{ error_phone }}</div>
-             {% endif %} 
-            </div>
-            
-              <div class="">
-<input type="text" name="postcode" placeholder="Postcode *" maxlength="4" pattern="^[0-9]{1,4}$" title="Please enter up to 4 digits only" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);" required>
-             </div>
-
-           <div class="required">
-               
-                    <select name="contact_type" id="contact_type" class="form-control">
-                        <option value="" disabled selected>Are you contacting us as?</option>
-                       
-                        <option value="For Myself">For Myself</option>
-                        <option value="For a Friend/Family Member">For a Friend/Family Member</option>
-                        <option value="Healthcare Professional">Healthcare Professional</option>
-                        <option value="Dealer or Business">Dealer or Business</option>
-                        <option value="Government or Non-Profit Organisation">Government or Non-Profit Organisation</option>
-                        <option value="Other">Other</option>
-                    </select>
-               
-            </div>
-            
-            <div class="" id="healthcare_profession" style="display: none;">
-                <select name="healthcare_profession" class="form-control">
-                          <option value="" disabled selected>If Healthcare Professional, please specify:</option>
-                        <option value="Occupational Therapist">Occupational Therapist</option>
-                        <option value="Physiotherapist">Physiotherapist</option>
-                        <option value="Rehabilitation Specialist">Rehabilitation Specialist</option>
-                        <option value="Aged Care Professional">Aged Care Professional</option>
-                        <option value="Nurse or Caregiver">Nurse or Caregiver</option>
-                        <option value="Neurologist">Neurologist</option>
-                        <option value="Orthopedic Specialist">Orthopedic Specialist</option>
-                    </select>
-               
-            </div>
-                     
-            
-
-          
-
-            <div class="">
-                 <select name="manufacturer_id" id="manufacturer_id" class="form-control" required>
-    <option value="" disabled {% if not manufacturer_id %}selected{% endif %}>Product of interest *</option>
-    {% for manufacturer in manufacturers %}
-            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer_id == manufacturer.manufacturer_id %}selected{% endif %}>
-                {{ manufacturer.name }}
-            </option>
-    {% endfor %}
-</select>
-
-    {% if error_manufacturer_id %}
-        <div class="text-red">{{ error_manufacturer_id }}</div>
-    {% endif %}
-             
-            </div>
-            
-            <div class="">
-             <select name="inquiry_reason" class="form-control">
-                        <option value="General Inquiry">General Inquiry</option>
-                        <option value="Demonstration">Demonstration</option>
-                        <option value="Quote">Quote</option>
-                        <option value="Find a dealer near me">Find a dealer near me</option>
-                        <option value="Product Information">Product Information</option>
-                        <option value="Dealer or Business Partnership">Dealer or Business Partnership</option>
-                        <option value="Technical Support">Technical Support</option>
-                        <option value="Warranty or Returns">Warranty or Returns</option>
-                        <option value="Other">Other</option>
-                    </select>
-             </div>
-            
-            <div class="">
-                <textarea name="message" class="form-control" placeholder="Message"></textarea>
-            </div>
-              <div class="">
-             {# {{ captcha }} #}
-              </div>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Enquiry</button>
-        </form>
+        <!-- HubSpot form embed (replaces old custom form) -->
+        <div id="hubspotForm-product-enq" class="hubspot-form-embed"></div>
+        <script src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            region: "ap1",
+            portalId: "443388967",
+            formId: "8cba3d00-4e2a-4c50-8b76-292b7de20849",
+            target: "#hubspotForm-product-enq"
+          });
+        </script>
         
         <div id="toastMessage" class="toast"></div>
        <div id="loaderOverlay" class="loader-overlay">
@@ -137,16 +50,6 @@
     </div> 
     </div>
     </div> 
-    <script>
-document.getElementById("contact_type").addEventListener("change", function() {
-    var healthcareField = document.getElementById("healthcare_profession");
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-    } else {
-        healthcareField.style.display = "none";
-    }
-});
-</script>
     {{ column_right }}
     </div> 
      </div> 

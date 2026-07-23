@@ -27,96 +27,17 @@
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="quoteRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/quote_request/validateAjax">
-            
-            <div class="form-group">
-               <input type="text" name="fullname"  placeholder="Full Name *" class="form-control" required>
-               {% if error_fullname %} 
-             <div class="text-red">{{ error_fullname }}</div>
-             {% endif %} 
-             </div>
-
-            <div class="">
-              <input type="text" name="email"  placeholder="Email *" class="form-control" required>
-              
-            </div>
-
-            <div class="">
-            <input type="text" name="phone" class="phoneValidate"  placeholder="Phone Number *" maxlength="10" required>
-            {% if error_phone %} 
-             <div class="text-red">{{ error_phone }}</div>
-             {% endif %} 
-            </div>
-            <div class="">
-            <input type="text" name="postcode" placeholder="Postcode *" maxlength="4"  title="Please enter up to 4 digits only" class="postcodeValidate" required>
-            </div>
-
-           <div class="required">
-               
-                    <select name="contact_type" id="contact_type" class="form-control">
-                        <option value="" disabled selected>Are you contacting us as?</option>
-                       
-                        <option value="For Myself">For Myself</option>
-                        <option value="For a Friend/Family Member">For a Friend/Family Member</option>
-                        <option value="Healthcare Professional">Healthcare Professional</option>
-                        <option value="Dealer or Business">Dealer or Business</option>
-                        <option value="Government or Non-Profit Organisation">Government or Non-Profit Organisation</option>
-                        <option value="Other">Other</option>
-                    </select>
-               
-            </div>
-            
-            <div class="" id="healthcare_profession" style="display: none;">
-                <select name="healthcare_profession" class="form-control">
-                        <option value="" disabled selected>If Healthcare Professional, please specify:</option>
-                        <option value="Occupational Therapist">Occupational Therapist</option>
-                        <option value="Physiotherapist">Physiotherapist</option>
-                        <option value="Rehabilitation Specialist">Rehabilitation Specialist</option>
-                        <option value="Aged Care Professional">Aged Care Professional</option>
-                        <option value="Nurse or Caregiver">Nurse or Caregiver</option>
-                        <option value="Neurologist">Neurologist</option>
-                        <option value="Orthopedic Specialist">Orthopedic Specialist</option>
-                    </select>
-               
-            </div>
-                     
-             <div class="required">
-             
-                    <select name="quote_type" class="form-control" required>
-                        <option value="" disabled selected>Preferred Quote Type *</option>
-                        <option value="Standard Quote">Standard Quote</option>
-                        <option value="NDIS Funding Quote">NDIS Funding Quote</option>
-                        <option value="Insurance/WorkSafe Quote">Insurance/WorkSafe Quote</option>
-                    </select>
-               
-            </div>  
-
-          
-
-            <div class="">
-                 <select name="manufacturer_id" id="manufacturer_id" class="form-control" required>
-    <option value="" disabled {% if not manufacturer_id %}selected{% endif %}>Product of interest *</option>
-    {% for manufacturer in manufacturers %}
-            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer_id == manufacturer.manufacturer_id %}selected{% endif %}>
-                {{ manufacturer.name }}
-            </option>
-    {% endfor %}
-</select>
-                
-                {% if error_product %} 
-             <div class="text-red">{{ error_product }}</div>
-             {% endif %} 
-             
-            </div>
-            
-            <div class="">
-                <textarea name="additional_info" class="form-control" placeholder="Additional Information"></textarea>
-            </div>
-              <div class="">
-             {# {{ captcha }} #}
-              </div>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Request</button>
-        </form>
+        <!-- HubSpot Form: Request a Quote -->
+        <div id="hubspotForm-quote-request" class="hubspot-form-embed"></div>
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            region: "ap1",
+            portalId: "443388967",
+            formId: "a127dbbf-73f5-4c03-a216-ef80b006488c",
+            target: "#hubspotForm-quote-request"
+          });
+        </script>
           <div id="toastMessage" class="toast"></div>
         <div id="loaderOverlay" class="loader-overlay">
         <div class="loader"></div>
@@ -127,16 +48,6 @@
     </div> 
     </div>
     </div> 
-    <script>
-document.getElementById("contact_type").addEventListener("change", function() {
-    var healthcareField = document.getElementById("healthcare_profession");
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-    } else {
-        healthcareField.style.display = "none";
-    }
-});
-</script>
     {{ column_right }}
     </div> 
      </div> 
