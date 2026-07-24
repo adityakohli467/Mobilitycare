@@ -67,31 +67,24 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
         }
 
         if ($category_id) {
-            // Walk up parent chain to build full hierarchy
-            $parent_chain = array();
-            $temp_id = $category_id;
-            while ($temp_id) {
-                $temp_info = $this->model_catalog_category->getCategory((int)$temp_id);
-                if ($temp_info) {
-                    array_unshift($parent_chain, array(
-                        'category_id' => (int)$temp_id,
-                        'name' => $temp_info['name'],
-                        'parent_id' => (int)$temp_info['parent_id']
-                    ));
-                    $temp_id = $temp_info['parent_id'];
-                } else {
-                    break;
-                }
-            }
+            // Build the full category hierarchy (root -> leaf) from the authoritative
+            // category_path table. This guarantees the root category (e.g. "Mobility
+            // Aids") is always present, even for deep chains such as Specialty
+            // Solutions products. The previous logic walked up via getCategory() and
+            // aborted the ENTIRE chain the moment a single lookup returned no row,
+            // which silently dropped the root breadcrumb.
+            $path_query = $this->db->query("SELECT cp.path_id AS category_id, cd.name FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category c ON (cp.path_id = c.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd ON (cp.path_id = cd.category_id) WHERE cp.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.status = '1' ORDER BY cp.level ASC");
 
-            // Show the full category chain (including the root wrapper, e.g. Mobility Aids)
-            // so the breadcrumb is deterministic regardless of how the user navigated.
+            $path = '';
 
-            // Add all categories in the chain as breadcrumbs
-            foreach ($parent_chain as $cat_item) {
+            // Add each category in the chain as a breadcrumb, building a cumulative
+            // path (e.g. 63, 63_82, 63_82_84) so the links resolve correctly.
+            foreach ($path_query->rows as $cat_item) {
+                $path = $path ? $path . '_' . (int)$cat_item['category_id'] : (string)(int)$cat_item['category_id'];
+
                 $data['breadcrumbs'][] = array(
                     'text' => $cat_item['name'],
-                    'href' => $this->url->link('product/category', 'path=' . $cat_item['category_id'])
+                    'href' => $this->url->link('product/category', 'path=' . $path)
                 );
             }
         }
