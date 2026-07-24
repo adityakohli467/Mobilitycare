@@ -34,35 +34,83 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
         // Build category breadcrumbs by walking up the parent chain
         $category_id = 0;
 
-        // Detect category from HTTP Referer (user navigated from a category page)
-        if (isset($this->request->server['HTTP_REFERER'])) {
+        // All categories this product is actually assigned to (NOT just top-menu ones).
+        // getCategoriesInfo() only returns top=1 categories, which collapses deep
+        // products down to just the root (e.g. "Mobility Aids"), so we must use
+        // getCategories() to have the full assigned set available for validation.
+        $assigned_ids = array();
+        foreach ($this->model_catalog_product->getCategories($product_id) as $cat) {
+            $assigned_ids[(int)$cat['category_id']] = true;
+        }
+
+        // Priority 1: explicit ?path= leaf category (if the product is assigned to it).
+        if (isset($this->request->get['path'])) {
+            $path_parts = explode('_', (string)$this->request->get['path']);
+            $path_leaf = (int)array_pop($path_parts);
+            if ($path_leaf && isset($assigned_ids[$path_leaf])) {
+                $category_id = $path_leaf;
+            }
+        }
+
+        // Priority 2: category the user navigated from (HTTP Referer), same host only.
+        if (!$category_id && isset($this->request->server['HTTP_REFERER'])) {
             $referer = $this->request->server['HTTP_REFERER'];
-            $referer_path = parse_url($referer, PHP_URL_PATH);
-            if ($referer_path && preg_match('#^/shop/([^/]+)#', $referer_path, $matches)) {
-                $ref_keyword = $this->db->escape($matches[1]);
-                $ref_query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $ref_keyword . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
-                if ($ref_query->num_rows) {
-                    $ref_parts = explode('=', $ref_query->row['query']);
-                    if ($ref_parts[0] == 'category_id') {
-                        // Verify this product actually belongs to that category
-                        $ref_cat_id = (int)$ref_parts[1];
-                        $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-                        foreach ($categories as $cat) {
-                            if ((int)$cat['category_id'] == $ref_cat_id) {
-                                $category_id = $ref_cat_id;
-                                break;
+            $referer_host = parse_url($referer, PHP_URL_HOST);
+            $current_host = isset($this->request->server['HTTP_HOST']) ? $this->request->server['HTTP_HOST'] : '';
+
+            if ($referer_host && $current_host && strcasecmp($referer_host, $current_host) === 0) {
+                $ref_cat_id = 0;
+
+                // Legacy referer: index.php?route=product/category&path=..._X
+                $referer_query = parse_url($referer, PHP_URL_QUERY);
+                if ($referer_query) {
+                    parse_str($referer_query, $referer_get);
+                    if (isset($referer_get['path'])) {
+                        $ref_path_parts = explode('_', (string)$referer_get['path']);
+                        $ref_cat_id = (int)array_pop($ref_path_parts);
+                    }
+                }
+
+                // SEO referer: /shop/<chain>/<leaf-slug>/ -> resolve the LAST slug.
+                if (!$ref_cat_id) {
+                    $referer_path = parse_url($referer, PHP_URL_PATH);
+                    if ($referer_path) {
+                        $slugs = array_values(array_filter(explode('/', trim($referer_path, '/')), 'strlen'));
+                        // Drop known route prefixes so the last real slug is the category.
+                        while ($slugs && in_array($slugs[0], array('shop', 'buy', 'brands'), true)) {
+                            array_shift($slugs);
+                        }
+                        $ref_leaf_slug = end($slugs);
+                        if ($ref_leaf_slug) {
+                            $ref_query = $this->db->query("SELECT `query` FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($ref_leaf_slug) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+                            if ($ref_query->num_rows) {
+                                $ref_parts = explode('=', $ref_query->row['query']);
+                                if ($ref_parts[0] == 'category_id') {
+                                    $ref_cat_id = (int)$ref_parts[1];
+                                }
                             }
                         }
                     }
                 }
+
+                // Verify the product actually belongs to the refered category.
+                if ($ref_cat_id && isset($assigned_ids[$ref_cat_id])) {
+                    $category_id = $ref_cat_id;
+                }
             }
         }
 
-        if (!$category_id) {
-            // Fallback: use first assigned category (primary)
-            $categories = $this->model_catalog_product->getCategoriesInfo($product_id);
-            if ($categories) {
-                $category_id = (int)$categories[0]['category_id'];
+        // Priority 3: fallback to the DEEPEST assigned category so the breadcrumb
+        // always shows the full hierarchy instead of collapsing to the root.
+        if (!$category_id && $assigned_ids) {
+            $max_depth = -1;
+            foreach (array_keys($assigned_ids) as $assigned_id) {
+                $depth_query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "category_path WHERE category_id = '" . (int)$assigned_id . "'");
+                $depth = (int)$depth_query->row['total'];
+                if ($depth > $max_depth) {
+                    $max_depth = $depth;
+                    $category_id = (int)$assigned_id;
+                }
             }
         }
 
