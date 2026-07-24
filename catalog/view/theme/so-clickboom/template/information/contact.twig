@@ -119,137 +119,38 @@
  
 			 </div>
 			<div class="col-sm-6 col-xs-12 contact-form">
-			   <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal quoteForm ajax-validate-form" data-validate-url="/index.php?route=information/contact/validateAjax">
-        <fieldset>
-           
-            <p>{{ comment }}</p>
-            
-            <div class="form-group required">
-                <div class="col-sm-12">
-                    <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" placeholder="Enter your full name *"/>
-                    {% if error_name %} 
-                    <div class="text-danger">{{ error_name }}</div>
-                    {% endif %} 
-                </div>
-            </div>
-            
-            <div class="form-group required">
-                <div class="col-sm-12">
-                    <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" placeholder="Enter your email address *" />
-                    {% if error_email %} 
-                    <div class="text-danger">{{ error_email }}</div>
-                    {% endif %} 
-                </div>
-            </div>
-            
-            <div class="form-group required">
-                <div class="col-sm-12">
-                    <input type="number" name="phone" value="{{ phone }}" id="input-phone" class="form-control" placeholder="Enter your phone number *" />
-                    {% if error_phone %} 
-                    <div class="text-danger">{{ error_phone }}</div>
-                    {% endif %} 
-                </div>
-            </div>
-            
-            <div class="form-group required">
-                <div class="col-sm-12">
-                   <input type="text" class="form-control" name="postcode" placeholder="Postcode *" maxlength="4" pattern="^[0-9]{1,4}$" title="Please enter up to 4 digits only" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);" required>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <div class="col-sm-12">
-                  
-                   <select name="manufacturer_id" id="manufacturer_id" class="form-control" >
-    <option value="" disabled {% if not manufacturer_id %}selected{% endif %}>Product of interest *</option>
-    {% for manufacturer in manufacturers %}
-            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer_id == manufacturer.manufacturer_id %}selected{% endif %}>
-                {{ manufacturer.name }}
-            </option>
-    {% endfor %}
-    </select>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label>Are you contacting us as?</label>
-                    <select name="contact_type" id="contact_type" class="form-control">
-                       
-                        <option value="For Myself">For Myself</option>
-                        <option value="For a Friend/Family Member">For a Friend/Family Member</option>
-                        <option value="Healthcare Professional">Healthcare Professional</option>
-                        <option value="Dealer or Business">Dealer or Business</option>
-                        <option value="Government or Non-Profit Organisation">Government or Non-Profit Organisation</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group" id="healthcare_profession" style="display: none;">
-                <div class="col-sm-12">
-                    <label>If Healthcare Professional, please specify:</label>
-                    <select name="healthcare_profession" class="form-control">
-                        <option value="Occupational Therapist">Occupational Therapist</option>
-                        <option value="Physiotherapist">Physiotherapist</option>
-                        <option value="Rehabilitation Specialist">Rehabilitation Specialist</option>
-                        <option value="Aged Care Professional">Aged Care Professional</option>
-                        <option value="Nurse or Caregiver">Nurse or Caregiver</option>
-                        <option value="Neurologist">Neurologist</option>
-                        <option value="Orthopedic Specialist">Orthopedic Specialist</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group required">
-                <div class="col-sm-12">
-                    <label>Reason for Inquiry</label>
-                    <select name="inquiry_reason" class="form-control">
-                        <option value="General Inquiry">General Inquiry</option>
-                        <option value="Demonstration">Demonstration</option>
-                        <option value="Quote">Quote</option>
-                        <option value="Find a dealer near me">Find a dealer near me</option>
-                        <option value="Product Information">Product Information</option>
-                        <option value="Dealer or Business Partnership">Dealer or Business Partnership</option>
-                        <option value="Technical Support">Technical Support</option>
-                        <option value="Warranty or Returns">Warranty or Returns</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <textarea name="enquiry" rows="5" id="input-enquiry" placeholder="Type your message here" class="form-control">{{ enquiry }}</textarea>
-                    {% if error_enquiry %} 
-                    <div class="text-danger">{{ error_enquiry }}</div>
-                    {% endif %} 
-                </div>
-            </div>
-            
-            {# {{ captcha }} #}
-        </fieldset>
-
-        <div class="form-group">
-       <button  style="width: 100%;" class="btn loadButton" type="submit">{{ button_submit }}</button>
-          </div>
-          
-          <script>
-document.getElementById("contact_type").addEventListener("change", function() {
-    const manufacturerField = document.querySelector("[name='manufacturer_id']");
-    const healthcareField = document.getElementById("healthcare_profession");
-
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-        manufacturerField.setAttribute("required", "required");
-    } else {
-        healthcareField.style.display = "none";
-        manufacturerField.removeAttribute("required");
-    }
-});
-</script>
-
-    </form>
+			   <!-- HubSpot Form: Contact Us -->
+			   <div id="hubspotForm-contact" class="hubspot-form-embed"></div>
+			   <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+			   <script>
+			     hbspt.forms.create({
+			       region: "ap1",
+			       portalId: "443388967",
+			       formId: "e6c3896d-2d93-4f73-b831-cb94ffcf1b47",
+			       target: "#hubspotForm-contact",
+			       onFormReady: function ($form) {
+			         var formEl = ($form && $form.length) ? $form[0] : $form;
+			         if (!formEl) { return; }
+			         // Show loader when the user clicks the submit button
+			         formEl.addEventListener('click', function (e) {
+			           var t = e.target;
+			           if (t && (t.type === 'submit' || (t.className && String(t.className).indexOf('hs-button') !== -1))) {
+			             $('#loaderOverlay').show();
+			           }
+			         });
+			         // Hide loader and show the button again when a validation error appears
+			         var observer = new MutationObserver(function () {
+			           if (formEl.querySelector('.hs-error-msgs li')) {
+			             $('#loaderOverlay').hide();
+			           }
+			         });
+			         observer.observe(formEl, { childList: true, subtree: true });
+			       },
+			       onFormSubmitted: function () {
+			         $('#loaderOverlay').hide();
+			       }
+			     });
+			   </script>
 			</div>
 		</div>
 		<div class="row mt-5 mb-5">
@@ -355,16 +256,6 @@ document.getElementById("contact_type").addEventListener("change", function() {
                         
                     </div>
        
-      <script>
-document.getElementById("contact_type").addEventListener("change", function() {
-    var healthcareField = document.getElementById("healthcare_profession");
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-    } else {
-        healthcareField.style.display = "none";
-    }
-});
-</script>
 <style>
 .info-contact p, .info-contact span, .info-contact b, .info-contact h4, .info-contact small{
     color:black !important;
