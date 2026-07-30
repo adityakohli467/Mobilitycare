@@ -8,6 +8,40 @@ class ControllerStartupSeoUrl extends Controller {
 
 		// Decode URL
 		if (isset($this->request->get['_route_'])) {
+			// Blog posts are nested under /blog/. The stored SEO keyword either
+			// already includes the "blog/" prefix (e.g. "blog/how-to-choose-a-
+			// mobility-ramp") or is a bare slug. Because such keywords contain a
+			// slash they must be resolved as a whole, before the generic per-part
+			// decoder below splits the path on "/".
+			$blog_route = rtrim($this->request->get['_route_'], '/');
+
+			if ($blog_route !== '' && strpos($blog_route, 'blog/') === 0) {
+				$blog_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($blog_route) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+
+				// Fall back to the bare slug when the stored keyword has no prefix.
+				if (!$blog_query->num_rows) {
+					$bare_slug = substr($blog_route, strlen('blog/'));
+
+					$blog_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($bare_slug) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+				}
+
+				if ($blog_query->num_rows) {
+					$blog_kv = explode('=', $blog_query->row['query']);
+
+					if ($blog_kv[0] == 'simple_blog_article_id') {
+						$this->request->get['simple_blog_article_id'] = $blog_kv[1];
+						$this->request->get['route'] = 'extension/simple_blog/article/view';
+					} elseif ($blog_kv[0] == 'simple_blog_category_id') {
+						$this->request->get['simple_blog_category_id'] = $blog_kv[1];
+						$this->request->get['route'] = 'extension/simple_blog/category';
+					} elseif ($blog_query->row['query']) {
+						$this->request->get['route'] = $blog_query->row['query'];
+					}
+
+					return;
+				}
+			}
+
 			$parts = explode('/', $this->request->get['_route_']);
 			
 			$had_shop_prefix = false;
@@ -61,7 +95,17 @@ if (isset($parts[0]) && $parts[0] == 'brands') {
 						$this->request->get['information_id'] = $url[1];
 					}
 
-					if ($query->row['query'] && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id') {
+					if ($url[0] == 'simple_blog_article_id') {
+						$this->request->get['simple_blog_article_id'] = $url[1];
+						$this->request->get['route'] = 'extension/simple_blog/article/view';
+					}
+
+					if ($url[0] == 'simple_blog_category_id') {
+						$this->request->get['simple_blog_category_id'] = $url[1];
+						$this->request->get['route'] = 'extension/simple_blog/category';
+					}
+
+					if ($query->row['query'] && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id' && $url[0] != 'simple_blog_article_id' && $url[0] != 'simple_blog_category_id') {
 						$this->request->get['route'] = $query->row['query'];
 					}
 				} else {
@@ -128,6 +172,22 @@ if (isset($parts[0]) && $parts[0] == 'brands') {
             $url .= '/brands/' . $query->row['keyword'] . '/';
         } elseif ($data['route'] == 'information/information') {
             $url .= '/' . $query->row['keyword'] . '/';
+        }
+
+        unset($data[$key]);
+    }
+} elseif (($data['route'] == 'extension/simple_blog/article/view' && $key == 'simple_blog_article_id') || ($data['route'] == 'extension/simple_blog/category' && $key == 'simple_blog_category_id')) {
+    // Blog posts are nested under /blog/. Generate the pretty URL from the
+    // stored SEO keyword, ensuring the /blog/ prefix is present exactly once.
+    $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+    if ($query->num_rows && $query->row['keyword']) {
+        $keyword = $query->row['keyword'];
+
+        if (strpos($keyword, 'blog/') === 0) {
+            $url .= '/' . $keyword . '/';
+        } else {
+            $url .= '/blog/' . $keyword . '/';
         }
 
         unset($data[$key]);
