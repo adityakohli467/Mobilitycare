@@ -107,7 +107,23 @@ class ControllerProductManufacturer extends Controller {
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 
 		if ($manufacturer_info) {
-			$this->document->setTitle($manufacturer_info['name']);
+			$manufacturer_description = $this->model_catalog_manufacturer->getManufacturerDescription($manufacturer_id);
+
+			if (!empty($manufacturer_description['meta_title'])) {
+				$this->document->setTitle($manufacturer_description['meta_title']);
+			} else {
+				$this->document->setTitle($manufacturer_info['name']);
+			}
+
+			if (!empty($manufacturer_description['meta_description'])) {
+				$this->document->setDescription($manufacturer_description['meta_description']);
+			}
+
+			if (!empty($manufacturer_description['meta_keyword'])) {
+				$this->document->setKeywords($manufacturer_description['meta_keyword']);
+			}
+
+			$data['manufacturer_description'] = !empty($manufacturer_description['description']) ? html_entity_decode($manufacturer_description['description'], ENT_QUOTES, 'UTF-8') : '';
 
 			$url = '';
 

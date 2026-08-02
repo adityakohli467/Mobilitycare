@@ -6,6 +6,18 @@ class ModelCatalogManufacturer extends Model {
 		return $query->row;
 	}
 
+	public function getManufacturerDescription($manufacturer_id) {
+		$table_exists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "manufacturer_description'");
+
+		if (!$table_exists->num_rows) {
+			return array();
+		}
+
+		$query = $this->db->query("SELECT description, meta_title, meta_description, meta_keyword FROM `" . DB_PREFIX . "manufacturer_description` WHERE manufacturer_id = '" . (int)$manufacturer_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->row;
+	}
+
 	public function getManufacturers($data = array()) {
 		if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";

@@ -16,6 +16,9 @@
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
 		<h2>{{ heading_title }}</h2>
+		{% if manufacturer_description %}
+		<div class="manufacturer-description">{{ manufacturer_description }}</div>
+		{% endif %}
 		{% if products %}
 			{#==== Product Listing ==== #}
 			{% include theme_directory~'/template/soconfig/listing.twig' with {listingType: listingType} %}

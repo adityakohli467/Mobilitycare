@@ -12,6 +12,11 @@ $_['text_percent']      = 'Percentage';
 $_['text_amount']       = 'Fixed Amount';
 $_['text_keyword']      = 'Do not use spaces, instead replace spaces with - and make sure the SEO URL is globally unique.';
 
+// Tab
+$_['tab_general']       = 'General';
+$_['tab_description']   = 'Description';
+$_['tab_seo']           = 'SEO';
+
 // Column
 $_['column_name']       = 'Brand Name';
 $_['column_sort_order'] = 'Sort Order';
@@ -24,6 +29,10 @@ $_['entry_keyword']     = 'Keyword';
 $_['entry_image']       = 'Image';
 $_['entry_sort_order']  = 'Sort Order';
 $_['entry_type']        = 'Type';
+$_['entry_description']      = 'Description';
+$_['entry_meta_title']       = 'Meta Tag Title';
+$_['entry_meta_description'] = 'Meta Tag Description';
+$_['entry_meta_keyword']     = 'Meta Tag Keywords';
 
 // Error
 $_['error_permission']  = 'Warning: You do not have permission to modify brand!';
