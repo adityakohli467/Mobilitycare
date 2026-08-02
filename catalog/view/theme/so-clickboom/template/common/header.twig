@@ -66,6 +66,76 @@ window.addEventListener('load', function() {
 });
 </script>
 
+<!-- CallRail <-> HubSpot bridge: forwards HubSpot form submissions into CallRail Form Tracking.
+     HubSpot handles the real (AJAX) submit; this only mirrors the values into a hidden native
+     form that CallRail can discover, so submissions are attributed to the visitor's session. -->
+<script>
+(function () {
+  var FORM_ID = 'callrail-hs-bridge-form';
+
+  function ensureForm() {
+    var form = document.getElementById(FORM_ID);
+    if (form) { return form; }
+    if (!document.body) { return null; }
+    form = document.createElement('form');
+    form.id = FORM_ID;
+    form.setAttribute('aria-hidden', 'true');
+    form.setAttribute('autocomplete', 'off');
+    form.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;';
+    ['name', 'email', 'phone', 'message'].forEach(function (n) {
+      var i = document.createElement('input');
+      i.type = 'text';
+      i.name = n;
+      i.setAttribute('autocomplete', 'off');
+      form.appendChild(i);
+    });
+    // CallRail reads the field values on the submit event; cancel the default so the page never navigates.
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+    document.body.appendChild(form);
+    return form;
+  }
+
+  function fieldsFromHubSpot(arr) {
+    var o = {};
+    (arr || []).forEach(function (f) { if (f && f.name) { o[String(f.name).toLowerCase()] = f.value; } });
+    var name = o.name || ((o.firstname || '') + ' ' + (o.lastname || '')).trim() || o.full_name || '';
+    var message = o.message || '';
+    if (!message) {
+      for (var k in o) { if (/message|comment|enquir|question|how_can_we_help/.test(k)) { message = o[k]; break; } }
+    }
+    return { name: name, email: o.email || '', phone: o.phone || o.mobilephone || '', message: message };
+  }
+
+  function forward(fields) {
+    var form = ensureForm();
+    if (!form) { return; }
+    form.elements['name'].value = fields.name || '';
+    form.elements['email'].value = fields.email || '';
+    form.elements['phone'].value = fields.phone || '';
+    form.elements['message'].value = fields.message || '';
+    if (typeof form.requestSubmit === 'function') {
+      form.requestSubmit();
+    } else {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+  }
+
+  // Build the hidden form early so CallRail's Form Tracking can discover it during its DOM scan.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureForm);
+  } else {
+    ensureForm();
+  }
+
+  // HubSpot broadcasts every embedded-form event to the parent window via postMessage.
+  window.addEventListener('message', function (event) {
+    var d = event && event.data;
+    if (!d || d.type !== 'hsFormCallback' || d.eventName !== 'onFormSubmit') { return; }
+    forward(fieldsFromHubSpot(d.data));
+  });
+})();
+</script>
+
 
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
