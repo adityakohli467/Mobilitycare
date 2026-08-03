@@ -51,6 +51,9 @@ RewriteRule ^buy/in-step-laser-cane$ /buy/instep-lasercue/ [R=301,L]
 # Ramps moved out from under Lifting & Transfer Aids to directly under Mobility Aids
 RewriteRule ^shop/mobility-aids/lifting-transfer-aids/ramps/?$ /shop/mobility-aids/ramps/ [R=301,L]
 
+# Specialty Solutions is a ROOT-level URL tree (no /shop/mobility-aids/ prefix)
+RewriteRule ^shop/mobility-aids/specialty-solutions/?$ /specialty-solutions/ [R=301,L]
+
 # --- 301 Redirects: /1000 URLs with specific destinations (BEFORE patterns) ---
 RewriteRule ^amf-bruns-world-innovators-in-wheelchair-occupant-restraints-for-vehicles//1000/?$ /shop/mobility-aids/vehicle-modifications/ [R=301,L]
 RewriteRule ^amf-bruns-world-innovators-in-wheelchair-occupant-restraints-for-vehicles/1000/?$ /shop/mobility-aids/vehicle-modifications/ [R=301,L]
@@ -556,7 +559,7 @@ RewriteRule ^organise-a-product-trial/?$ index.php?route=information/trial_reque
 # Product Demonstration
 RewriteRule ^organise-a-product-demonstration/?$ index.php?route=information/demo_request [L,QSA]
 # Funding Support
-RewriteRule ^am-i-eligible-for-funding-support/?$ /funding-support [R=301,L]
+RewriteRule ^am-i-eligible-for-funding-support/?$ /funding-support/ [R=301,L]
 
 RewriteRule ^funding-support/?$ index.php?route=information/funding_support [L,QSA]
 RewriteRule ^ndis/?$ index.php?route=information/ndis [L,QSA]
@@ -740,7 +743,7 @@ RewriteRule ^about-us/?$ index.php?route=information/aboutUs [L,QSA]
 RewriteRule ^blog/?$ index.php?route=extension/simple_blog/article [L,QSA]
 RewriteRule ^terms-conditions/?$ index.php?route=information/information&information_id=5 [L,QSA]
 RewriteRule ^privacy-policy/?$ index.php?route=information/information&information_id=3 [L,QSA]
-RewriteRule ^faq/?$ /customer-service [R=301,L]
+RewriteRule ^faq/?$ /customer-service/ [R=301,L]
 RewriteRule ^delivery-information/?$ index.php?route=information/information&information_id=6 [L,QSA]
 RewriteRule ^demo-videos/?$ index.php?route=information/information&information_id=7 [L,QSA]
 RewriteRule ^featured-products/?$ index.php?route=product/category&path=101 [L,QSA]
@@ -782,7 +785,7 @@ RewriteRule ^index\.php$ /delivery-information? [R=301,L]
 
 # demo videos
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/information&information_id=7[\s?] [NC]
-RewriteRule ^index\.php$ /demo-videos? [R=301,L]
+RewriteRule ^index\.php$ /demo-videos/? [R=301,L]
 
 # faq -> customer-service (duplicate eliminated)
 # (redirect already handled above in rewrite rules)
@@ -807,7 +810,7 @@ RewriteCond %{QUERY_STRING} ^route=product/category&path=63$ [NC]
 RewriteRule ^(index\.php)?$ /shop/mobility-aids? [R=301,L]
 
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=product/manufacturer[\s?] [NC]
-RewriteRule ^index\.php$ /brands? [R=301,L]
+RewriteRule ^index\.php$ /brands/? [R=301,L]
 
 
 

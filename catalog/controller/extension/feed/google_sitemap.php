@@ -84,7 +84,6 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				'customer-service',
 				'light-drive-2-enquiry',
 				'autochair-smart-lifter-enquiry',
-				'about-us',
 				'blog',
 				'brands',
 				'request-local-dealer'
@@ -92,7 +91,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			foreach ($customUrls as $url) {
 				$output .= '<url>' . "\n";
-				$output .= '  <loc>' . $this->escapeUrl($server . $url) . '</loc>' . "\n";
+				$output .= '  <loc>' . $this->escapeUrl($server . $url . '/') . '</loc>' . "\n";
 				$output .= '  <changefreq>monthly</changefreq>' . "\n";
 				$output .= '  <priority>0.8</priority>' . "\n";
 				$output .= '</url>' . "\n";
