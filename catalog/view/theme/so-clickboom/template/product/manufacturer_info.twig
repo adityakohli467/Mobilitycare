@@ -16,7 +16,7 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-		<h1>{{ heading_title }}</h1>
+		<h1 style="margin-bottom: 30px;">{{ heading_title }}</h1>
 		{% if products %}
 			{#==== Product Listing ==== #}
             <div class="products-category">
@@ -29,7 +29,7 @@
 			</div>
 		{% endif %}
 		{% if manufacturer_description %}
-		<div class="manufacturer-description">{{ manufacturer_description }}</div>
+		<div class="manufacturer-description" style="margin-top: 30px;">{{ manufacturer_description }}</div>
 		{% endif %}
 		{{ content_bottom }}</div>
     {{ column_right }}</div>

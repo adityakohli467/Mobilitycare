@@ -15,7 +15,7 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-		<h2 style="color: #003264;">{{ heading_title }}</h2>
+		<h2 style="color: #003264; margin-bottom: 25px;">{{ heading_title }}</h2>
 		{% if products %}
 			{#==== Product Listing ==== #}
 			{% include theme_directory~'/template/soconfig/listing.twig' with {listingType: listingType} %}
