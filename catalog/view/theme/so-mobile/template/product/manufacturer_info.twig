@@ -15,10 +15,7 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-		<h2>{{ heading_title }}</h2>
-		{% if manufacturer_description %}
-		<div class="manufacturer-description">{{ manufacturer_description }}</div>
-		{% endif %}
+		<h2 style="color: #003264;">{{ heading_title }}</h2>
 		{% if products %}
 			{#==== Product Listing ==== #}
 			{% include theme_directory~'/template/soconfig/listing.twig' with {listingType: listingType} %}
@@ -27,6 +24,9 @@
 			<div class="buttons">
 				<div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
 			</div>
+		{% endif %}
+		{% if manufacturer_description %}
+		<div class="manufacturer-description">{{ manufacturer_description }}</div>
 		{% endif %}
 		{{ content_bottom }}</div>
     {{ column_right }}</div>
