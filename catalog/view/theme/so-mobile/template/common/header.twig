@@ -101,6 +101,9 @@ a{text-decoration:none;}
 {{soconfig.css_out(soconfig.get_settings('cssExclude'))}}
 {{soconfig.js_out(soconfig.get_settings('jsExclude'))}}
 
+{# =========== Custom Code Editor (admin Custom CSS) ==============#}
+{% if soconfig.get_settings('cssinput_status') and (soconfig.get_settings('cssinput_content')) is not empty %}{% set custom_css = soconfig.get_settings('cssinput_content') %}{% if '<style' in custom_css or '<link' in custom_css %}{{ custom_css }}{% else %}<style>{{ custom_css }}</style>{% endif %}{% endif %}
+
 
 {# =========== Begin Google Font ==============#}
 {% if soconfig.get_settings('murl_body')  and  soconfig.get_settings('mbody_status') ==  'google' %} <link href='{{ soconfig.get_settings('murl_body') }}&display=swap' rel='stylesheet' media="print" onload="this.media='all'"> {% endif %} 	

@@ -191,6 +191,7 @@ a{text-decoration:none;}
 
 {{soconfig.addCss('catalog/view/theme/'~theme_directory~'/css/ie9-and-up.css')}}
 {{soconfig.addCss('catalog/view/theme/'~theme_directory~'/css/custom.css')}}
+{{soconfig.addCss('catalog/view/theme/'~theme_directory~'/css/child.css')}}
 {{soconfig.addCss('catalog/view/javascript/pe-icon-7-stroke/css/pe-icon-7-stroke.css')}}
 {{soconfig.addCss('catalog/view/javascript/pe-icon-7-stroke/css/helper.css')}}
 {% for style in styles %}{{ soconfig.addCss(style.href)}}{% endfor %}
@@ -220,7 +221,7 @@ a{text-decoration:none;}
 {{soconfig.css_out(soconfig.get_settings('cssExclude'))}}
 {{soconfig.js_out(soconfig.get_settings('jsExclude'))}}
 {# =========== Custom Code Editor ==============#}
-{% if soconfig.get_settings('cssinput_status') and (soconfig.get_settings('cssinput_content')) is not empty %}{{ soconfig.get_settings('cssinput_content')  }} {% endif %} 
+{% if soconfig.get_settings('cssinput_status') and (soconfig.get_settings('cssinput_content')) is not empty %}{% set custom_css = soconfig.get_settings('cssinput_content') %}{% if '<style' in custom_css or '<link' in custom_css %}{{ custom_css }}{% else %}<style>{{ custom_css }}</style>{% endif %}{% endif %} 
 {# =========== Begin Google Analytics ==============#}
 {% for link in links %}<link href="{{ link.href }}" rel="{{ link.rel }}" />{% endfor %}
 {% set has_canonical = false %}

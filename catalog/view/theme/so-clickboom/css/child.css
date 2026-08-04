@@ -1,0 +1,56 @@
+/* ============================================================
+   CHILD / CLIENT OVERRIDE STYLESHEET
+   ------------------------------------------------------------
+   Purpose : Safe place for custom CSS tweaks. This file is
+             loaded LAST (after theme.css and custom.css), so
+             rules here override the theme without editing core
+             theme files. It is safe from theme updates.
+
+   Usage   : Add your custom rules below. Keep selectors
+             specific (scope them to a section) to avoid
+             unintended side effects.
+   ============================================================ */
+
+
+/* ============================================================
+   PRODUCT CATEGORY — CONTENT AREA
+   Targets the category description/content block rendered under
+   the product grid on category pages:
+     <div class="... category-content mt-5"> {{ description }} </div>
+   Adjust the spacing values below to taste.
+   ============================================================ */
+
+/* Heading spacing */
+.category-content h1,
+.category-content h2,
+.category-content h3,
+.category-content h4,
+.category-content h5,
+.category-content h6 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+/* Remove the extra top gap on the very first heading */
+.category-content > :first-child {
+    margin-top: 0;
+}
+
+/* Paragraph spacing */
+.category-content p {
+    margin-top: 0;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+/* List spacing (optional) */
+.category-content ul,
+.category-content ol {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.category-content li {
+    margin-bottom: 6px;
+}
