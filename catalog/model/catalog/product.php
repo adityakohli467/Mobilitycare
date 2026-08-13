@@ -59,6 +59,7 @@ class ModelCatalogProduct extends Model {
 			$productData =  array(
 				'product_id'       => $query->row['product_id'],
 				'featured_image'       => $query->row['featured_image'],
+				'primary_category_id'  => isset($query->row['primary_category_id']) ? (int)$query->row['primary_category_id'] : 0,
 				'display_add_to_cart'  => $query->row['display_add_to_cart'],
 				'display_custom_quote' => $query->row['display_custom_quote'],
 				'show_price' => $query->row['show_price'],

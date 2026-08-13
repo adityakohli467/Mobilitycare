@@ -153,9 +153,17 @@ $data['price_no_currency'] = preg_replace('/[^0-9.]/', '', $product_info['price'
 
         $category_id = 0;
 
+        // 0) Admin-selected primary breadcrumb category always wins, so a product
+        //    in several categories shows a fixed trail no matter how the visitor
+        //    arrived (direct link, Google Ad, category browse, etc.). Must still be
+        //    one of the product's assigned categories.
+        if (!empty($product_info['primary_category_id']) && isset($product_categories[(int)$product_info['primary_category_id']])) {
+            $category_id = (int)$product_info['primary_category_id'];
+        }
+
         // 1) Explicit referring category on the URL (?path=...), if it is one of
         //    the product's assigned categories.
-        if (isset($this->request->get['path'])) {
+        if (!$category_id && isset($this->request->get['path'])) {
             $parts = explode('_', (string)$this->request->get['path']);
             $leaf = (int)array_pop($parts);
 

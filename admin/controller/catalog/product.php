@@ -1382,6 +1382,15 @@ $data['placeholderFeaturedImage'] = $this->model_tool_image->resize('no_image.pn
 			}
 		}
 
+		// Primary breadcrumb category (fixed breadcrumb for multi-category products)
+		if (isset($this->request->post['primary_category_id'])) {
+			$data['primary_category_id'] = (int)$this->request->post['primary_category_id'];
+		} elseif (!empty($product_info) && isset($product_info['primary_category_id'])) {
+			$data['primary_category_id'] = (int)$product_info['primary_category_id'];
+		} else {
+			$data['primary_category_id'] = 0;
+		}
+
 		// Filters
 		$this->load->model('catalog/filter');
 

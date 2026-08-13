@@ -138,6 +138,8 @@ class ModelCatalogProduct extends Model {
 			}
 		}
 
+		$this->savePrimaryCategory($product_id, $data);
+
 		if (isset($data['product_filter'])) {
 			foreach ($data['product_filter'] as $filter_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
@@ -330,6 +332,8 @@ class ModelCatalogProduct extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
 			}
 		}
+
+		$this->savePrimaryCategory($product_id, $data);
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
 
@@ -638,6 +642,19 @@ public function saveProductSpecs($product_id, $data) {
 		}
 
 		return $product_category_data;
+	}
+
+	private function savePrimaryCategory($product_id, $data) {
+		$primary_category_id = isset($data['primary_category_id']) ? (int)$data['primary_category_id'] : 0;
+
+		// Only keep the primary category if it is one of the product's assigned categories.
+		$assigned = isset($data['product_category']) ? array_map('intval', $data['product_category']) : array();
+
+		if (!$primary_category_id || !in_array($primary_category_id, $assigned, true)) {
+			$primary_category_id = 0;
+		}
+
+		$this->db->query("UPDATE " . DB_PREFIX . "product SET primary_category_id = '" . (int)$primary_category_id . "' WHERE product_id = '" . (int)$product_id . "'");
 	}
 
 	public function getProductFilters($product_id) {
