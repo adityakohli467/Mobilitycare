@@ -14,7 +14,7 @@
     <div class="row mt-5 form-container">
       <div class="row text-center"><h3>Warranty Claim Form</h3></div>
       <div class="row text-red mt-3 text-success"><strong><small>Note : Important: Before submitting this claim, please review our <a href="https://www.mobilitycare.net.au/returns-warranty-policy/" class="text-danger text-decoration-underline"> Returns-policy </a>to check if your product is covered under warranty. </small></strong></div>
-    <form action="{{ action }}" method="post" enctype="multipart/form-data" class="mt-3 ajax-validate-form" data-validate-url="/index.php?route=information/warranty_claim/validateAjax">
+    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="warrantyClaimForm" class="mt-3 ajax-validate-form" data-validate-url="/index.php?route=information/warranty_claim/validateAjax">
     <fieldset>
         <legend>Customer Information</legend>
         <div class="row mb-3">
