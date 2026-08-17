@@ -1201,218 +1201,18 @@
 
       <div class="modal-body">
 
-        {# ===== HubSpot form (Get a Custom Quote — VM) — enable AFTER adding a hidden "product_id" field to this form in HubSpot, then delete the old <form> below. NOTE: include //js.hsforms.net/forms/embed/v2.js only once per page.
+        {# ===== HubSpot form (Get a Custom Quote - VM) ===== #}
         <div id="hubspotForm-custom-quote-vm" class="hubspot-form-embed"></div>
-        <script src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
         <script>
           hbspt.forms.create({
-            region: "ap1",
             portalId: "443388967",
-            formId: "55944d41-a797-431d-b316-82e8b7a578bf",
-            target: "#hubspotForm-custom-quote-vm",
-            onFormReady: function($form) {
-              var pid = $form.querySelector('input[name="product_id"]');
-              if (pid) { pid.value = "{{ product_id }}"; }
-            }
+            formId: "6e593eb8-f76c-4f3f-95a8-f4814b5a81e6",
+            region: "ap1",
+            target: "#hubspotForm-custom-quote-vm"
           });
         </script>
-        ===== end HubSpot form ===== #}
 
-        <form action="{{ action }}" method="post" class="quoteForm">
-            
-               <!-- VEHICLE MAKE SECTION -->
-<div class="section-header" style="background:#eee; padding:8px; font-weight:bold; margin-top:15px;">VEHICLE MAKE</div>
-
-<div class="row" style="margin-top:15px;">
-  <!-- Vehicle Make -->
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label  for="vehicle_make">Vehicle Make*</label>
-      <input type="text" name="vehicle_make" id="vehicle_make" placeholder="Vehicle Make*" class="form-control" required>
-    </div>
-  </div>
-
-  <!-- Vehicle Model -->
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label  for="vehicle_model">Model*</label>
-      <input type="text" name="vehicle_model" id="vehicle_model" placeholder="Model*" class="form-control" required>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <!-- Vehicle Year -->
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label  for="vehicle_year">Year*</label>
-      <input type="text" name="vehicle_year" id="vehicle_year" placeholder="Year*" class="form-control yearValidate" required>
-    </div>
-  </div>
-
-  <!-- Body Type -->
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label  for="body_type">Body Type*</label>
-      <input type="text" name="body_type" id="body_type" placeholder="Body Type (e.g. Wagon/Ute/Sedan/Van)" class="form-control" required>
-    </div>
-  </div>
-</div>
-
-
-<!-- LIFTING DETAILS SECTION -->
-<div class="section-header" style="background:#eee; padding:8px; font-weight:bold; margin-top:15px;">LIFTING DETAILS</div>
-
-<div class="row" style="margin-top:15px;">
-  <!-- Left Column -->
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label  for="lifting_item">Select Item to be lifted*</label>
-      <select name="lifting_item" id="lifting_item" class="form-control" required>
-        <option value="" disabled selected>Select Item to be lifted*</option>
-        <option value="Mobility Scooter">Mobility Scooter</option>
-        <option value="Electric Wheelchair">Electric Wheelchair</option>
-        <option value="Manual Wheelchair">Manual Wheelchair</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Right Column -->
-  
-</div>
-
-<div class="row">
-  <!-- Full-width below -->
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label for="item_height">Item Height (Folded)*</label>
-      
-        <input type="text" name="item_height" id="item_height" placeholder="Item Height (Folded) (mm)*" class="form-control validateDecimal" required>
-       
-      
-    </div>
-  </div>
-  
-  
-  <div class="col-sm-6">
-    <div class="form-group">
-      <label  for="item_weight">Item Weight*</label>
-        <input type="text" name="item_weight" id="item_weight" placeholder="Item Weight* (kg)" class="form-control validateDecimal" required>
-    </div>
-  </div>
-</div>
-
-
-<div class="section-header" style="background:#eee; padding:8px; font-weight:bold; margin-top:15px;">CONTACT DETAILS</div>
-
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Full Name *</label>
-                <input type="text" name="fullname" placeholder="Full Name *" class="form-control" required>
-                {% if error_fullname %}
-                  <div class="text-danger">{{ error_fullname }}</div>
-                {% endif %}
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Email *</label>
-                <input type="text" name="email" placeholder="Email *" class="form-control" required>
-                
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Phone Number *</label>
-                <input type="text" maxlength="10" name="phone" placeholder="Phone Number *" maxlength="10" class="form-control phoneValidate" required>
-                {% if error_phone %}
-                  <div class="text-danger">{{ error_phone }}</div>
-                {% endif %}
-              </div>
-            </div>
-            
-            
-
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Postcode *</label>
-                <input type="text" name="postcode" placeholder="Postcode *" maxlength="4" title="Please enter up to 4 digits only" class="form-control postcodeValidate" required>
-                       
-                        
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="form-group required">
-                <label>Are you contacting us as? *</label>
-                <select name="contact_type" class="form-control contact_type">
-                  <option value="" disabled selected>Are you contacting us as?</option>
-                  <option value="For Myself">For Myself</option>
-                  <option value="For a Friend/Family Member">For a Friend/Family Member</option>
-                  <option value="Healthcare Professional">Healthcare Professional</option>
-                  <option value="Dealer or Business">Dealer or Business</option>
-                  <option value="Government or Non-Profit Organisation">Government or Non-Profit Organisation</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-sm-6 healthcare_profession"  style="display: none;">
-              <div class="form-group">
-                <label>If Healthcare Professional, please specify:</label>
-                <select name="healthcare_profession" class="form-control">
-                  <option value="" disabled selected>If Healthcare Professional, please specify:</option>
-                  <option value="Occupational Therapist">Occupational Therapist</option>
-                  <option value="Physiotherapist">Physiotherapist</option>
-                  <option value="Rehabilitation Specialist">Rehabilitation Specialist</option>
-                  <option value="Aged Care Professional">Aged Care Professional</option>
-                  <option value="Nurse or Caregiver">Nurse or Caregiver</option>
-                  <option value="Neurologist">Neurologist</option>
-                  <option value="Orthopedic Specialist">Orthopedic Specialist</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="form-group required">
-                <label>Preferred Quote Type *</label>
-                <select name="quote_type" class="form-control" required>
-                  <option value="" disabled selected>Preferred Quote Type *</option>
-                  <option value="Standard Quote">Standard Quote</option>
-                  <option value="NDIS Funding Quote">NDIS Funding Quote</option>
-                  <option value="Insurance/WorkSafe Quote">Insurance/WorkSafe Quote</option>
-                </select>
-              </div>
-            </div>
-
-           <input type="hidden" name="product_id" value="{{ product_id }}" />
-          </div>
-
-          <div class="form-group">
-            <label>Additional Information</label>
-            <textarea name="additional_info" class="form-control" placeholder="Additional Information"></textarea>
-          </div>
- <input type="hidden" name="is_manufacturer_or_product" value="1" />
- <input type="hidden" name="manufacturer_id" value="{{ product_id }}" />
-          <div class="form-group">
-            {# {{ captcha }} #}
-          </div>
-
-          <div class="form-group text-right">
-            <button type="submit" class="btn btn-primary">
-              <i class="fa fa-paper-plane"></i> Submit Your Request
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   </div>
@@ -1431,24 +1231,15 @@
 
       <div class="modal-body">
 
-        {# HubSpot form: Ask a question (formId a8dbca29) — add hidden product_id/product_name/product_url fields in HubSpot to capture the product. #}
+        {# ===== HubSpot form: Ask a Question ===== #}
         <div id="hubspotForm-ask-question" class="hubspot-form-embed"></div>
-        <script src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
         <script>
           hbspt.forms.create({
-            region: "ap1",
             portalId: "443388967",
             formId: "a8dbca29-415b-4cba-a37b-98ff429d1bec",
-            target: "#hubspotForm-ask-question",
-            onFormReady: function($form) {
-              var setField = function (name, value) {
-                var el = $form.querySelector('input[name="' + name + '"]');
-                if (el) { el.value = value; }
-              };
-              setField('product_id', "{{ product_id }}");
-              setField('product_name', "{{ heading_title|e('js') }}");
-              setField('product_url', window.location.href);
-            }
+            region: "ap1",
+            target: "#hubspotForm-ask-question"
           });
         </script>
       </div>
