@@ -72,20 +72,20 @@ class ControllerCommonHeader extends Controller {
 		$data['logout'] = $this->url->link('account/logout', '', true);
 		$data['shopping_cart'] = $this->url->link('checkout/checkout');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
-		$data['contact'] = 'contact-mobilitycare';
+		$data['contact'] = 'contact-mobilitycare/';
 		$data['telephone'] = $this->config->get('config_telephone');
-		$data['customerSupport'] = 'customer-service';
-		$data['bookDemo'] = 'organise-a-product-demonstration';
-		$data['quote'] = 'request-quote';
+		$data['customerSupport'] = 'customer-service/';
+		$data['bookDemo'] = 'organise-a-product-demonstration/';
+		$data['quote'] = 'request-quote/';
 		
 		$data['language'] = $this->load->controller('common/language');
 		$data['currency'] = $this->load->controller('common/currency');
 		$data['search'] = $this->load->controller('common/search');
 		$data['cart'] = $this->load->controller('common/cart');
 		$data['menu'] = $this->load->controller('common/menu');
-		$data['dealer_link'] = 'become-a-dealer';
-		$data['findDealer_link'] = 'find-a-dealer';
-		$data['ndis_link'] = 'ndis';
+		$data['dealer_link'] = 'become-a-dealer/';
+		$data['findDealer_link'] = 'find-a-dealer/';
+		$data['ndis_link'] = 'ndis/';
 		
 
 		return $this->load->view('common/header', $data);

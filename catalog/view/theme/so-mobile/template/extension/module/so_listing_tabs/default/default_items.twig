@@ -122,7 +122,7 @@
     {% endif %}
 
     {% if product.display_custom_quote == 1 %}
-    <button type="button" class="btn btn-button" onclick="openModal({{ product.product_id }})" title="Get Your Custom Quote" style="background-color: #d9534f; color: white; padding: 8px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 11px; white-space: nowrap;">
+    <button type="button" class="btn btn-button" onclick="openModal({{ product.product_id }}, '{{ product.name|e('js') }}')" title="Get Your Custom Quote" style="background-color: #d9534f; color: white; padding: 8px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 11px; white-space: nowrap;">
         <span><i class="fa fa-cart-plus" aria-hidden="true"></i> Get Custom Quote</span>
     </button>
     {% endif %}
@@ -205,139 +205,32 @@
                     <h4 class="modal-title" id="customQuoteModalLabel">Get Your Custom Quote</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ action }}" method="post" class="form-horizontal quoteForm">
-                        <div class="form-group">
-                            <label for="fullname" class="col-sm-3 control-label">Full Name *</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="fullname" id="fullname" placeholder="Full Name *" class="form-control" >
-                                {% if error_fullname %}
-                                <div class="text-danger">{{ error_fullname }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email" class="col-sm-3 control-label">Email *</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="email" id="email" placeholder="Email *" class="form-control" >
-                                {% if error_email %}
-                                <div class="text-danger">{{ error_email }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone" class="col-sm-3 control-label">Phone Number *</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="phone" id="phone" placeholder="Phone Number *" class="form-control" >
-                                {% if error_phone %}
-                                <div class="text-danger">{{ error_phone }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="postcode" class="col-sm-3 control-label">Postcode *</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="postcode" id="postcode" placeholder="Postcode *" class="form-control" >
-                                {% if error_phone %}
-                                <div class="text-danger">{{ error_postcode }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group ">
-                            <label for="contact_type" class="col-sm-3 control-label">Are you contacting us as? *</label>
-                            <div class="col-sm-9">
-                                <select name="contact_type" id="contact_type" class="form-control">
-                                    <option value="" disabled selected>Are you contacting us as?</option>
-                                   
-                                    <option value="For Myself">For Myself</option>
-                                    <option value="For a Friend/Family Member">For a Friend/Family Member</option>
-                                    <option value="Healthcare Professional">Healthcare Professional</option>
-                                    <option value="Dealer or Business">Dealer or Business</option>
-                                    <option value="Government or Non-Profit Organisation">Government or Non-Profit Organisation</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group" id="healthcare_profession" style="display: none;">
-                            <label for="healthcare_profession" class="col-sm-3 control-label">If Healthcare Professional, please specify:</label>
-                            <div class="col-sm-9">
-                                <select name="healthcare_profession" class="form-control">
-                                    <option value="" disabled selected>If Healthcare Professional, please specify:</option>
-                                    <option value="Occupational Therapist">Occupational Therapist</option>
-                                    <option value="Physiotherapist">Physiotherapist</option>
-                                    <option value="Rehabilitation Specialist">Rehabilitation Specialist</option>
-                                    <option value="Aged Care Professional">Aged Care Professional</option>
-                                    <option value="Nurse or Caregiver">Nurse or Caregiver</option>
-                                    <option value="Neurologist">Neurologist</option>
-                                    <option value="Orthopedic Specialist">Orthopedic Specialist</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group ">
-                            <label for="quote_type" class="col-sm-3 control-label">Preferred Quote Type *</label>
-                            <div class="col-sm-9">
-                                <select name="quote_type" id="quote_type" class="form-control">
-                                    <option value="" disabled selected>Preferred Quote Type *</option>
-                                    <option value="Standard Quote">Standard Quote</option>
-                                    <option value="NDIS Funding Quote">NDIS Funding Quote</option>
-                                    <option value="Insurance/WorkSafe Quote">Insurance/WorkSafe Quote</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="product_of_interest" class="col-sm-3 control-label">Product of Interest *</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="product_of_interest" id="product_of_interest" class="form-control" readonly placeholder="Product will be selected automatically">
-                            </div>
-                        </div>
-
-                        <div class="form-group hidden">
-                            <label for="product_id" class="col-sm-3 control-label">Choose a Product *</label>
-                            <div class="col-sm-9">
-                                <select name="product_id" class="form-control quote_product_id" >
-                                    <option value="" disabled>Choose a Product *</option>
-                                    <option value="65" data-name="Light Drive Wheelchair Power Assist">Light Drive Wheelchair Power Assist</option>
-                                    {% for product in child_items %}
-                                    <option value="{{ product.product_id }}" data-name="{{ product.name }}">{{ product.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                {% if error_product %}
-                                <div class="text-danger">{{ error_product }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="additional_info" class="col-sm-3 control-label">Additional Information</label>
-                            <div class="col-sm-9">
-                                <textarea name="additional_info" id="additional_info" class="form-control" placeholder="Additional Information"></textarea>
-                            </div>
-                        </div>
- <input type="hidden" name="is_manufacturer_or_product" value="1" />
- <input type="hidden" name="manufacturer_id" class="selected_manufacturer_id"  />
-                        {# Captcha removed
-                        <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <div class="captcha-container" style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="{{ captcha_image_data }}" alt="Captcha" class="captcha-image" />
-                                    <input type="text" name="captcha" class="form-control" placeholder="Enter Captcha code" required style="max-width: 150px;" />
-                                </div>
-                            </div>
-                        </div>
-                        #}
-
-                        <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Request</button>
-                            </div>
-                        </div>
-                    </form>
+                    {# HubSpot form: Request a Quote (55944d41) — selected product passed via openModal() #}
+                    <div id="hubspotForm-custom-quote-home" class="hubspot-form-embed"></div>
+                    <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+                    <script>
+                      var mcQuoteForm = null;
+                      function mcSetQuoteFields() {
+                        if (!mcQuoteForm) { return; }
+                        var setField = function (name, value) {
+                          var el = mcQuoteForm.querySelector('[name="' + name + '"]');
+                          if (el) { el.value = value; }
+                        };
+                        setField('product_id', window.mcQuoteProductId || '');
+                        setField('product_name', window.mcQuoteProductName || '');
+                        setField('product_url', window.location.href);
+                      }
+                      hbspt.forms.create({
+                        region: "ap1",
+                        portalId: "443388967",
+                        formId: "55944d41-a797-431d-b316-82e8b7a578bf",
+                        target: "#hubspotForm-custom-quote-home",
+                        onFormReady: function($form) {
+                          mcQuoteForm = $form;
+                          mcSetQuoteFields();
+                        }
+                      });
+                    </script>
                     
         <div id="loaderOverlay" class="loader-overlay">
         <div class="loader"></div>
@@ -446,51 +339,16 @@
         }
 </style>
 <script>
-function openModal(productId, productNameOverride) {
-    // Find the modal whose dropdown contains this product ID
-    var targetModal = null;
-    var targetSelect = null;
+function openModal(productId, productName) {
+    // Store the clicked product so it is passed into the HubSpot form
+    window.mcQuoteProductId = productId;
+    window.mcQuoteProductName = productName || ('Product #' + productId);
 
-    $('.quote_product_id').each(function() {
-        var opt = $(this).find('option[value="' + productId + '"]');
-        if (opt.length) {
-            targetSelect = $(this);
-            targetModal = $(this).closest('.modal');
-            return false; // break
-        }
-    });
-
-    if (targetModal && targetModal.length) {
-        targetModal.modal('show');
-    } else {
-        // Fallback: open first available modal
-        targetModal = $('.modal:has(.quote_product_id)').first();
-        targetSelect = targetModal.find('.quote_product_id');
-        targetModal.modal('show');
+    if (typeof mcSetQuoteFields === 'function') {
+        mcSetQuoteFields();
     }
 
-    // Set the hidden manufacturer_id field
-    targetModal.find('.selected_manufacturer_id').val(productId);
-
-    if (targetSelect && targetSelect.length) {
-        var selectedOption = targetSelect.find('option[value="' + productId + '"]');
-        if (selectedOption.length) {
-            // Product found in dropdown
-            targetSelect.val(productId);
-            var productName = selectedOption.data('name') || selectedOption.text();
-            targetModal.find('#product_of_interest').val(productName);
-        } else if (productNameOverride) {
-            // Product not in dropdown - add it dynamically with provided name
-            targetSelect.append('<option value="' + productId + '" data-name="' + productNameOverride + '">' + productNameOverride + '</option>');
-            targetSelect.val(productId);
-            targetModal.find('#product_of_interest').val(productNameOverride);
-        } else {
-            // No name provided - set product ID as fallback
-            targetSelect.append('<option value="' + productId + '">Product #' + productId + '</option>');
-            targetSelect.val(productId);
-            targetModal.find('#product_of_interest').val('Product #' + productId);
-        }
-    }
+    $('#customQuoteModal').modal('show');
 }
 
  $('.loader-overlay').hide();
@@ -541,18 +399,5 @@ function openModal(productId, productNameOverride) {
             }
         }
     });
-});
-</script>
-
-<script>
-
-
-document.getElementById("contact_type").addEventListener("change", function() {
-    var healthcareField = document.getElementById("healthcare_profession");
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-    } else {
-        healthcareField.style.display = "none";
-    }
 });
 </script>
