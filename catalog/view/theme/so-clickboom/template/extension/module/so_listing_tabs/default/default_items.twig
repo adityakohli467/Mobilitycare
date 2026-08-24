@@ -230,9 +230,11 @@
                       var mcQuoteForm = null;
                       function mcSetQuoteFields() {
                         if (!mcQuoteForm) { return; }
+                        // HubSpot passes $form as a jQuery object; normalise to jQuery for lookups
+                        var $form = (window.jQuery && mcQuoteForm instanceof window.jQuery) ? mcQuoteForm : window.jQuery(mcQuoteForm);
                         var setField = function (name, value) {
-                          var el = mcQuoteForm.querySelector('[name="' + name + '"]');
-                          if (el) { el.value = value; }
+                          var $el = $form.find('[name="' + name + '"]');
+                          if ($el.length) { $el.val(value).trigger('input').trigger('change'); }
                         };
                         setField('product_id', window.mcQuoteProductId || '');
                         setField('product_name', window.mcQuoteProductName || '');
@@ -366,9 +368,11 @@ function openModal(productId, productName) {
     window.mcQuoteProductId = productId;
     window.mcQuoteProductName = productName || ('Product #' + productId);
 
-    if (typeof mcSetQuoteFields === 'function') {
-        mcSetQuoteFields();
-    }
+    try {
+        if (typeof mcSetQuoteFields === 'function') {
+            mcSetQuoteFields();
+        }
+    } catch (e) { /* never block the modal from opening */ }
 
     $('#customQuoteModal').modal('show');
 }
