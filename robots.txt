@@ -10,12 +10,18 @@ Disallow: /index.php?route=account/*
 Disallow: /index.php?route=checkout/*
 Disallow: /cart
 Disallow: /checkout
+Disallow: /register/
 
 # Duplicate content - sorting, filtering, pagination
-Disallow: /index.php?route=product/category&sort=
-Disallow: /index.php?route=product/category&order=
-Disallow: /index.php?route=product/category&limit=
+# (wildcarded mid-string — path=/other params can sit before sort=/order=/limit=)
+Disallow: /index.php?route=product/category*sort=
+Disallow: /index.php?route=product/category*order=
+Disallow: /index.php?route=product/category*limit=
+Disallow: /index.php?route=product/category/subCategoryList*
 Disallow: /index.php?route=product/search*
+
+# Product downloads (PDFs / manuals — not indexable content)
+Disallow: /index.php?route=product/product/download*
 
 # Wishlist & Compare (both URL forms)
 Disallow: /wishlist
