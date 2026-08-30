@@ -1118,6 +1118,11 @@ Options -Indexes
   <FilesMatch "\.(html|php)$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
   </FilesMatch>
+  # Don't cache robots.txt & sitemap (critical for SEO)
+  <FilesMatch "(robots\.txt|sitemap\.xml)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+  </FilesMatch>
   # Keep-Alive
   Header set Connection keep-alive
   # Vary header for WebP content negotiation (image model serves WebP based on Accept)
