@@ -13,44 +13,17 @@
         <h4 class="modal-title">Find a local dealer</h4>
       </div>
       <div class="modal-body">
-        <form id="askQuestionForm">
-          <input type="hidden" name="isAjax" value="1">
-          <input type="hidden" name="product_id" value="{{ product_id|default(0) }}">
-
-          <div class="form-group">
-            <label>Name *</label>
-            <input type="text" name="name" id="customerName" class="form-control" required>
-          </div>
-
-          <div class="form-group">
-            <label>Email *</label>
-            <input type="email" name="email" id="customerEmail" class="form-control" required>
-          </div>
-
-          <div class="form-group">
-            <label>Phone *</label>
-            <input type="tel" name="phone" id="customerPhone" class="form-control phoneValidate" maxlength="10" placeholder="04XX XXX XXX" required>
-          </div>
-
-          <div class="form-group">
-            <label>Postcode *</label>
-            <input type="text" name="postcode" class="form-control postcodeValidate" required>
-          </div>
-
-          <div class="form-group">
-            <label>State</label>
-            <input type="text" name="state" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label>Message</label>
-            <textarea name="message" class="form-control" rows="4"></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-block">
-            Submit
-          </button>
-        </form>
+        {# HubSpot form: Ask a Question (replaces native #askQuestionForm) #}
+        <div id="hubspotForm-ask-question-modal" class="hubspot-form-embed"></div>
+        <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            portalId: "443388967",
+            formId: "a8dbca29-415b-4cba-a37b-98ff429d1bec",
+            region: "ap1",
+            target: "#hubspotForm-ask-question-modal"
+          });
+        </script>
       </div>
     </div>
   </div>

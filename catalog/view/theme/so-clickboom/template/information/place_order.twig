@@ -30,7 +30,18 @@ Complete the form below and our team will contact you to confirm details, pricin
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="demoRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/place_order/validateAjax">
+        <!-- HubSpot Form: Place an Order -->
+        <div id="hubspotForm-place-order" class="hubspot-form-embed"></div>
+        <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            portalId: "443388967",
+            formId: "99f058c7-176f-44b7-bb42-1d8e26c81ffc",
+            region: "ap1",
+            target: "#hubspotForm-place-order"
+          });
+        </script>
+        {% if false %}{# native form disabled — replaced by HubSpot #}
             
             <div class="">
                <input type="text" name="fullname"  placeholder="Full Name *" required>
@@ -120,7 +131,7 @@ Complete the form below and our team will contact you to confirm details, pricin
              {# {{ captcha }} #}
               </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Order</button>
-        </form>
+        {% endif %}{# end native form #}
         <div id="toastMessage" class="toast"></div>
         <div id="loaderOverlay" class="loader-overlay">
         <div class="loader"></div>
@@ -180,12 +191,13 @@ Complete the form below and our team will contact you to confirm details, pricin
      </script>
 <script src="/catalog/view/javascript/form-ajax-validate.js"></script>
         <script>
-document.getElementById("contact_type").addEventListener("change", function() {
-    var healthcareField = document.getElementById("healthcare_profession");
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-    } else {
-        healthcareField.style.display = "none";
-    }
-});
+var _contactType = document.getElementById("contact_type");
+if (_contactType) {
+    _contactType.addEventListener("change", function() {
+        var healthcareField = document.getElementById("healthcare_profession");
+        if (healthcareField) {
+            healthcareField.style.display = (this.value === "Healthcare Professional") ? "block" : "none";
+        }
+    });
+}
 </script>

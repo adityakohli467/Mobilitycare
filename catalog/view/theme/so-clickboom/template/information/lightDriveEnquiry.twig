@@ -27,7 +27,18 @@ you, along with pricing and next steps.
     </div>
     
     <div class="demo-request-right col-md-7 col-sm-12">
-        <form action="{{ action }}" method="post" id="quoteRequestForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/lightDriveEnquiry/validateAjax">
+        <!-- HubSpot Form: Light Drive 2 Enquiry -->
+        <div id="hubspotForm-lightdrive" class="hubspot-form-embed"></div>
+        <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            portalId: "443388967",
+            formId: "74a31046-9442-4ba8-8dbe-1de3e65d3d4e",
+            region: "ap1",
+            target: "#hubspotForm-lightdrive"
+          });
+        </script>
+        {% if false %}{# native form disabled — replaced by HubSpot #}
             
             <div class="form-group">
                <input type="text" name="fullname"  placeholder="Full Name *" class="form-control" required>
@@ -101,7 +112,7 @@ you, along with pricing and next steps.
              {# {{ captcha }} #}
               </div>
             <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Your Request</button>
-        </form>
+        {% endif %}{# end native form #}
           <div id="toastMessage" class="toast"></div>
         <div id="loaderOverlay" class="loader-overlay">
         <div class="loader"></div>
@@ -113,14 +124,15 @@ you, along with pricing and next steps.
     </div>
     </div> 
     <script>
-document.getElementById("contact_type").addEventListener("change", function() {
-    var healthcareField = document.getElementById("healthcare_profession");
-    if (this.value === "Healthcare Professional") {
-        healthcareField.style.display = "block";
-    } else {
-        healthcareField.style.display = "none";
-    }
-});
+var _contactType = document.getElementById("contact_type");
+if (_contactType) {
+    _contactType.addEventListener("change", function() {
+        var healthcareField = document.getElementById("healthcare_profession");
+        if (healthcareField) {
+            healthcareField.style.display = (this.value === "Healthcare Professional") ? "block" : "none";
+        }
+    });
+}
 </script>
     {{ column_right }}
     </div> 

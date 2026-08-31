@@ -114,55 +114,17 @@
           <h2>Enquire About RAYMEX&reg; Lift</h2>
           <p class="form-subtitle">Complete the form and our team will contact you with more information.</p>
 
-          <form action="{{ action }}" method="post" id="raymexEnquiryForm" class="ajax-validate-form" data-validate-url="/index.php?route=information/raymexLiftEnquiry/validateAjax">
-
-            <div class="form-group">
-              <label class="field-label">Full Name *</label>
-              <input type="text" name="fullname" placeholder="Full Name *" class="form-control" required>
-              {% if error_fullname %}<div class="text-red">{{ error_fullname }}</div>{% endif %}
-            </div>
-
-            <div class="form-group">
-              <label class="field-label">Email *</label>
-              <input type="text" name="email" placeholder="Email *" class="form-control" required>
-              {% if error_email %}<div class="text-red">{{ error_email }}</div>{% endif %}
-            </div>
-
-            <div class="form-group">
-              <label class="field-label">Phone Number *</label>
-              <input type="text" name="phone" class="form-control phoneValidate" placeholder="Phone Number *" maxlength="10" required>
-              {% if error_phone %}<div class="text-red">{{ error_phone }}</div>{% endif %}
-            </div>
-
-            <div class="form-group">
-              <label class="field-label">Postcode *</label>
-              <input type="text" name="postcode" placeholder="Postcode *" maxlength="4" title="Please enter up to 4 digits only" class="form-control postcodeValidate" required>
-              {% if error_postcode %}<div class="text-red">{{ error_postcode }}</div>{% endif %}
-            </div>
-
-            <div class="form-group">
-              <label class="field-label">Are you contacting us as? *</label>
-              <select name="contact_type" id="contact_type" class="form-control placeholder" required>
-                <option value="" disabled selected>Are you contacting us as?</option>
-                <option value="End user">End user</option>
-                <option value="Family member or carer">Family member or carer</option>
-                <option value="Occupational therapist">Occupational therapist</option>
-                <option value="Aged care or home care provider">Aged care or home care provider</option>
-                <option value="Dealer or clinic">Dealer or clinic</option>
-                <option value="Other">Other</option>
-              </select>
-              {% if error_contact_type %}<div class="text-red">{{ error_contact_type }}</div>{% endif %}
-            </div>
-
-            <div class="form-group">
-              <label class="field-label">Additional Information</label>
-              <textarea name="additional_info" class="form-control" placeholder="Tell us a little about what you need help with."></textarea>
-            </div>
-
-            <button type="submit" class="btn-submit"><i class="fa fa-paper-plane"></i>&nbsp; SUBMIT YOUR REQUEST</button>
-
-            <p class="form-privacy">MobilityCare will use your details to respond to your enquiry about the RAYMEX&reg; Lift.</p>
-          </form>
+          <!-- HubSpot Form: RAYMEX Lift Enquiry -->
+          <div id="hubspotForm-raymex" class="hubspot-form-embed"></div>
+          <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+          <script>
+            hbspt.forms.create({
+              portalId: "443388967",
+              formId: "a31128a2-3c29-4561-ab0e-05820953b07d",
+              region: "ap1",
+              target: "#hubspotForm-raymex"
+            });
+          </script>
 
           <div id="toastMessage" class="toast"></div>
           <div id="loaderOverlay" class="loader-overlay">
