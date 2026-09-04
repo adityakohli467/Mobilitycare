@@ -1039,7 +1039,7 @@ body.quote-modal-open .popup-marketing {
 
             <div class="modal-body">
 
-            {# ===== HubSpot form: Ask a Question ===== #}
+            {# ===== HubSpot form: Ask a Question ===== hidden product_id/product_name/product_url set in onFormReady. #}
             <div id="hubspotForm-ask-question" class="hubspot-form-embed"></div>
             <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
             <script>
@@ -1047,7 +1047,16 @@ body.quote-modal-open .popup-marketing {
                 portalId: "443388967",
                 formId: "a8dbca29-415b-4cba-a37b-98ff429d1bec",
                 region: "ap1",
-                target: "#hubspotForm-ask-question"
+                target: "#hubspotForm-ask-question",
+                onFormReady: function($form) {
+                  var setField = function (name, value) {
+                    var el = $form.querySelector('input[name="' + name + '"]');
+                    if (el) { el.value = value; }
+                  };
+                  setField('product_id', "{{ product_id }}");
+                  setField('product_name', "{{ heading_title|e('js') }}");
+                  setField('product_url', window.location.href);
+                }
               });
             </script>
 
