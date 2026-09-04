@@ -13,7 +13,7 @@
         <h4 class="modal-title">Find a local dealer</h4>
       </div>
       <div class="modal-body">
-        {# HubSpot form: Ask a Question (replaces native #askQuestionForm) #}
+        {# HubSpot form: Ask a Question (replaces native #askQuestionForm) — hidden product fields set in onFormReady. #}
         <div id="hubspotForm-ask-question-modal" class="hubspot-form-embed"></div>
         <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
         <script>
@@ -21,7 +21,16 @@
             portalId: "443388967",
             formId: "a8dbca29-415b-4cba-a37b-98ff429d1bec",
             region: "ap1",
-            target: "#hubspotForm-ask-question-modal"
+            target: "#hubspotForm-ask-question-modal",
+            onFormReady: function($form) {
+              var setField = function (name, value) {
+                var el = $form.querySelector('input[name="' + name + '"]');
+                if (el) { el.value = value; }
+              };
+              setField('product_id', "{{ product_id|default('') }}");
+              setField('product_name', "{{ heading_title|default('')|e('js') }}");
+              setField('product_url', window.location.href);
+            }
           });
         </script>
       </div>

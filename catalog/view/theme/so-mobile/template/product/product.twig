@@ -1006,7 +1006,7 @@ body.quote-modal-open .popup-marketing {
                 </div>
       <div class="modal-body">
 
-        {# ===== HubSpot form (Get a Custom Quote - VM) ===== #}
+        {# ===== HubSpot form (Get a Custom Quote - VM) ===== hidden product_id/product_name/product_url set in onFormReady. #}
         <div id="hubspotForm-custom-quote-vm" class="hubspot-form-embed"></div>
         <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
         <script>
@@ -1014,7 +1014,16 @@ body.quote-modal-open .popup-marketing {
             portalId: "443388967",
             formId: "22a46276-8db7-451b-9599-592059421728",
             region: "ap1",
-            target: "#hubspotForm-custom-quote-vm"
+            target: "#hubspotForm-custom-quote-vm",
+            onFormReady: function($form) {
+              var setField = function (name, value) {
+                var el = $form.querySelector('input[name="' + name + '"]');
+                if (el) { el.value = value; }
+              };
+              setField('product_id', "{{ product_id }}");
+              setField('product_name', "{{ heading_title|e('js') }}");
+              setField('product_url', window.location.href);
+            }
           });
         </script>
 

@@ -219,7 +219,7 @@ window.addEventListener('load', function() {
     form.setAttribute('aria-hidden', 'true');
     form.setAttribute('autocomplete', 'off');
     form.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;';
-    ['name', 'email', 'phone', 'message', 'product_name'].forEach(function (n) {
+    ['name', 'email', 'phone', 'message', 'product_name', 'product_url'].forEach(function (n) {
       var i = document.createElement('input');
       i.type = 'text';
       i.name = n;
@@ -240,7 +240,7 @@ window.addEventListener('load', function() {
     if (!message) {
       for (var k in o) { if (/message|comment|enquir|question|how_can_we_help/.test(k)) { message = o[k]; break; } }
     }
-    return { name: name, email: o.email || '', phone: o.phone || o.mobilephone || '', message: message, product_name: o.product_name || '' };
+    return { name: name, email: o.email || '', phone: o.phone || o.mobilephone || '', message: message, product_name: o.product_name || '', product_url: o.product_url || '' };
   }
 
   function forward(fields) {
@@ -251,6 +251,7 @@ window.addEventListener('load', function() {
     form.elements['phone'].value = fields.phone || '';
     form.elements['message'].value = fields.message || '';
     form.elements['product_name'].value = fields.product_name || '';
+    form.elements['product_url'].value = fields.product_url || '';
     if (typeof form.requestSubmit === 'function') {
       form.requestSubmit();
     } else {
