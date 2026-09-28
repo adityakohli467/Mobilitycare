@@ -36,7 +36,7 @@ steps for you.
    
     
     <div class="demo-request-right col-md-12 col-sm-12">
-        {# ===== HubSpot form: Autochair Enquiry ===== #}
+        {# ===== HubSpot form: Autochair Enquiry ===== hidden product_name/product_url set in onFormReady. #}
         <div id="hubspotForm-autochair" class="hubspot-form-embed"></div>
         <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
         <script>
@@ -44,7 +44,15 @@ steps for you.
             portalId: "443388967",
             formId: "6e593eb8-f76c-4f3f-95a8-f4814b5a81e6",
             region: "ap1",
-            target: "#hubspotForm-autochair"
+            target: "#hubspotForm-autochair",
+            onFormReady: function($form) {
+              var setField = function (name, value) {
+                var el = $form.querySelector('input[name="' + name + '"]');
+                if (el) { el.value = value; }
+              };
+              setField('product_name', "Autochair Smart Lifter");
+              setField('product_url', window.location.href);
+            }
           });
         </script>
           <div id="toastMessage" class="toast"></div>

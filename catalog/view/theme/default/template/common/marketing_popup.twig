@@ -103,33 +103,23 @@
     and clinical justification documents.
   </p>
 
-  <form id="healthProForm">
-    
-
-    <div class="form-group">
-      <input type="email"
-             class="form-control text-center"
-             name="work_email"
-             placeholder="Work email address"
-             required>
-    </div>
-    
-    {# Captcha removed
-    {% if captcha %}
-    <div class="form-group">
-      {{ captcha }}
-    </div>
-    {% endif %}
-    #}
-
-    <!-- Both buttons side by side -->
-    <div class="text-center" style="margin: 20px 0;">
-      <button type="submit" class="btn btn-primary">
-        SEND ME THE DOCUMENTS
-      </button>
-     
-    </div>
-  </form>
+  {# HubSpot form: Health Professional documents request — product_name set as hidden field in onFormReady. #}
+  <div id="hubspotForm-health-pro" class="hubspot-form-embed"></div>
+  <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+  <script>
+    hbspt.forms.create({
+      portalId: "443388967",
+      formId: "8ae8be69-8ca3-47c1-bb8c-a0d28fb563df",
+      region: "ap1",
+      target: "#hubspotForm-health-pro",
+      onFormReady: function($form) {
+        var titleEl = document.querySelector('.title-product h1') || document.querySelector('h1');
+        var productName = titleEl ? titleEl.textContent.trim() : '';
+        var el = $form.querySelector('input[name="product_name"]');
+        if (el) { el.value = productName; }
+      }
+    });
+  </script>
 </div>
     </div>
   </div>
@@ -199,29 +189,6 @@ $(document).ready(function () {
   $('#bookaDemoModal, #customQuoteModal, #customQuoteModalForVM, #askQuestionModal').on('show.bs.modal', function() {
     $('#healthProModal').modal('hide');
   });
-
-  // Form submit
-  $('#healthProForm').on('submit', function (e) {
-    e.preventDefault();
-
-    var formData = $(this).serialize();
-
-    $.post(
-        'index.php?route=information/marketingpopup/submit',
-        formData,
-        function (res) {
-            if (res.success) {
-                $('#healthProModal').modal('hide');
-                showToast(res.message || "Documents request sent successfully!");
-            } else {
-                showToast(res.message || "Something went wrong. Please try again.");
-            }
-        },
-        'json'
-    ).fail(function () {
-        showToast("Network error. Please check your connection.");
-    });
-});
 
 });
 

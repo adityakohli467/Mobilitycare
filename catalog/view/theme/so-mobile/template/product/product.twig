@@ -982,9 +982,7 @@ body.quote-modal-open .popup-marketing {
                             var el = $form.querySelector('input[name="' + name + '"]');
                             if (el) { el.value = value; }
                           };
-                          setField('product_id', "{{ product_id }}");
                           setField('product_name', "{{ heading_title|e('js') }}");
-                          setField('product_url', window.location.href);
                         }
                       });
                     </script>
@@ -1020,9 +1018,7 @@ body.quote-modal-open .popup-marketing {
                 var el = $form.querySelector('input[name="' + name + '"]');
                 if (el) { el.value = value; }
               };
-              setField('product_id', "{{ product_id }}");
               setField('product_name', "{{ heading_title|e('js') }}");
-              setField('product_url', window.location.href);
             }
           });
         </script>

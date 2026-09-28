@@ -236,9 +236,7 @@
                           var $el = $form.find('[name="' + name + '"]');
                           if ($el.length) { $el.val(value).trigger('input').trigger('change'); }
                         };
-                        setField('product_id', window.mcQuoteProductId || '');
                         setField('product_name', window.mcQuoteProductName || '');
-                        setField('product_url', window.location.href);
                       }
                       hbspt.forms.create({
                         region: "ap1",
