@@ -113,9 +113,10 @@
       region: "ap1",
       target: "#hubspotForm-health-pro",
       onFormReady: function($form) {
+        var formEl = ($form && $form.length) ? $form[0] : $form;
         var titleEl = document.querySelector('.title-product h1') || document.querySelector('h1');
         var productName = titleEl ? titleEl.textContent.trim() : '';
-        var el = $form.querySelector('input[name="product_name"]');
+        var el = formEl.querySelector('input[name="product_name"]');
         if (el) { el.value = productName; }
       }
     });

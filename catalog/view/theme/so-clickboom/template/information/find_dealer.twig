@@ -26,7 +26,7 @@
             formId: "9445e236-7201-4912-b620-a2b9e86f4f6e",
             target: "#hubspotForm-find-dealer",
             onFormReady: function($form) {
-              var el = $form.querySelector('input[name="product_url"]');
+              var el = ($form[0] || $form).querySelector('input[name="product_url"]');
               if (el) { el.value = window.location.href; }
             }
           });

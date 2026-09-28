@@ -978,8 +978,9 @@ body.quote-modal-open .popup-marketing {
                         formId: "55944d41-a797-431d-b316-82e8b7a578bf",
                         target: "#hubspotForm-custom-quote",
                         onFormReady: function($form) {
+                          var formEl = ($form && $form.length) ? $form[0] : $form;
                           var setField = function (name, value) {
-                            var el = $form.querySelector('input[name="' + name + '"]');
+                            var el = formEl.querySelector('input[name="' + name + '"]');
                             if (el) { el.value = value; }
                           };
                           setField('product_name', "{{ heading_title|e('js') }}");
@@ -1014,8 +1015,9 @@ body.quote-modal-open .popup-marketing {
             region: "ap1",
             target: "#hubspotForm-custom-quote-vm",
             onFormReady: function($form) {
+              var formEl = ($form && $form.length) ? $form[0] : $form;
               var setField = function (name, value) {
-                var el = $form.querySelector('input[name="' + name + '"]');
+                var el = formEl.querySelector('input[name="' + name + '"]');
                 if (el) { el.value = value; }
               };
               setField('product_name', "{{ heading_title|e('js') }}");
@@ -1054,8 +1056,9 @@ body.quote-modal-open .popup-marketing {
                 region: "ap1",
                 target: "#hubspotForm-ask-question",
                 onFormReady: function($form) {
+                  var formEl = ($form && $form.length) ? $form[0] : $form;
                   var setField = function (name, value) {
-                    var el = $form.querySelector('input[name="' + name + '"]');
+                    var el = formEl.querySelector('input[name="' + name + '"]');
                     if (el) { el.value = value; }
                   };
                   setField('product_id', "{{ product_id }}");

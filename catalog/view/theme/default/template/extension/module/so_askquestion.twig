@@ -24,7 +24,7 @@
             target: "#hubspotForm-ask-question-modal",
             onFormReady: function($form) {
               var setField = function (name, value) {
-                var el = $form.querySelector('input[name="' + name + '"]');
+                var el = ($form[0] || $form).querySelector('input[name="' + name + '"]');
                 if (el) { el.value = value; }
               };
               setField('product_id', "{{ product_id|default('') }}");
