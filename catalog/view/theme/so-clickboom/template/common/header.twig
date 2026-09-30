@@ -79,6 +79,8 @@ window.addEventListener('load', function() {
     if (!document.body) { return null; }
     form = document.createElement('form');
     form.id = FORM_ID;
+    // Exclude from HubSpot Collected Forms so submissions attribute to the native HubSpot form, not this bridge.
+    form.setAttribute('data-hs-do-not-collect', 'true');
     form.setAttribute('aria-hidden', 'true');
     form.setAttribute('autocomplete', 'off');
     form.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;';
