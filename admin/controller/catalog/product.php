@@ -42,6 +42,7 @@ class ControllerCatalogProduct extends Controller {
 
 
                 foreach ($this->request->post['product_features'] as $index => $feature) {
+					$feature['image'] = trim($feature['image'] ?? '');
                     $image_path = '';
                     // Handle file upload
                     if (isset($_FILES['product_features']['name'][$index]['image_file']) &&
@@ -56,7 +57,7 @@ class ControllerCatalogProduct extends Controller {
 
 
                         // Validate file type and size
-                        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+						$allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                         if (!in_array($file['type'], $allowed_types)) {
                             $this->error['warning'] = 'Invalid file type for index ' . $index . ': ' . $file['type'];
                         } elseif ($file['size'] > 10000000) { // 10MB limit
@@ -87,10 +88,12 @@ class ControllerCatalogProduct extends Controller {
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+						curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+						curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+						curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MobilitycareImageImporter/1.0)');
                         $image_content = curl_exec($ch);
                         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+						$curl_error = curl_error($ch);
                         curl_close($ch);
                         if ($image_content !== false && $http_code == 200) {
                             if (file_put_contents($destination, $image_content)) {
@@ -100,7 +103,7 @@ class ControllerCatalogProduct extends Controller {
                                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
                             }
                         } else {
-                            $this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')';
+							$this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')' . ($curl_error ? ': ' . $curl_error : '');
                         }
                     } elseif (empty($image_path) && !empty($feature['image'])) {
                         $image_path = $feature['image'];
@@ -130,8 +133,13 @@ class ControllerCatalogProduct extends Controller {
                     return;
                 }
             } else {
-                
-                $this->session->data['error_warning'] = implode(', ', $this->error);
+				if (($this->request->server['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
+					$this->response->addHeader('Content-Type: application/json');
+					$this->response->setOutput(json_encode(array('error' => $this->error)));
+				} else {
+					$this->getForm();
+				}
+				return;
             }
 
 
@@ -248,6 +256,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
 
 
                 foreach ($this->request->post['product_features'] as $index => $feature) {
+					$feature['image'] = trim($feature['image'] ?? '');
                     $image_path = '';
                     
                     // Handle file upload
@@ -291,10 +300,12 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+						curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+						curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+						curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MobilitycareImageImporter/1.0)');
                         $image_content = curl_exec($ch);
                         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+						$curl_error = curl_error($ch);
                         curl_close($ch);
                         if ($image_content !== false && $http_code == 200) {
                             if (file_put_contents($destination, $image_content)) {
@@ -303,7 +314,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                                 $this->error['warning'] = 'Failed to save URL image: ' . $url;
                             }
                         } else {
-                            $this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')';
+							$this->error['warning'] = 'Failed to fetch image from URL: ' . $url . ' (HTTP ' . $http_code . ')' . ($curl_error ? ': ' . $curl_error : '');
                         }
                     } elseif (empty($image_path) && !empty($feature['image'])) {
                         $image_path = $feature['image'];
@@ -334,7 +345,13 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "product_messages WHERE product_id
                     return;
                 }
             } else {
-                $this->session->data['error_warning'] = implode(', ', $this->error);
+				if (($this->request->server['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
+					$this->response->addHeader('Content-Type: application/json');
+					$this->response->setOutput(json_encode(array('error' => $this->error)));
+				} else {
+					$this->getForm();
+				}
+				return;
             }
 
 

@@ -322,7 +322,7 @@ $(document).on('click', '.remove-message', function() {
                   </span>
                 </div>
                 <input type="file" name="product_features[{{ loop.index0 }}][image_file]" class="form-control image-file" style="display:none;" accept="image/*" />
-<img src="{{ feature.image ? feature.image : base_url ~ 'image/view/image/placeholder.png' }}" alt="Preview" class="image-preview" style="max-width:100px; margin-top:10px;" />
+<img src="{{ feature.image ? (feature.image|slice(0, 7) == 'http://' or feature.image|slice(0, 8) == 'https://' ? feature.image : base_url ~ 'image/' ~ feature.image) : 'view/image/placeholder.png' }}" alt="Preview" class="image-preview" style="max-width:100px; margin-top:10px;" />
 
               </div>
               <div class="col-sm-2">
@@ -1596,10 +1596,10 @@ $('body').on('change', '.image-file', function () {
 
 // Handle image URL input for preview
 $('body').on('input', '.feature-image', function () {
-  let imgSrc = $(this).val();
+  let imgSrc = $(this).val().trim();
   let preview = $(this).closest('.feature-row').find('.image-preview');
   if (imgSrc) {
-    preview.attr('src', imgSrc);
+    preview.attr('src', /^https?:\/\//i.test(imgSrc) ? imgSrc : '{{ base_url|e('js') }}image/' + imgSrc);
   } else {
     preview.attr('src', 'view/image/placeholder.png');
   }
