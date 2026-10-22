@@ -3,75 +3,44 @@
 
 <style>
   /* ===== Trekinetic GTE Series 4 landing page ===== */
-  .trek-hero {
-    position: relative;
-    background-image: url('/image/catalog/demo/trekinetic-gte-series-4.jpg');
-    background-size: cover;
-    background-position: 1% center;
-    background-repeat: no-repeat;
-    padding: 55px 0 65px;
-    min-height: 620px;
-    overflow: hidden;
-  }
-  /* White fade on the LEFT only so the photo stays crisp in the centre/right */
-  .trek-hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(90deg,
-      #ffffff 0%,
-      #ffffff 26%,
-      rgba(255,255,255,0.75) 38%,
-      rgba(255,255,255,0.0) 52%,
-      rgba(255,255,255,0.0) 100%);
-  }
-  .trek-hero-inner { position: relative; z-index: 1; max-width: 1470px !important; }
+  html { scroll-behavior: smooth; }
 
-  .trek-content h1 {
+  .trek-top { padding: 45px 0 20px; background: #fff; }
+  .trek-top .container { max-width: 1470px !important; }
+  /* Vertically centre the photo against the text column */
+  .trek-top-row { display: flex; flex-wrap: wrap; align-items: center; }
+
+  .trek-photo-col { padding-bottom: 20px; }
+  .trek-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(10,31,68,0.15);
+  }
+
+  .trek-info-col { padding-left: 35px; }
+  .trek-info h1 {
     font-size: 42px;
     font-weight: 800;
     color: #0a1f44;
     line-height: 1.1;
-    margin: 0 0 22px;
-    max-width: 440px;
+    margin: 0 0 20px;
   }
-  .trek-content p {
+  .trek-info p {
     color: #1a2b4a;
     font-size: 16px;
     line-height: 1.65;
     margin-bottom: 16px;
-    max-width: 430px;
   }
-  .trek-content p strong { color: #0a1f44; font-weight: 700; }
+  .trek-info p strong { color: #0a1f44; font-weight: 700; }
 
-  .trek-callout {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #ffffff;
-    border-left: 4px solid #d9232e;
-    box-shadow: 0 2px 14px rgba(0,0,0,0.10);
-    padding: 15px 20px;
-    border-radius: 4px;
-    margin: 30px 0 26px;
-    max-width: 560px;
-  }
-  .trek-callout svg { flex: 0 0 auto; }
-  .trek-callout p {
-    margin: 0;
-    color: #d9232e;
-    font-weight: 700;
-    font-size: 15px;
-    line-height: 1.4;
-    max-width: none;
-  }
-
-  .trek-points { list-style: none; padding: 0; margin: 0; }
+  .trek-points { list-style: none; padding: 0; margin: 22px 0 28px; }
   .trek-points li {
     position: relative;
     padding-left: 32px;
     margin-bottom: 14px;
-    font-size: 15px;
+    font-size: 16px;
     color: #1a2b4a;
     font-weight: 500;
     line-height: 1.5;
@@ -91,26 +60,54 @@
     background-position: center;
   }
 
+  .trek-enquire-btn {
+    display: inline-block;
+    background: #d9232e;
+    color: #fff;
+    padding: 15px 36px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .trek-enquire-btn:hover,
+  .trek-enquire-btn:focus { background: #b91c25; color: #fff; text-decoration: none; }
+
+  /* ----- Form section below ----- */
+  .trek-form-section {
+    background: #f4f7fb;
+    padding: 50px 0 60px;
+    margin-top: 30px;
+  }
+  .trek-form-section .container { max-width: 1470px !important; }
+  #trek-enquiry { scroll-margin-top: 110px; }
   .trek-form-card {
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 10px 40px rgba(10,31,68,0.15);
-    padding: 28px 30px 32px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(10,31,68,0.12);
+    padding: 34px 38px 38px;
+    max-width: 760px;
+    margin: 0 auto;
   }
   .trek-form-card h2 {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: #0a1f44;
     margin: 0 0 6px;
+    text-align: center;
   }
   .trek-form-card .form-subtitle {
     color: #8a93a3;
     font-size: 14px;
     line-height: 1.5;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
+    text-align: center;
   }
 
-  /* ----- HubSpot embed styled to match the reference form ----- */
+  /* ----- HubSpot embed styling ----- */
   .trek-form-card .hs-form-field { margin-bottom: 14px; }
   .trek-form-card .hs-form-field > label {
     color: #0a1f44;
@@ -120,7 +117,6 @@
   }
   .trek-form-card .hs-form-required { color: #d9232e; }
   .trek-form-card .hubspot-form-embed .hs-input:not([type="checkbox"]):not([type="radio"]),
-  .trek-form-card .hs-input select,
   .trek-form-card select.hs-input,
   .trek-form-card textarea.hs-input {
     width: 100% !important;
@@ -159,16 +155,11 @@
   .trek-form-card .hs-button:hover { background: #b91c25 !important; }
 
   @media (max-width: 991px) {
-    .trek-hero {
-      background-image: none;
-      padding: 30px 0;
-      min-height: 0;
-    }
-    .trek-hero::before { display: none; }
-    .trek-content h1 { font-size: 30px; max-width: none; }
-    .trek-content p,
-    .trek-callout { max-width: none; }
-    .trek-form-card { margin-top: 28px; }
+    .trek-top { padding: 25px 0 10px; }
+    .trek-info-col { padding-left: 15px; margin-top: 22px; }
+    .trek-info h1 { font-size: 30px; }
+    .trek-form-section { padding: 35px 0 40px; }
+    .trek-form-card { padding: 24px 20px 28px; }
   }
 </style>
 
@@ -182,58 +173,61 @@
   {% endif %}
 
   <div id="content" class="{{ class }}">{{ content_top }}
-    <div class="trek-hero">
-      <div class="container trek-hero-inner">
-        <div class="row">
 
-          {# ── LEFT COLUMN: Heading + Intro + Callout + Bullets ── #}
-          <div class="col-md-5 col-sm-12 trek-content">
-            <h1>All-Terrain Power Wheelchair for Outdoor Access</h1>
+    {# ═══ TOP: Two columns — photo left, content right ═══ #}
+    <div class="trek-top">
+      <div class="container">
+        <div class="row trek-top-row">
 
-            <p>The <strong>Trekinetic GTE Series 4</strong> is a compact all-terrain power wheelchair for people who want more freedom outdoors without moving to a large mobility scooter.</p>
-
-            <p>Whether it&rsquo;s a day out with family, a trip away, exploring local parks or getting back to the places you used to avoid, the GTE Series 4 is designed to make outdoor access feel more possible.</p>
-
-            <div class="trek-callout">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9232e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-              </svg>
-              <p>Enquire now to request product information, pricing or a trial.</p>
-            </div>
-
-            <ul class="trek-points">
-              <li>Compact all-terrain power wheelchair</li>
-              <li>Designed for everyday use, travel and outdoor access</li>
-              <li>Suitable for grass, gravel, compacted sand and uneven paths</li>
-              <li>Supports users who fatigue over longer distances or rougher surfaces</li>
-            </ul>
+          <div class="col-md-6 col-sm-12 trek-photo-col">
+            <img src="/image/catalog/demo/trekinetic-gte-series-4.jpg" alt="Trekinetic GTE Series 4 all-terrain power wheelchair on the beach" class="trek-photo">
           </div>
 
-          {# ── RIGHT COLUMN: Enquiry Form ── #}
-          <div class="col-md-5 col-md-offset-2 col-sm-12">
-            <div class="trek-form-card">
-              <h2>Enquire About the Trekinetic GTE Series 4</h2>
-              <p class="form-subtitle">Complete the form and our team will contact you with product information, pricing, or trial options.</p>
+          <div class="col-md-6 col-sm-12 trek-info-col">
+            <div class="trek-info">
+              <h1>All-Terrain Power Wheelchair for Outdoor Access</h1>
 
-              <!-- HubSpot Form: RAYMEX / MobilityCare enquiry form (reused) -->
-              <div id="hubspotForm-trekinetic" class="hubspot-form-embed"></div>
-              <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
-              <script>
-                hbspt.forms.create({
-                  portalId: "443388967",
-                  formId: "a31128a2-3c29-4561-ab0e-05820953b07d",
-                  region: "ap1",
-                  target: "#hubspotForm-trekinetic"
-                });
-              </script>
+              <p>The <strong>Trekinetic GTE Series 4</strong> is a compact all-terrain power wheelchair for people who want more freedom outdoors without moving to a large mobility scooter.</p>
+
+              <p>Whether it&rsquo;s a day out with family, a trip away, exploring local parks or getting back to the places you used to avoid, the GTE Series 4 is designed to make outdoor access feel more possible.</p>
+
+              <ul class="trek-points">
+                <li>Compact all-terrain power wheelchair</li>
+                <li>Designed for everyday use, travel and outdoor access</li>
+                <li>Suitable for grass, gravel, compacted sand and uneven paths</li>
+                <li>Supports users who fatigue over longer distances or rougher surfaces</li>
+              </ul>
+
+              <a href="#trek-enquiry" class="trek-enquire-btn">Enquire Now</a>
             </div>
           </div>
 
         </div>
       </div>
     </div>
-    {{ column_right }}
+
+    {# ═══ BELOW: Enquiry form ═══ #}
+    <div class="trek-form-section" id="trek-enquiry">
+      <div class="container">
+        <div class="trek-form-card">
+          <h2>Enquire About the Trekinetic GTE Series 4</h2>
+          <p class="form-subtitle">Complete the form and our team will contact you with product information, pricing, or trial options.</p>
+
+          <!-- HubSpot Form: Trekinetic GTE Enquiry -->
+          <div id="hubspotForm-trekinetic" class="hubspot-form-embed"></div>
+          <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
+          <script>
+            hbspt.forms.create({
+              portalId: "443388967",
+              formId: "dbee92c9-b063-438a-9aef-2f2b39f4d5b4",
+              region: "ap1",
+              target: "#hubspotForm-trekinetic"
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 {{ footer }}

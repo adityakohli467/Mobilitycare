@@ -579,7 +579,9 @@ RewriteRule ^returns-warranty-policy/?$ index.php?route=information/information&
 RewriteRule ^light-drive-2-enquiry/?$ index.php?route=information/lightDriveEnquiry [L,QSA]
 RewriteRule ^autochair-smart-lifter-enquiry/?$ index.php?route=information/autochairEnquiry [L,QSA]
 RewriteRule ^raymex-lift-enquiry/?$ index.php?route=information/raymexLiftEnquiry [L,QSA]
-RewriteRule ^testTrekinetic/?$ index.php?route=information/trekinetic [L,QSA]
+RewriteRule ^buy/trekinetic-gte-enquiry/?$ index.php?route=information/trekinetic [L,QSA]
+# Old test URL -> new canonical
+RewriteRule ^testTrekinetic/?$ /buy/trekinetic-gte-enquiry/ [R=301,L]
 RewriteRule ^request-local-dealer/?$ index.php?route=information/find_dealer_form [L,QSA]
 
 # Duplicate content fix: /home -> / (canonical homepage)
@@ -634,7 +636,7 @@ RewriteRule ^index\.php$ /raymex-lift-enquiry/? [R=301,L,QSD]
 
 # Trekinetic GTE Series 4
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/trekinetic[\s&] [NC]
-RewriteRule ^index\.php$ /testTrekinetic/? [R=301,L,QSD]
+RewriteRule ^index\.php$ /buy/trekinetic-gte-enquiry/? [R=301,L,QSD]
 
 # Find Dealer Form
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/find_dealer_form[\s&] [NC]

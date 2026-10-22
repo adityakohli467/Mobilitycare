@@ -3,6 +3,8 @@
 
 <style>
   /* ===== Trekinetic GTE Series 4 — mobile ===== */
+  html { scroll-behavior: smooth; }
+  #trek-enquiry { scroll-margin-top: 80px; }
   .trek-wrap { padding: 20px 0 10px; }
   .trek-content h1 {
     font-size: 26px;
@@ -25,7 +27,24 @@
     border-radius: 10px;
     display: block;
     margin: 4px 0 18px;
+    box-shadow: 0 6px 22px rgba(10,31,68,0.15);
   }
+
+  .trek-enquire-btn {
+    display: inline-block;
+    background: #d9232e;
+    color: #fff;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-top: 6px;
+  }
+  .trek-enquire-btn:hover,
+  .trek-enquire-btn:focus { background: #b91c25; color: #fff; text-decoration: none; }
 
   .trek-callout {
     display: flex;
@@ -153,50 +172,44 @@
     <div class="container">
       <div class="trek-wrap">
 
-        {# 1) Heading + Intro #}
+        {# 1) Photo #}
+        <img src="/image/catalog/demo/trekinetic-gte-series-4.jpg" alt="Trekinetic GTE Series 4 all-terrain power wheelchair on the beach" class="trek-hero-img">
+
+        {# 2) Heading + Intro + Benefits + Button #}
         <div class="trek-content">
           <h1>All-Terrain Power Wheelchair for Outdoor Access</h1>
-
-          <img src="/image/catalog/demo/trekinetic-gte-series-4.jpg" alt="Trekinetic GTE Series 4 all-terrain power wheelchair on the beach" class="trek-hero-img">
 
           <p>The <strong>Trekinetic GTE Series 4</strong> is a compact all-terrain power wheelchair for people who want more freedom outdoors without moving to a large mobility scooter.</p>
 
           <p>Whether it&rsquo;s a day out with family, a trip away, exploring local parks or getting back to the places you used to avoid, the GTE Series 4 is designed to make outdoor access feel more possible.</p>
 
-          <div class="trek-callout">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d9232e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </svg>
-            <p>Enquire now to request product information, pricing or a trial.</p>
-          </div>
+          <ul class="trek-points">
+            <li>Compact all-terrain power wheelchair</li>
+            <li>Designed for everyday use, travel and outdoor access</li>
+            <li>Suitable for grass, gravel, compacted sand and uneven paths</li>
+            <li>Supports users who fatigue over longer distances or rougher surfaces</li>
+          </ul>
+
+          <a href="#trek-enquiry" class="trek-enquire-btn">Enquire Now</a>
         </div>
 
-        {# 2) Form #}
-        <div class="trek-form-card">
+        {# 3) Form #}
+        <div class="trek-form-card" id="trek-enquiry">
           <h2>Enquire About the Trekinetic GTE Series 4</h2>
           <p class="form-subtitle">Complete the form and our team will contact you with product information, pricing, or trial options.</p>
 
-          <!-- HubSpot Form: RAYMEX / MobilityCare enquiry form (reused) -->
+          <!-- HubSpot Form: Trekinetic GTE Enquiry -->
           <div id="hubspotForm-trekinetic" class="hubspot-form-embed"></div>
           <script charset="utf-8" type="text/javascript" src="//js-ap1.hsforms.net/forms/embed/v2.js"></script>
           <script>
             hbspt.forms.create({
               portalId: "443388967",
-              formId: "a31128a2-3c29-4561-ab0e-05820953b07d",
+              formId: "dbee92c9-b063-438a-9aef-2f2b39f4d5b4",
               region: "ap1",
               target: "#hubspotForm-trekinetic"
             });
           </script>
         </div>
-
-        {# 3) Bullet points #}
-        <ul class="trek-points">
-          <li>Compact all-terrain power wheelchair</li>
-          <li>Designed for everyday use, travel and outdoor access</li>
-          <li>Suitable for grass, gravel, compacted sand and uneven paths</li>
-          <li>Supports users who fatigue over longer distances or rougher surfaces</li>
-        </ul>
 
       </div>
     </div>
