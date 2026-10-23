@@ -893,6 +893,14 @@ RewriteRule ^thank-you-autochair/?$ index.php?route=information/form_success/aut
 RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/form_success/autochair[\s&] [NC]
 RewriteRule ^index\.php$ /thank-you-autochair [R=301,L,QSD]
 
+# trekinetic form success
+
+RewriteRule ^thank-you-trekinetic/?$ index.php?route=information/form_success/trekinetic [L,QSA]
+
+# Canonical redirect (THIS LINE FIXES YOUR ISSUE)
+RewriteCond %{THE_REQUEST} \s/index\.php\?route=information/form_success/trekinetic[\s&] [NC]
+RewriteRule ^index\.php$ /thank-you-trekinetic/ [R=301,L,QSD]
+
 # autochair form success
 
 RewriteRule ^thank-you-lightdrive/?$ index.php?route=information/form_success/lightdrive [L,QSA]
