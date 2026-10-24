@@ -154,6 +154,13 @@
   }
   .trek-form-card .hs-button:hover { background: #b91c25 !important; }
 
+  /* On laptops/desktops, enlarge the photo so it matches the height of the text column */
+  @media (min-width: 992px) {
+    .trek-top-row { align-items: stretch; }
+    .trek-photo-col { display: flex; }
+    .trek-photo { height: 100%; object-fit: cover; }
+  }
+
   @media (max-width: 991px) {
     .trek-top { padding: 25px 0 10px; }
     .trek-info-col { padding-left: 15px; margin-top: 22px; }
