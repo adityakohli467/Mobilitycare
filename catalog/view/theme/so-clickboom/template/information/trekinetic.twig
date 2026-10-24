@@ -237,4 +237,19 @@
 
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var cta = document.querySelector('.trek-enquire-btn');
+    var target = document.getElementById('trek-enquiry');
+    if (cta && target) {
+      cta.addEventListener('click', function (e) {
+        e.preventDefault();
+        var headerOffset = 110;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    }
+  });
+</script>
 {{ footer }}
