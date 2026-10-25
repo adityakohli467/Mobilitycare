@@ -144,6 +144,11 @@ class Soconfig{
 			}
 		}else{
 			foreach($css_files_to_out as $file) {
+				// Cache-bust local CSS: version changes whenever the file is edited
+				$local_path = dirname(DIR_APPLICATION).'/'.$file;
+				if (strpos($file, '//') === false && strpos($file, '?') === false && is_file($local_path)) {
+					$file .= '?v='.filemtime($local_path);
+				}
 				$is_defer = false;
 				foreach($defer_patterns as $p) { if(strpos($file, $p) !== false) { $is_defer = true; break; } }
 				if($is_defer) {
