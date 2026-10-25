@@ -558,21 +558,3 @@
 .zoom-btn:hover {
   background: #286090;
 }
-/* Sticky product tabs: ancestors with overflow-x:hidden would become scroll containers and break sticky, so clip instead */
-.product-detail,
-.product-detail .container,
-.product-detail .container-fluid,
-.product-detail .row {
-    overflow-x: clip !important;
-}
-.producttab .tabsslider .nav-tabs {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 9;
-}
-@media screen and (orientation: landscape) {
-    .producttab .tabsslider .nav-tabs {
-        top: 44px;
-    }
-}

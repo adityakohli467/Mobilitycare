@@ -3383,6 +3383,23 @@ span.fa-stack {
   border-width: 1px 0 1px 0;
   border-style: solid;
   border-color: #ededed; }
+/* Sticky tabs: overflow-x:hidden on ancestors breaks sticky, so clip instead */
+.product-detail,
+.product-detail .container,
+.product-detail .container-fluid,
+.product-detail .row {
+  overflow-x: clip !important; }
+
+.producttab .tabsslider .nav-tabs {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 9; }
+
+@media screen and (orientation: landscape) {
+  .producttab .tabsslider .nav-tabs {
+    top: 44px; } }
+
   .producttab .tabsslider .nav-tabs li {
     list-style: none;
     cursor: pointer;
