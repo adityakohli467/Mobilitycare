@@ -3385,6 +3385,7 @@ span.fa-stack {
   border-color: #ededed; }
 /* Sticky tabs: overflow-x:hidden on ancestors breaks sticky, so clip instead */
 .product-detail,
+.product-detail #content,
 .product-detail .container,
 .product-detail .container-fluid,
 .product-detail .row {
