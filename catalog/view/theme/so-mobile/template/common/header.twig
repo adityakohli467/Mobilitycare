@@ -292,10 +292,26 @@ window.addEventListener('load', function() {
 {% include theme_directory~'/template/soconfig/panel_left.twig' %}
 
 <div id="wrapper">  
-<div class="site-closure-notice" style="background:#d0021b;color:#fff;text-align:center;padding:8px 10px;font-size:13px;line-height:1.4;font-weight:600;">
+<style>
+/* Ratchet bars/content are fixed/absolute, so the notice is fixed and they are offset by its height (--cn-h, set by JS). */
+.site-closure-notice{position:fixed;top:0;left:0;right:0;z-index:1001;background:#d0021b;color:#fff;text-align:center;padding:6px 10px;font-size:12px;line-height:1.35;font-weight:600;}
+body .bar.bar-nav:not(.bar-static){top:var(--cn-h,0px) !important;}
+body .bar-nav ~ .content{margin-top:calc(45px + var(--cn-h,0px)) !important;}
+@media screen and (orientation: landscape){
+	body .bar-nav ~ .content{margin-top:calc(44px + var(--cn-h,0px)) !important;}
+}
+</style>
+<div class="site-closure-notice" id="siteClosureNotice">
 	MobilityCare will be closed on Monday 2 November and Tuesday 3 November.<br>
 	We will respond to all enquiries upon our return on Wednesday 4 November.
 </div>
+<script>
+(function(){
+	var n=document.getElementById('siteClosureNotice');
+	function s(){document.documentElement.style.setProperty('--cn-h',n.offsetHeight+'px');}
+	s();window.addEventListener('resize',s);window.addEventListener('load',s);
+})();
+</script>
 {# =========== Show Panel Bar==============#}
 {% if soconfig.get_settings('bottombar_status') %}
 	{% include theme_directory~'/template/soconfig/panel_bar.twig' with {typeheader: soconfig.get_settings('mtypeheader')} %}
