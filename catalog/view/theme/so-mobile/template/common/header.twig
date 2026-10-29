@@ -292,6 +292,10 @@ window.addEventListener('load', function() {
 {% include theme_directory~'/template/soconfig/panel_left.twig' %}
 
 <div id="wrapper">  
+<div class="site-closure-notice" style="background:#d0021b;color:#fff;text-align:center;padding:8px 10px;font-size:13px;line-height:1.4;font-weight:600;">
+	MobilityCare will be closed on Monday 2 November and Tuesday 3 November.<br>
+	We will respond to all enquiries upon our return on Wednesday 4 November.
+</div>
 {# =========== Show Panel Bar==============#}
 {% if soconfig.get_settings('bottombar_status') %}
 	{% include theme_directory~'/template/soconfig/panel_bar.twig' with {typeheader: soconfig.get_settings('mtypeheader')} %}
