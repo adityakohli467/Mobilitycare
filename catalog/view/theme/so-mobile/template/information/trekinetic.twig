@@ -207,7 +207,11 @@
               portalId: "443388967",
               formId: "dbee92c9-b063-438a-9aef-2f2b39f4d5b4",
               region: "ap1",
-              target: "#hubspotForm-trekinetic"
+              target: "#hubspotForm-trekinetic",
+              onFormReady: function($form) {
+                var el = ($form[0] || $form).querySelector('input[name="product_name"]');
+                if (el) { el.value = "Trekinetic GTE"; }
+              }
             });
           </script>
         </div>

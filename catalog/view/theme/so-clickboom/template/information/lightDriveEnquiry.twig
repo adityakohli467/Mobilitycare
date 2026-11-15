@@ -37,7 +37,11 @@ you, along with pricing and next steps.
             portalId: "443388967",
             formId: "74a31046-9442-4ba8-8dbe-1de3e65d3d4e",
             region: "ap1",
-            target: "#hubspotForm-lightdrive"
+            target: "#hubspotForm-lightdrive",
+            onFormReady: function($form) {
+              var el = ($form[0] || $form).querySelector('input[name="product_name"]');
+              if (el) { el.value = "Light Drive 2"; }
+            }
           });
         </script>
         {% if false %}{# native form disabled — replaced by HubSpot #}

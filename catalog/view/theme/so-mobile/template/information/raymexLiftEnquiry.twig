@@ -122,7 +122,11 @@
               portalId: "443388967",
               formId: "a31128a2-3c29-4561-ab0e-05820953b07d",
               region: "ap1",
-              target: "#hubspotForm-raymex"
+              target: "#hubspotForm-raymex",
+              onFormReady: function($form) {
+                var el = ($form[0] || $form).querySelector('input[name="product_name"]');
+                if (el) { el.value = "Raymex Lift"; }
+              }
             });
           </script>
 
