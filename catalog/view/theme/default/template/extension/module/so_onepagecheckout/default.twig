@@ -190,6 +190,8 @@
 </div>
 <script>
     var confirmClicked = false;
+    // Guards the card-payment flow so one checkout can only ever start one charge.
+    var paymentInProgress = false;
 $(document).on('change', 'input[name="payment_method"]', function() {
     togglePaymentForms($(this).val());
 });
@@ -237,7 +239,11 @@ if ($('.so-onepagecheckout .leftScrollSection').length) {
 
  function bindConfirmOrderButtonClickForCreditCard(){
         console.log("Trigger before");
-        $('#payment-ui-container').on('click', '#button-confirm', function() {
+        // .off() first so this handler can NEVER be bound more than once.
+        $('#payment-ui-container').off('click', '#button-confirm').on('click', '#button-confirm', function() {
+    // Hard stop against double submits / rapid repeat clicks.
+    if (paymentInProgress) { return false; }
+    paymentInProgress = true;
     // do one round of validations for all input fields here as well
     $(this).button('loading');
    
@@ -257,17 +263,26 @@ if ($('.so-onepagecheckout .leftScrollSection').length) {
         beforeSend: function() {
             $('#button-confirm').button('loading');
         },
-        complete: function() {
-            $('#button-confirm').button('reset');
-        },
         success: function(json) {
              ajaxLoadingOff();
             if (json.error) {
+                // Payment did not go through (e.g. card declined) -
+                // unlock so the customer can correct details and retry.
+                paymentInProgress = false;
+                $('#button-confirm').button('reset');
                 alert(json.error);
             }
             if (json.success) {
+                // Success: keep the button locked and navigate away so a
+                // second charge can never be triggered from this page.
                 location = json.success;
             }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            paymentInProgress = false;
+            ajaxLoadingOff();
+            $('#button-confirm').button('reset');
+            console.error && console.error(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
         }
     });
    }
@@ -519,7 +534,8 @@ $(document).on('ajaxComplete', function() {
                 if(json['errors']){
                      ajaxLoadingOff();
                     $("#button-confirm").button('reset');
-                    
+                    paymentInProgress = false;
+
                     $.each(json['errors'],function(k,v){
                         if(k==='shipping_method'||k==='payment_method'){
                             return;
