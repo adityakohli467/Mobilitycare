@@ -120,6 +120,15 @@ class ControllerExtensionPaymentPinPayments extends Controller {
             }
             $json = ['success' => $this->url->link('checkout/success')];
         } else {
+            // Customers type "4242 4242 ..." and "YY" (the form placeholders); Pin wants digits and a 4-digit year.
+            $card_number  = preg_replace('/\D/', '', $this->request->post['card_number']);
+            $expiry_month = str_pad(preg_replace('/\D/', '', $this->request->post['expiry_month']), 2, '0', STR_PAD_LEFT);
+            $expiry_year  = preg_replace('/\D/', '', $this->request->post['expiry_year']);
+            if (strlen($expiry_year) == 2) {
+                $expiry_year = '20' . $expiry_year;
+            }
+            $cvc = preg_replace('/\D/', '', $this->request->post['cvc']);
+
             $charge_data = [
                 'amount'      => $amount,
                 'currency'    => $currency,
@@ -127,10 +136,10 @@ class ControllerExtensionPaymentPinPayments extends Controller {
                 'email'       => $order_info['email'],
                 'ip_address'  => isset($this->request->server['REMOTE_ADDR']) ? $this->request->server['REMOTE_ADDR'] : '',
                 // Card fields (Charges API accepts card[...] directly)
-                'card[number]'          => $this->request->post['card_number'],
-                'card[expiry_month]'    => $this->request->post['expiry_month'],
-                'card[expiry_year]'     => $this->request->post['expiry_year'],
-                'card[cvc]'             => $this->request->post['cvc'],
+                'card[number]'          => $card_number,
+                'card[expiry_month]'    => $expiry_month,
+                'card[expiry_year]'     => $expiry_year,
+                'card[cvc]'             => $cvc,
                 'card[name]'            => trim($order_info['payment_firstname'] . ' ' . $order_info['payment_lastname']),
                 'card[address_line1]'   => $order_info['payment_address_1'],
                 'card[address_city]'    => $order_info['payment_city'],
@@ -173,8 +182,23 @@ class ControllerExtensionPaymentPinPayments extends Controller {
                     }
                     $json = ['error' => 'Invalid response from payment gateway'];
                 } elseif (!empty($result['error'])) {
-                    // Top-level gateway error
-                    $json = ['error' => isset($result['error_description']) ? $result['error_description'] : 'Payment gateway error'];
+                    // Top-level gateway error (card_declined, invalid_resource, etc.)
+                    $error_message = isset($result['error_description']) ? $result['error_description'] : 'Payment gateway error';
+                    $details = [];
+                    if (!empty($result['messages']) && is_array($result['messages'])) {
+                        foreach ($result['messages'] as $msg) {
+                            if (!empty($msg['message'])) {
+                                $details[] = $msg['message'];
+                            }
+                        }
+                    }
+                    if ($details) {
+                        $error_message .= ': ' . implode('; ', $details);
+                    }
+                    if (isset($this->log)) {
+                        $this->log->write('PinPayments error - order #' . $order_id . ', code ' . $result['error'] . ', ' . $error_message);
+                    }
+                    $json = ['error' => $error_message];
                 } elseif (!empty($result['response']['success']) && $result['response']['success'] === true) {
                     // SUCCESS - mark the order paid INSIDE the lock so any
                     // queued duplicate requests are blocked by the re-check.
