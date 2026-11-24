@@ -27,7 +27,6 @@
                 var el = ($form[0] || $form).querySelector('input[name="' + name + '"]');
                 if (el) { el.value = value; }
               };
-              setField('product_id', "{{ product_id|default('') }}");
               setField('product_name', "{{ heading_title|default('')|e('js') }}");
               setField('product_url', window.location.href);
             }
