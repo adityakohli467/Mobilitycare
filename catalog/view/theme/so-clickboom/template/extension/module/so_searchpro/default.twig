@@ -250,7 +250,7 @@ $(document).ready(function() {
 								image:   item.image,
 								link:    item.link,
 								minimum:    item.minimum,
-								show_price:  showprice,
+								show_price:  (showprice && item.show_price) ? 1 : 0,
 								show_image:  showimage,
 								value:   item.product_id,
 							}

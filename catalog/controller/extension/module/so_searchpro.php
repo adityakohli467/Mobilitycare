@@ -291,8 +291,8 @@ class ControllerExtensionModuleSosearchpro extends Controller {
 				$json[] = array(
 					'total' => $total,
 					'product_id' => $result['product_id'],
-					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),	
-					'category_name' => strip_tags(html_entity_decode($category_name, ENT_QUOTES, 'UTF-8')),	
+					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+					'category_name' => strip_tags(html_entity_decode($category_name, ENT_QUOTES, 'UTF-8')),
 					'model'      => $result['model'],
 					'image'		 => $image,
 				// 	'link'		 => $this->url->link('product/product','path='.$path.'&product_id='.$result['product_id']),
@@ -300,6 +300,7 @@ class ControllerExtensionModuleSosearchpro extends Controller {
 					'special'	 => $special,
 					'tax'		 => $tax,
 					'price'      => $price,
+					'show_price' => isset($result['show_price']) ? (int)$result['show_price'] : 1,
 					'seo' => $result['product_id'],
 					'minimum'    =>  $result['minimum']
 				);	
